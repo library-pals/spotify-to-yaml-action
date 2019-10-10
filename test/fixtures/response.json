@@ -1,0 +1,121 @@
+{
+  "external_urls": {
+    "spotify": "https://open.spotify.com/user/katydecorah/playlist/0EXTe6h9sAjUkX1kwpE2y3"
+  },
+  "images": [
+    {
+      "height": 640,
+      "url": "https://mosaic.scdn.co/640/3cb9a164c04b6fe71198fcbe544bfebfdde8ffc845d842893fc343bff9d0a7e7362dec10c33de4d08ca9f28e0a6a923a969f3975a752b20fea5a254bec76e692ec570600aef07eef4919509b3c80d479",
+      "width": 640
+    },
+    {
+      "height": 300,
+      "url": "https://mosaic.scdn.co/300/3cb9a164c04b6fe71198fcbe544bfebfdde8ffc845d842893fc343bff9d0a7e7362dec10c33de4d08ca9f28e0a6a923a969f3975a752b20fea5a254bec76e692ec570600aef07eef4919509b3c80d479",
+      "width": 300
+    },
+    {
+      "height": 60,
+      "url": "https://mosaic.scdn.co/60/3cb9a164c04b6fe71198fcbe544bfebfdde8ffc845d842893fc343bff9d0a7e7362dec10c33de4d08ca9f28e0a6a923a969f3975a752b20fea5a254bec76e692ec570600aef07eef4919509b3c80d479",
+      "width": 60
+    }
+  ],
+  "name": "2017/2018 Winter",
+  "tracks": {
+    "items": [
+      {
+        "track": {
+          "album": {
+            "name": "Black Willow"
+          },
+          "artists": [
+            {
+              "name": "Loma"
+            }
+          ],
+          "name": "Black Willow - Single Version"
+        }
+      },
+      {
+        "track": {
+          "album": {
+            "name": "Kitsch"
+          },
+          "artists": [
+            {
+              "name": "Sur Back"
+            }
+          ],
+          "name": "Trophy Daughter"
+        }
+      },
+      {
+        "track": {
+          "album": {
+            "name": "Truth Hurts"
+          },
+          "artists": [
+            {
+              "name": "Lizzo"
+            }
+          ],
+          "name": "Truth Hurts"
+        }
+      },
+      {
+        "track": {
+          "album": {
+            "name": "Fleas"
+          },
+          "artists": [
+            {
+              "name": "Babeo Baggins"
+            }
+          ],
+          "name": "Fleas"
+        }
+      },
+      {
+        "track": {
+          "album": {
+            "name": "Night Shift"
+          },
+          "artists": [
+            {
+              "name": "Lucy Dacus"
+            }
+          ],
+          "name": "Night Shift"
+        }
+      },
+      {
+        "track": {
+          "album": {
+            "name": "Ruinism"
+          },
+          "artists": [
+            {
+              "name": "Lapalux"
+            },
+            {
+              "name": "Talvi"
+            }
+          ],
+          "name": "4EVA"
+        }
+      },
+      {
+        "track": {
+          "album": {
+            "name": "An Awesome Wave"
+          },
+          "artists": [
+            {
+              "name": "alt-J"
+            }
+          ],
+          "name": "Breezeblocks"
+        }
+      }
+    ]
+  }
+}
