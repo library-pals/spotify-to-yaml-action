@@ -1,0 +1,5 @@
+name: 'Spotify to Jekyll'
+description: 'Generate a Jekyll post from a Spotify playlist'
+runs:
+  using: 'node12'
+  main: 'index.js'

@@ -1,12 +1,28 @@
 const _ = require('underscore');
 const fs = require('fs');
-const moment = require('moment');
 const Jimp = require('jimp');
 const SpotifyWebApi = require('spotify-web-api-node');
+const core = require('@actions/core');
+
+process.env.MONTH = 8;
+
+try {
+  module.exports.playlist({}, null, (err, callback) => {
+    if (err) {
+      core.setFailed(err.message);
+    }
+    console.log(callback);
+  });
+
+} catch (error) {
+  core.setFailed(error.message);
+}
 
 module.exports.playlist = (event, context, callback) => {
-  module.exports
-    .getPlaylist()
+  module.exports.learnPlaylistName()
+  .then(listName => module.exports.listPlaylists(listName))
+  .then(playlistID => module.exports
+    .getPlaylist(playlistID))
     .then(module.exports.formatTracks)
     // create new post
     .then(data => module.exports.createPost(data))
@@ -18,7 +34,7 @@ module.exports.playlist = (event, context, callback) => {
     .catch(err => callback(err));
 };
 
-module.exports.getPlaylist = () => {
+module.exports.getPlaylist = (playlistID) => {
   const spotifyApi = new SpotifyWebApi({
     clientId: process.env.SpotifyClientID,
     clientSecret: process.env.SpotifyClientSecret
@@ -30,10 +46,43 @@ module.exports.getPlaylist = () => {
     .then(() =>
       spotifyApi.getPlaylist(
         process.env.SpotifyUser,
-        process.env.SpotifyPlaylist
+        playlistID
       )
     )
     .then(data => data.body)
+    .catch(err => err);
+};
+
+module.exports.learnPlaylistName = () => {
+  return new Promise(resolve => {
+    const today = new Date();
+    const month = process.env.MONTH || today.getMonth();
+    const year = today.getFullYear();
+    const season = {
+      2: 'Spring',
+      5: 'Summer',
+      8: 'Fall',
+      11: 'Winter'
+    };
+    resolve(`${season[month] === 11 ? `${year}/${year + 1}` : year} ${season[month]}`);
+  });
+};
+
+module.exports.listPlaylists = (listName) => {
+  const spotifyApi = new SpotifyWebApi({
+    clientId: process.env.SpotifyClientID,
+    clientSecret: process.env.SpotifyClientSecret
+  });
+
+  return spotifyApi
+    .clientCredentialsGrant()
+    .then(data => spotifyApi.setAccessToken(data.body['access_token']))
+    .then(() =>
+      spotifyApi.getUserPlaylists(
+        process.env.SpotifyUser
+      )
+    )
+    .then(data => data.body.items.filter(list => list.name === listName)[0].id)
     .catch(err => err);
 };
 
@@ -66,7 +115,7 @@ module.exports.getTracks = tracks => {
 module.exports.createPost = data => {
   return new Promise((resolve, reject) => {
     fs.writeFile(
-      `playlists/_posts/${moment().format('YYYY-MM-DD')}-${
+      `playlists/_posts/${new Date().toISOString().slice(0,10)}-${
         data.formatted_name
       }.md`,
       module.exports.buildPost(data),
