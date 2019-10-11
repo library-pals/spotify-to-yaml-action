@@ -45,7 +45,7 @@ module.exports.learnPlaylistName = () => {
       8: 'Fall',
       11: 'Winter'
     };
-    const name = `${season[month] === 11 ? `${year}/${year + 1}` : year} ${
+    const name = `${month == 11 ? `${year}/${year + 1}` : year} ${
       season[month]
     }`;
     core.exportVariable('playlist', name);
@@ -151,14 +151,3 @@ module.exports.saveImage = data => {
     });
   });
 };
-
-try {
-  module.exports.playlist({}, null, (err, callback) => {
-    if (err) {
-      core.setFailed(err.message);
-    }
-    console.log(callback);
-  });
-} catch (error) {
-  core.setFailed(error.message);
-}

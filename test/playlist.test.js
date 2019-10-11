@@ -58,3 +58,38 @@ test('[formatTracks]', assert => {
     assert.end();
   });
 });
+
+const today = new Date();
+const year = today.getFullYear();
+
+test('[learnPlaylistName], Fall', assert => {
+  process.env.MONTH = 8;
+  return playlist.learnPlaylistName().then(d => {
+    assert.deepEqual(d, `${year} Fall`);
+    assert.end();
+  });
+});
+
+test('[learnPlaylistName], Winter', assert => {
+  process.env.MONTH = 11;
+  return playlist.learnPlaylistName().then(d => {
+    assert.deepEqual(d, `${year}/${year + 1} Winter`);
+    assert.end();
+  });
+});
+
+test('[learnPlaylistName], Spring', assert => {
+  process.env.MONTH = 2;
+  return playlist.learnPlaylistName().then(d => {
+    assert.deepEqual(d, `${year} Spring`);
+    assert.end();
+  });
+});
+
+test('[learnPlaylistName], Summer', assert => {
+  process.env.MONTH = 5;
+  return playlist.learnPlaylistName().then(d => {
+    assert.deepEqual(d, `${year} Summer`);
+    assert.end();
+  });
+});
