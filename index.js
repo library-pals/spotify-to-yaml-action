@@ -4,8 +4,6 @@ const Jimp = require('jimp');
 const SpotifyWebApi = require('spotify-web-api-node');
 const core = require('@actions/core');
 
-process.env.MONTH = 8;
-
 module.exports.playlist = (event, context, callback) => {
   module.exports
     .learnPlaylistName()
