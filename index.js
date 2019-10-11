@@ -69,7 +69,6 @@ module.exports.listPlaylists = listName => {
 
 module.exports.formatTracks = data => {
   return new Promise(resolve => {
-    console.log('formatTracks', data);
     resolve({
       name: data.name,
       formatted_name: data.name
