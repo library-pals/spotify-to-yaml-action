@@ -1,8 +1,8 @@
 {
-  "name": "spotify-to-jekyll",
+  "name": "spotify-to-jekyll-action",
   "version": "1.0.0",
   "description": "Turn a Spotify playlist into a Jekyll post",
-  "main": "index.js",
+  "main": "action.js",
   "bin": {
     "spotify-to-jekyll": "./bin/playlist.js"
   },
@@ -40,5 +40,13 @@
   "directories": {
     "test": "test"
   },
-  "keywords": []
+  "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/katydecorah/spotify-to-jekyll-action.git"
+  },
+  "bugs": {
+    "url": "https://github.com/katydecorah/spotify-to-jekyll-action/issues"
+  },
+  "homepage": "https://github.com/katydecorah/spotify-to-jekyll-action#readme"
 }
