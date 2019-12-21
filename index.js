@@ -75,7 +75,10 @@ module.exports.formatTracks = data => {
         .replace('/', '-')
         .toLowerCase()
         .replace(' ', '-'),
-      url: data.external_urls.spotify,
+      url:
+        data.external_urls && data.external_urls.spotify
+          ? data.external_urls.spotify
+          : '',
       tracks: module.exports.getTracks(data.tracks),
       image: _.findWhere(data.images, { width: 640 }).url
     });
