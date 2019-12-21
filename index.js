@@ -40,12 +40,12 @@ module.exports.learnPlaylistName = () => {
     const month = process.env.MONTH || today.getMonth();
     const year = today.getFullYear();
     const season = {
-      2: 'Spring',
-      5: 'Summer',
-      8: 'Fall',
-      11: 'Winter'
+      2: 'Winter',
+      5: 'Spring',
+      8: 'Summer',
+      11: 'Fall'
     };
-    const name = `${month == 11 ? `${year}/${year + 1}` : year} ${
+    const name = `${month == 2 ? `${year}/${year + 1}` : year} ${
       season[month]
     }`;
     core.exportVariable('playlist', name);
