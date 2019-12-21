@@ -14,7 +14,7 @@ module.exports.playlist = (event, context, callback) => {
     .then(data => module.exports.createPost(data))
     // save tracks to playlists.yml
     .then(data => module.exports.updateMaster(data))
-    // save image to img/playlists/
+    // save image to img/staging/
     .then(data => module.exports.saveImage(data))
     .then(data => callback(null, data))
     .catch(err => callback(err));
@@ -112,7 +112,7 @@ module.exports.createPost = data => {
 };
 
 module.exports.buildPost = data => {
-  let contents = `---\ntitle: ${data.name}\nspotify: ${data.url}\nimage: img/playlists/${data.formatted_name}.png\npermalink: /playlists/${data.formatted_name}/\n---\n\n[Listen on Spotify](${data.url})\n\n`;
+  let contents = `---\ntitle: ${data.name}\nspotify: ${data.url}\nimage: ${data.formatted_name}.png\npermalink: /playlists/${data.formatted_name}/\n---\n\n[Listen on Spotify](${data.url})\n\n`;
   data.tracks.map(track => {
     contents += `* ${track.name}, ${track.artist}\n`;
   });
@@ -149,7 +149,7 @@ module.exports.saveImage = data => {
   return new Promise((resolve, reject) => {
     Jimp.read(data.image, (err, img) => {
       if (err) return reject(err);
-      img.rgba(false).write(`img/playlists/${data.formatted_name}.png`);
+      img.rgba(false).write(`img/staging/${data.formatted_name}.png`);
       resolve('done!');
     });
   });
