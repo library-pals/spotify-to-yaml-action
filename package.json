@@ -21,9 +21,9 @@
     "husky": "^0.14.3",
     "jimp": "^0.2.28",
     "lint-staged": "^7.3.0",
-    "prettier": "^1.18.2",
+    "prettier": "^1.19.1",
     "request": "^2.88.0",
-    "tape": "^4.10.2",
+    "tape": "^4.12.1",
     "underscore": "^1.9.1"
   },
   "lint-staged": {
@@ -34,7 +34,7 @@
     ]
   },
   "dependencies": {
-    "@actions/core": "^1.1.3",
+    "@actions/core": "^1.2.0",
     "spotify-web-api-node": "^3.1.1"
   },
   "directories": {
