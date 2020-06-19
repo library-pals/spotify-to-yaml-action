@@ -38,7 +38,7 @@ module.exports.learnPlaylistName = () => {
   return new Promise((resolve) => {
     const today = new Date();
     const month = process.env.MONTH || today.getMonth();
-    const year = today.getFullYear();
+    const year = process.env.YEAR || today.getFullYear();
     const season = {
       2: "Winter",
       5: "Spring",
