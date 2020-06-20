@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "description": "Turn a Spotify playlist into a Jekyll post",
   "main": "action.js",
-  "bin": {
-    "spotify-to-jekyll": "./bin/playlist.js"
-  },
   "scripts": {
     "test": "tape test/*.js && eslint *.js test/*.js",
     "precommit": "lint-staged",
@@ -20,12 +17,10 @@
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-promise": "^4.2.1",
     "husky": "^4.2.5",
-    "jimp": "^0.13.0",
     "prettier": "^2.0.5",
     "pretty-quick": "^2.0.1",
     "request": "^2.88.2",
-    "tape": "^5.0.1",
-    "underscore": "^1.10.2"
+    "tape": "^5.0.1"
   },
   "husky": {
     "hooks": {
@@ -34,6 +29,7 @@
   },
   "dependencies": {
     "@actions/core": "^1.2.4",
+    "spotify-to-jekyll": "^0.3.1",
     "spotify-web-api-node": "^4.0.0"
   },
   "directories": {
