@@ -14,7 +14,7 @@ module.exports.playlist = (event, context, callback) => {
       "Missing `SpotifyClientSecret` environment variable please see README.md"
     );
   module.exports
-    .getPlaylist()
+    .getPlaylist(process.env.SpotifyPlaylist)
     .then(module.exports.formatTracks)
     // create new post
     .then((data) => module.exports.createPost(data))
@@ -26,7 +26,7 @@ module.exports.playlist = (event, context, callback) => {
     .catch((err) => callback(err));
 };
 
-module.exports.getPlaylist = () => {
+module.exports.getPlaylist = (playlist) => {
   const spotifyApi = new SpotifyWebApi({
     clientId: process.env.SpotifyClientID,
     clientSecret: process.env.SpotifyClientSecret,
@@ -35,7 +35,7 @@ module.exports.getPlaylist = () => {
   return spotifyApi
     .clientCredentialsGrant()
     .then((data) => spotifyApi.setAccessToken(data.body["access_token"]))
-    .then(() => spotifyApi.getPlaylist(process.env.SpotifyPlaylist))
+    .then(() => spotifyApi.getPlaylist(playlist))
     .then((data) => data.body)
     .catch((err) => {
       throw new Error(err);
