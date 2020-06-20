@@ -3,7 +3,7 @@ const {
   formatTracks,
   createPost,
   saveImage,
-  updateMaster,
+  updateMain,
 } = require("spotify-to-jekyll/index.js");
 const core = require("@actions/core");
 const SpotifyWebApi = require("spotify-web-api-node");
@@ -17,7 +17,7 @@ module.exports.playlist = (event, context, callback) => {
     // create new post
     .then((data) => createPost(data))
     // save tracks to playlists.yml
-    .then((data) => updateMaster(data))
+    .then((data) => updateMain(data))
     // save image to img/staging/
     .then((data) => saveImage(data))
     .then((data) => callback(null, data))
