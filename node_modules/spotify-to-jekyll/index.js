@@ -19,7 +19,7 @@ module.exports.playlist = (event, context, callback) => {
     // create new post
     .then((data) => module.exports.createPost(data))
     // save tracks to playlists.yml
-    .then((data) => module.exports.updateMaster(data))
+    .then((data) => module.exports.updateMain(data))
     // save image to img/playlists/
     .then((data) => module.exports.saveImage(data))
     .then((data) => callback(null, data))
@@ -94,11 +94,11 @@ module.exports.buildPost = (data) => {
   return contents;
 };
 
-module.exports.updateMaster = (data) => {
+module.exports.updateMain = (data) => {
   return new Promise((resolve, reject) => {
     fs.writeFile(
       "_data/playlists.yml",
-      module.exports.buildNewMaster(data),
+      module.exports.buildNewMain(data),
       (err) => {
         if (err) return reject(err);
         resolve(data);
@@ -107,7 +107,7 @@ module.exports.updateMaster = (data) => {
   });
 };
 
-module.exports.buildNewMaster = (data) => {
+module.exports.buildNewMain = (data) => {
   let content = fs.readFileSync("_data/playlists.yml").toString("utf8");
   content += `- playlist: ${data.name}\n  spotify: ${data.url}\n  tracks:\n`;
   data.tracks.map((track) => {
