@@ -4,7 +4,7 @@ const {
   createPost,
   saveImage,
   updateMaster,
-} = require("spotify-to-jekyll");
+} = require("spotify-to-jekyll").index;
 const core = require("@actions/core");
 const SpotifyWebApi = require("spotify-web-api-node");
 
