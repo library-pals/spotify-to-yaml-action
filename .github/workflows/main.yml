@@ -13,6 +13,8 @@ jobs:
           SpotifyClientID: ${{ secrets.SpotifyClientID }}
           SpotifyClientSecret: ${{ secrets.SpotifyClientSecret}}
           SpotifyUser: ${{ secrets.SpotifyUser }}
+          ImgDir: ${{ secrets.ImgDir }}
+          UpdateDataFile: ${{ secrets.UpdateDataFile }}
       - name: Commit files
         run: |
           git config --local user.email "action@github.com"
