@@ -28,7 +28,7 @@
     }
   },
   "dependencies": {
-    "@actions/core": "^1.2.4",
+    "@actions/core": "^1.2.6",
     "spotify-to-jekyll": "^0.4.0",
     "spotify-web-api-node": "^4.0.0"
   },
