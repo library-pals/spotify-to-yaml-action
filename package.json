@@ -2,24 +2,25 @@
   "name": "spotify-to-jekyll-action",
   "version": "1.0.0",
   "description": "Turn a Spotify playlist into a Jekyll post",
-  "main": "action.js",
+  "main": "dist/index.js",
   "scripts": {
-    "test": "tape test/*.js && eslint *.js test/*.js",
+    "pretest": "npm run lint",
+    "test": "tape test/*.js",
     "precommit": "lint-staged",
-    "lint": "eslint *.js test/*.js",
-    "pretty-quick": "pretty-quick"
+    "lint": "eslint .",
+    "pretty-quick": "pretty-quick",
+    "build": "ncc build src/action.js"
   },
   "author": "Katy DeCorah",
   "license": "ISC",
   "devDependencies": {
+    "@vercel/ncc": "^0.25.1",
     "babel-eslint": "^10.1.0",
-    "eslint": "^7.3.0",
-    "eslint-config-prettier": "^6.11.0",
-    "eslint-plugin-promise": "^4.2.1",
-    "husky": "^4.2.5",
-    "prettier": "^2.0.5",
-    "pretty-quick": "^2.0.1",
-    "request": "^2.88.2",
+    "eslint": "^7.15.0",
+    "eslint-config-prettier": "^7.0.0",
+    "husky": "^4.3.5",
+    "prettier": "^2.2.1",
+    "pretty-quick": "^3.1.0",
     "tape": "^5.0.1"
   },
   "husky": {
@@ -28,7 +29,7 @@
     }
   },
   "dependencies": {
-    "@actions/core": "^1.2.4",
+    "@actions/core": "^1.2.6",
     "spotify-to-jekyll": "^0.4.0",
     "spotify-web-api-node": "^4.0.0"
   },
