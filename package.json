@@ -18,11 +18,9 @@
     "babel-eslint": "^10.1.0",
     "eslint": "^7.15.0",
     "eslint-config-prettier": "^7.0.0",
-    "eslint-plugin-promise": "^4.2.1",
     "husky": "^4.3.5",
     "prettier": "^2.2.1",
     "pretty-quick": "^3.1.0",
-    "request": "^2.88.2",
     "tape": "^5.0.1"
   },
   "husky": {
