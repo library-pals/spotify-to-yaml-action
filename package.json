@@ -2,16 +2,19 @@
   "name": "spotify-to-jekyll-action",
   "version": "1.0.0",
   "description": "Turn a Spotify playlist into a Jekyll post",
-  "main": "action.js",
+  "main": "dist/index.js",
   "scripts": {
-    "test": "tape test/*.js && eslint *.js test/*.js",
+    "pretest": "npm run lint",
+    "test": "tape test/*.js",
     "precommit": "lint-staged",
-    "lint": "eslint *.js test/*.js",
-    "pretty-quick": "pretty-quick"
+    "lint": "eslint .",
+    "pretty-quick": "pretty-quick",
+    "build": "ncc build src/action.js"
   },
   "author": "Katy DeCorah",
   "license": "ISC",
   "devDependencies": {
+    "@vercel/ncc": "^0.25.1",
     "babel-eslint": "^10.1.0",
     "eslint": "^7.3.0",
     "eslint-config-prettier": "^6.11.0",

@@ -1,5 +1,5 @@
-name: 'Spotify to Jekyll'
-description: 'Generate a Jekyll post from a Spotify playlist'
+name: "Spotify to Jekyll"
+description: "Generate a Jekyll post from a Spotify playlist"
 runs:
-  using: 'node12'
-  main: 'action.js'
+  using: "node12"
+  main: "dist/index.js"

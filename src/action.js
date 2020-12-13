@@ -1,5 +1,5 @@
-const script = require('./index.js');
-const core = require('@actions/core');
+const script = require("./index.js");
+const core = require("@actions/core");
 
 try {
   script.playlist({}, null, (err, callback) => {
