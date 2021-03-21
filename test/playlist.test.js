@@ -24,7 +24,7 @@ test("[learnPlaylistName], Fall", (assert) => {
 test("[learnPlaylistName], Winter", (assert) => {
   process.env.MONTH = 2;
   return playlist.learnPlaylistName().then((d) => {
-    assert.deepEqual(d, `${process.env.YEAR}/${process.env.YEAR + 1} Winter`);
+    assert.deepEqual(d, `${process.env.YEAR - 1}/${process.env.YEAR} Winter`);
     assert.end();
   });
 });

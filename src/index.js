@@ -1,5 +1,4 @@
 const {
-  getPlaylist,
   formatTracks,
   createPost,
   saveImage,
@@ -8,23 +7,7 @@ const {
 const core = require("@actions/core");
 const SpotifyWebApi = require("spotify-web-api-node");
 
-module.exports.playlist = (event, context, callback) => {
-  module.exports
-    .learnPlaylistName()
-    .then((listName) => module.exports.listPlaylists(listName))
-    .then((playlistID) => getPlaylist(playlistID))
-    .then(formatTracks)
-    // create new post
-    .then((data) => createPost(data))
-    // save tracks to playlists.yml
-    .then((data) => updateMain(data))
-    // save image to img/staging/
-    .then((data) => saveImage(data))
-    .then((data) => callback(null, data))
-    .catch((err) => callback(err));
-};
-
-module.exports.learnPlaylistName = () => {
+function learnPlaylistName() {
   return new Promise((resolve) => {
     const today = new Date();
     const month = process.env.MONTH || today.getMonth();
@@ -35,15 +18,15 @@ module.exports.learnPlaylistName = () => {
       8: "Summer",
       11: "Fall",
     };
-    const name = `${month == 2 ? `${year}/${year + 1}` : year} ${
+    const name = `${month == 2 ? `${year - 1}/${year}` : year} ${
       season[month]
     }`;
     core.exportVariable("playlist", name);
     resolve(name);
   });
-};
+}
 
-module.exports.listPlaylists = (listName) => {
+function listPlaylists(listName) {
   const spotifyApi = new SpotifyWebApi({
     clientId: process.env.SpotifyClientID,
     clientSecret: process.env.SpotifyClientSecret,
@@ -51,10 +34,41 @@ module.exports.listPlaylists = (listName) => {
 
   return spotifyApi
     .clientCredentialsGrant()
-    .then((data) => spotifyApi.setAccessToken(data.body["access_token"]))
-    .then(() => spotifyApi.getUserPlaylists(process.env.SpotifyUser))
-    .then(
-      (data) => data.body.items.filter((list) => list.name === listName)[0].id
-    )
+    .then((data) => {
+      spotifyApi.setAccessToken(data.body["access_token"]);
+      return spotifyApi
+        .getUserPlaylists(process.env.SpotifyUser)
+        .then(({ body }) => body.items.find((list) => list.name === listName))
+        .then(({ name, external_urls, id, images }) => {
+          return spotifyApi.getPlaylistTracks(id).then(({ body }) => {
+            return {
+              name,
+              external_urls,
+              images,
+              tracks: {
+                items: body.items,
+              },
+            };
+          });
+        })
+        .catch((err) => err);
+    })
     .catch((err) => err);
-};
+}
+
+try {
+  learnPlaylistName()
+    .then((listName) => listPlaylists(listName))
+    .then(formatTracks)
+    // create new post
+    .then((data) => createPost(data))
+    // save tracks to playlists.yml
+    .then((data) => updateMain(data))
+    // save image to img/staging/
+    .then((data) => saveImage(data))
+    .catch((err) => core.setFailed(err.message));
+} catch (error) {
+  core.setFailed(error.message);
+}
+
+module.exports = { learnPlaylistName, listPlaylists };
