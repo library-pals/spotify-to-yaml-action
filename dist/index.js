@@ -66784,7 +66784,6 @@ try {
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 const {
-  getPlaylist,
   formatTracks,
   createPost,
   saveImage,
@@ -66797,7 +66796,6 @@ module.exports.playlist = (event, context, callback) => {
   module.exports
     .learnPlaylistName()
     .then((listName) => module.exports.listPlaylists(listName))
-    .then((playlistID) => getPlaylist(playlistID))
     .then(formatTracks)
     // create new post
     .then((data) => createPost(data))
@@ -66836,11 +66834,25 @@ module.exports.listPlaylists = (listName) => {
 
   return spotifyApi
     .clientCredentialsGrant()
-    .then((data) => spotifyApi.setAccessToken(data.body["access_token"]))
-    .then(() => spotifyApi.getUserPlaylists(process.env.SpotifyUser))
-    .then(
-      (data) => data.body.items.filter((list) => list.name === listName)[0].id
-    )
+    .then((data) => {
+      spotifyApi.setAccessToken(data.body["access_token"]);
+      return spotifyApi
+        .getUserPlaylists(process.env.SpotifyUser)
+        .then(({ body }) => body.items.find((list) => list.name === listName))
+        .then(({ name, external_urls, id, images }) => {
+          return spotifyApi.getPlaylistTracks(id).then(({ body }) => {
+            return {
+              name,
+              external_urls,
+              images,
+              tracks: {
+                items: body.items,
+              },
+            };
+          });
+        })
+        .catch((err) => err);
+    })
     .catch((err) => err);
 };
 
