@@ -35,7 +35,7 @@ module.exports.learnPlaylistName = () => {
       8: "Summer",
       11: "Fall",
     };
-    const name = `${month == 2 ? `${year}/${year + 1}` : year} ${
+    const name = `${month == 2 ? `${year - 1}/${year}` : year} ${
       season[month]
     }`;
     core.exportVariable("playlist", name);

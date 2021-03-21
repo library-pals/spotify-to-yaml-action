@@ -66780,26 +66780,6 @@ try {
 
 /***/ }),
 
-/***/ 3348:
-/***/ ((__unused_webpack_module, __unused_webpack_exports, __nccwpck_require__) => {
-
-const script = __nccwpck_require__(4351);
-const core = __nccwpck_require__(2186);
-
-try {
-  script.playlist({}, null, (err, callback) => {
-    if (err) {
-      core.setFailed(err.message);
-    }
-    console.log(callback);
-  });
-} catch (error) {
-  core.setFailed(error.message);
-}
-
-
-/***/ }),
-
 /***/ 4351:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
@@ -66840,7 +66820,7 @@ module.exports.learnPlaylistName = () => {
       8: "Summer",
       11: "Fall",
     };
-    const name = `${month == 2 ? `${year}/${year + 1}` : year} ${
+    const name = `${month == 2 ? `${year - 1}/${year}` : year} ${
       season[month]
     }`;
     core.exportVariable("playlist", name);
@@ -67121,6 +67101,6 @@ module.exports = require("zlib");;
 /******/ 	// module exports must be returned from runtime so entry inlining is disabled
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
-/******/ 	return __nccwpck_require__(3348);
+/******/ 	return __nccwpck_require__(4351);
 /******/ })()
 ;
