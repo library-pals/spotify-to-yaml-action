@@ -44,7 +44,7 @@ function listPlaylists(listName) {
           );
           if (!findPlaylist) {
             core.setFailed(
-              `Cound not find playlist "${listName}". Is it private?`
+              `Could not find playlist "${listName}". Is it private?`
             );
             return;
           }
