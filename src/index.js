@@ -38,7 +38,18 @@ function listPlaylists(listName) {
       spotifyApi.setAccessToken(data.body["access_token"]);
       return spotifyApi
         .getUserPlaylists(process.env.SpotifyUser)
-        .then(({ body }) => body.items.find((list) => list.name === listName))
+        .then(({ body }) => {
+          const findPlaylist = body.items.find(
+            (list) => list.name === listName
+          );
+          if (!findPlaylist) {
+            core.setFailed(
+              `Could not find playlist "${listName}". Is it private?`
+            );
+            return;
+          }
+          return findPlaylist;
+        })
         .then(({ name, external_urls, id, images }) => {
           return spotifyApi.getPlaylistTracks(id).then(({ body }) => {
             return {
