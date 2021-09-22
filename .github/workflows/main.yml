@@ -7,7 +7,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Create post
+      - name: Fetch playlist
         uses: ./
         env:
           SpotifyClientID: ${{ secrets.SpotifyClientID }}
