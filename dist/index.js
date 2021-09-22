@@ -66785,7 +66785,6 @@ try {
 
 const {
   formatTracks,
-  createPost,
   saveImage,
   updateMain,
 } = __nccwpck_require__(1062);
@@ -66823,7 +66822,18 @@ function listPlaylists(listName) {
       spotifyApi.setAccessToken(data.body["access_token"]);
       return spotifyApi
         .getUserPlaylists(process.env.SpotifyUser)
-        .then(({ body }) => body.items.find((list) => list.name === listName))
+        .then(({ body }) => {
+          const findPlaylist = body.items.find(
+            (list) => list.name === listName
+          );
+          if (!findPlaylist) {
+            core.setFailed(
+              `Could not find playlist "${listName}". Is it private?`
+            );
+            return;
+          }
+          return findPlaylist;
+        })
         .then(({ name, external_urls, id, images }) => {
           return spotifyApi.getPlaylistTracks(id).then(({ body }) => {
             return {
@@ -66845,8 +66855,6 @@ try {
   learnPlaylistName()
     .then((listName) => listPlaylists(listName))
     .then(formatTracks)
-    // create new post
-    .then((data) => createPost(data))
     // save tracks to playlists.yml
     .then((data) => updateMain(data))
     // save image to img/staging/
