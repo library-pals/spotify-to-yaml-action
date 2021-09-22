@@ -1,6 +1,5 @@
 const {
   formatTracks,
-  createPost,
   saveImage,
   updateMain,
 } = require("spotify-to-jekyll/index.js");
@@ -71,8 +70,6 @@ try {
   learnPlaylistName()
     .then((listName) => listPlaylists(listName))
     .then(formatTracks)
-    // create new post
-    .then((data) => createPost(data))
     // save tracks to playlists.yml
     .then((data) => updateMain(data))
     // save image to img/staging/
