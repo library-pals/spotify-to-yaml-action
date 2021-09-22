@@ -1,6 +1,6 @@
 {
   "name": "spotify-to-jekyll-action",
-  "version": "4.2.1",
+  "version": "5.0.0",
   "description": "Turn a Spotify playlist into a Jekyll post",
   "main": "dist/index.js",
   "scripts": {
