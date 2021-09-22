@@ -9,24 +9,20 @@
     "precommit": "lint-staged",
     "lint": "eslint .",
     "pretty-quick": "pretty-quick",
-    "build": "ncc build src/index.js"
+    "build": "ncc build src/index.js",
+    "prepare": "husky install"
   },
   "author": "Katy DeCorah",
   "license": "ISC",
   "devDependencies": {
-    "@vercel/ncc": "^0.27.0",
+    "@vercel/ncc": "^0.31.1",
     "babel-eslint": "^10.1.0",
     "eslint": "^7.22.0",
     "eslint-config-prettier": "^8.1.0",
-    "husky": "^4.3.8",
+    "husky": "^7.0.0",
     "prettier": "^2.2.1",
     "pretty-quick": "^3.1.0",
     "tape": "^5.2.2"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "pretty-quick --staged"
-    }
   },
   "dependencies": {
     "@actions/core": "^1.2.6",
