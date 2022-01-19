@@ -14,13 +14,11 @@ async function listPlaylists(listName) {
   spotifyApi.setAccessToken(access_token);
 
   const { body } = await spotifyApi.getUserPlaylists(username);
-  console.log(body);
   const findPlaylist = body.items.find((list) => list.name === listName);
   if (!findPlaylist) {
     core.setFailed(`Could not find playlist "${listName}". Is it private?`);
     return;
   }
-
   const {
     body: { items },
   } = await spotifyApi.getPlaylistTracks(findPlaylist.id);
