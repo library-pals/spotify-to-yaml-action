@@ -27,7 +27,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.issue = exports.issueCommand = void 0;
-const os = __importStar(__nccwpck_require__(2087));
+const os = __importStar(__nccwpck_require__(2037));
 const utils_1 = __nccwpck_require__(5278);
 /**
  * Commands
@@ -134,12 +134,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getState = exports.saveState = exports.group = exports.endGroup = exports.startGroup = exports.info = exports.notice = exports.warning = exports.error = exports.debug = exports.isDebug = exports.setFailed = exports.setCommandEcho = exports.setOutput = exports.getBooleanInput = exports.getMultilineInput = exports.getInput = exports.addPath = exports.setSecret = exports.exportVariable = exports.ExitCode = void 0;
+exports.getIDToken = exports.getState = exports.saveState = exports.group = exports.endGroup = exports.startGroup = exports.info = exports.notice = exports.warning = exports.error = exports.debug = exports.isDebug = exports.setFailed = exports.setCommandEcho = exports.setOutput = exports.getBooleanInput = exports.getMultilineInput = exports.getInput = exports.addPath = exports.setSecret = exports.exportVariable = exports.ExitCode = void 0;
 const command_1 = __nccwpck_require__(7351);
 const file_command_1 = __nccwpck_require__(717);
 const utils_1 = __nccwpck_require__(5278);
-const os = __importStar(__nccwpck_require__(2087));
-const path = __importStar(__nccwpck_require__(5622));
+const os = __importStar(__nccwpck_require__(2037));
+const path = __importStar(__nccwpck_require__(1017));
+const oidc_utils_1 = __nccwpck_require__(8041);
 /**
  * The code to exit an action
  */
@@ -408,6 +409,12 @@ function getState(name) {
     return process.env[`STATE_${name}`] || '';
 }
 exports.getState = getState;
+function getIDToken(aud) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield oidc_utils_1.OidcClient.getIDToken(aud);
+    });
+}
+exports.getIDToken = getIDToken;
 //# sourceMappingURL=core.js.map
 
 /***/ }),
@@ -441,8 +448,8 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.issueCommand = void 0;
 // We use any as a valid input type
 /* eslint-disable @typescript-eslint/no-explicit-any */
-const fs = __importStar(__nccwpck_require__(5747));
-const os = __importStar(__nccwpck_require__(2087));
+const fs = __importStar(__nccwpck_require__(7147));
+const os = __importStar(__nccwpck_require__(2037));
 const utils_1 = __nccwpck_require__(5278);
 function issueCommand(command, message) {
     const filePath = process.env[`GITHUB_${command}`];
@@ -458,6 +465,90 @@ function issueCommand(command, message) {
 }
 exports.issueCommand = issueCommand;
 //# sourceMappingURL=file-command.js.map
+
+/***/ }),
+
+/***/ 8041:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.OidcClient = void 0;
+const http_client_1 = __nccwpck_require__(9925);
+const auth_1 = __nccwpck_require__(3702);
+const core_1 = __nccwpck_require__(2186);
+class OidcClient {
+    static createHttpClient(allowRetry = true, maxRetry = 10) {
+        const requestOptions = {
+            allowRetries: allowRetry,
+            maxRetries: maxRetry
+        };
+        return new http_client_1.HttpClient('actions/oidc-client', [new auth_1.BearerCredentialHandler(OidcClient.getRequestToken())], requestOptions);
+    }
+    static getRequestToken() {
+        const token = process.env['ACTIONS_ID_TOKEN_REQUEST_TOKEN'];
+        if (!token) {
+            throw new Error('Unable to get ACTIONS_ID_TOKEN_REQUEST_TOKEN env variable');
+        }
+        return token;
+    }
+    static getIDTokenUrl() {
+        const runtimeUrl = process.env['ACTIONS_ID_TOKEN_REQUEST_URL'];
+        if (!runtimeUrl) {
+            throw new Error('Unable to get ACTIONS_ID_TOKEN_REQUEST_URL env variable');
+        }
+        return runtimeUrl;
+    }
+    static getCall(id_token_url) {
+        var _a;
+        return __awaiter(this, void 0, void 0, function* () {
+            const httpclient = OidcClient.createHttpClient();
+            const res = yield httpclient
+                .getJson(id_token_url)
+                .catch(error => {
+                throw new Error(`Failed to get ID Token. \n 
+        Error Code : ${error.statusCode}\n 
+        Error Message: ${error.result.message}`);
+            });
+            const id_token = (_a = res.result) === null || _a === void 0 ? void 0 : _a.value;
+            if (!id_token) {
+                throw new Error('Response json body do not have ID Token field');
+            }
+            return id_token;
+        });
+    }
+    static getIDToken(audience) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                // New ID Token is requested from action service
+                let id_token_url = OidcClient.getIDTokenUrl();
+                if (audience) {
+                    const encodedAudience = encodeURIComponent(audience);
+                    id_token_url = `${id_token_url}&audience=${encodedAudience}`;
+                }
+                core_1.debug(`ID token url is ${id_token_url}`);
+                const id_token = yield OidcClient.getCall(id_token_url);
+                core_1.setSecret(id_token);
+                return id_token;
+            }
+            catch (error) {
+                throw new Error(`Error message: ${error.message}`);
+            }
+        });
+    }
+}
+exports.OidcClient = OidcClient;
+//# sourceMappingURL=oidc-utils.js.map
 
 /***/ }),
 
@@ -496,6 +587,7 @@ function toCommandProperties(annotationProperties) {
     }
     return {
         title: annotationProperties.title,
+        file: annotationProperties.file,
         line: annotationProperties.startLine,
         endLine: annotationProperties.endLine,
         col: annotationProperties.startColumn,
@@ -504,6 +596,682 @@ function toCommandProperties(annotationProperties) {
 }
 exports.toCommandProperties = toCommandProperties;
 //# sourceMappingURL=utils.js.map
+
+/***/ }),
+
+/***/ 3702:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+class BasicCredentialHandler {
+    constructor(username, password) {
+        this.username = username;
+        this.password = password;
+    }
+    prepareRequest(options) {
+        options.headers['Authorization'] =
+            'Basic ' +
+                Buffer.from(this.username + ':' + this.password).toString('base64');
+    }
+    // This handler cannot handle 401
+    canHandleAuthentication(response) {
+        return false;
+    }
+    handleAuthentication(httpClient, requestInfo, objs) {
+        return null;
+    }
+}
+exports.BasicCredentialHandler = BasicCredentialHandler;
+class BearerCredentialHandler {
+    constructor(token) {
+        this.token = token;
+    }
+    // currently implements pre-authorization
+    // TODO: support preAuth = false where it hooks on 401
+    prepareRequest(options) {
+        options.headers['Authorization'] = 'Bearer ' + this.token;
+    }
+    // This handler cannot handle 401
+    canHandleAuthentication(response) {
+        return false;
+    }
+    handleAuthentication(httpClient, requestInfo, objs) {
+        return null;
+    }
+}
+exports.BearerCredentialHandler = BearerCredentialHandler;
+class PersonalAccessTokenCredentialHandler {
+    constructor(token) {
+        this.token = token;
+    }
+    // currently implements pre-authorization
+    // TODO: support preAuth = false where it hooks on 401
+    prepareRequest(options) {
+        options.headers['Authorization'] =
+            'Basic ' + Buffer.from('PAT:' + this.token).toString('base64');
+    }
+    // This handler cannot handle 401
+    canHandleAuthentication(response) {
+        return false;
+    }
+    handleAuthentication(httpClient, requestInfo, objs) {
+        return null;
+    }
+}
+exports.PersonalAccessTokenCredentialHandler = PersonalAccessTokenCredentialHandler;
+
+
+/***/ }),
+
+/***/ 9925:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const http = __nccwpck_require__(3685);
+const https = __nccwpck_require__(5687);
+const pm = __nccwpck_require__(6443);
+let tunnel;
+var HttpCodes;
+(function (HttpCodes) {
+    HttpCodes[HttpCodes["OK"] = 200] = "OK";
+    HttpCodes[HttpCodes["MultipleChoices"] = 300] = "MultipleChoices";
+    HttpCodes[HttpCodes["MovedPermanently"] = 301] = "MovedPermanently";
+    HttpCodes[HttpCodes["ResourceMoved"] = 302] = "ResourceMoved";
+    HttpCodes[HttpCodes["SeeOther"] = 303] = "SeeOther";
+    HttpCodes[HttpCodes["NotModified"] = 304] = "NotModified";
+    HttpCodes[HttpCodes["UseProxy"] = 305] = "UseProxy";
+    HttpCodes[HttpCodes["SwitchProxy"] = 306] = "SwitchProxy";
+    HttpCodes[HttpCodes["TemporaryRedirect"] = 307] = "TemporaryRedirect";
+    HttpCodes[HttpCodes["PermanentRedirect"] = 308] = "PermanentRedirect";
+    HttpCodes[HttpCodes["BadRequest"] = 400] = "BadRequest";
+    HttpCodes[HttpCodes["Unauthorized"] = 401] = "Unauthorized";
+    HttpCodes[HttpCodes["PaymentRequired"] = 402] = "PaymentRequired";
+    HttpCodes[HttpCodes["Forbidden"] = 403] = "Forbidden";
+    HttpCodes[HttpCodes["NotFound"] = 404] = "NotFound";
+    HttpCodes[HttpCodes["MethodNotAllowed"] = 405] = "MethodNotAllowed";
+    HttpCodes[HttpCodes["NotAcceptable"] = 406] = "NotAcceptable";
+    HttpCodes[HttpCodes["ProxyAuthenticationRequired"] = 407] = "ProxyAuthenticationRequired";
+    HttpCodes[HttpCodes["RequestTimeout"] = 408] = "RequestTimeout";
+    HttpCodes[HttpCodes["Conflict"] = 409] = "Conflict";
+    HttpCodes[HttpCodes["Gone"] = 410] = "Gone";
+    HttpCodes[HttpCodes["TooManyRequests"] = 429] = "TooManyRequests";
+    HttpCodes[HttpCodes["InternalServerError"] = 500] = "InternalServerError";
+    HttpCodes[HttpCodes["NotImplemented"] = 501] = "NotImplemented";
+    HttpCodes[HttpCodes["BadGateway"] = 502] = "BadGateway";
+    HttpCodes[HttpCodes["ServiceUnavailable"] = 503] = "ServiceUnavailable";
+    HttpCodes[HttpCodes["GatewayTimeout"] = 504] = "GatewayTimeout";
+})(HttpCodes = exports.HttpCodes || (exports.HttpCodes = {}));
+var Headers;
+(function (Headers) {
+    Headers["Accept"] = "accept";
+    Headers["ContentType"] = "content-type";
+})(Headers = exports.Headers || (exports.Headers = {}));
+var MediaTypes;
+(function (MediaTypes) {
+    MediaTypes["ApplicationJson"] = "application/json";
+})(MediaTypes = exports.MediaTypes || (exports.MediaTypes = {}));
+/**
+ * Returns the proxy URL, depending upon the supplied url and proxy environment variables.
+ * @param serverUrl  The server URL where the request will be sent. For example, https://api.github.com
+ */
+function getProxyUrl(serverUrl) {
+    let proxyUrl = pm.getProxyUrl(new URL(serverUrl));
+    return proxyUrl ? proxyUrl.href : '';
+}
+exports.getProxyUrl = getProxyUrl;
+const HttpRedirectCodes = [
+    HttpCodes.MovedPermanently,
+    HttpCodes.ResourceMoved,
+    HttpCodes.SeeOther,
+    HttpCodes.TemporaryRedirect,
+    HttpCodes.PermanentRedirect
+];
+const HttpResponseRetryCodes = [
+    HttpCodes.BadGateway,
+    HttpCodes.ServiceUnavailable,
+    HttpCodes.GatewayTimeout
+];
+const RetryableHttpVerbs = ['OPTIONS', 'GET', 'DELETE', 'HEAD'];
+const ExponentialBackoffCeiling = 10;
+const ExponentialBackoffTimeSlice = 5;
+class HttpClientError extends Error {
+    constructor(message, statusCode) {
+        super(message);
+        this.name = 'HttpClientError';
+        this.statusCode = statusCode;
+        Object.setPrototypeOf(this, HttpClientError.prototype);
+    }
+}
+exports.HttpClientError = HttpClientError;
+class HttpClientResponse {
+    constructor(message) {
+        this.message = message;
+    }
+    readBody() {
+        return new Promise(async (resolve, reject) => {
+            let output = Buffer.alloc(0);
+            this.message.on('data', (chunk) => {
+                output = Buffer.concat([output, chunk]);
+            });
+            this.message.on('end', () => {
+                resolve(output.toString());
+            });
+        });
+    }
+}
+exports.HttpClientResponse = HttpClientResponse;
+function isHttps(requestUrl) {
+    let parsedUrl = new URL(requestUrl);
+    return parsedUrl.protocol === 'https:';
+}
+exports.isHttps = isHttps;
+class HttpClient {
+    constructor(userAgent, handlers, requestOptions) {
+        this._ignoreSslError = false;
+        this._allowRedirects = true;
+        this._allowRedirectDowngrade = false;
+        this._maxRedirects = 50;
+        this._allowRetries = false;
+        this._maxRetries = 1;
+        this._keepAlive = false;
+        this._disposed = false;
+        this.userAgent = userAgent;
+        this.handlers = handlers || [];
+        this.requestOptions = requestOptions;
+        if (requestOptions) {
+            if (requestOptions.ignoreSslError != null) {
+                this._ignoreSslError = requestOptions.ignoreSslError;
+            }
+            this._socketTimeout = requestOptions.socketTimeout;
+            if (requestOptions.allowRedirects != null) {
+                this._allowRedirects = requestOptions.allowRedirects;
+            }
+            if (requestOptions.allowRedirectDowngrade != null) {
+                this._allowRedirectDowngrade = requestOptions.allowRedirectDowngrade;
+            }
+            if (requestOptions.maxRedirects != null) {
+                this._maxRedirects = Math.max(requestOptions.maxRedirects, 0);
+            }
+            if (requestOptions.keepAlive != null) {
+                this._keepAlive = requestOptions.keepAlive;
+            }
+            if (requestOptions.allowRetries != null) {
+                this._allowRetries = requestOptions.allowRetries;
+            }
+            if (requestOptions.maxRetries != null) {
+                this._maxRetries = requestOptions.maxRetries;
+            }
+        }
+    }
+    options(requestUrl, additionalHeaders) {
+        return this.request('OPTIONS', requestUrl, null, additionalHeaders || {});
+    }
+    get(requestUrl, additionalHeaders) {
+        return this.request('GET', requestUrl, null, additionalHeaders || {});
+    }
+    del(requestUrl, additionalHeaders) {
+        return this.request('DELETE', requestUrl, null, additionalHeaders || {});
+    }
+    post(requestUrl, data, additionalHeaders) {
+        return this.request('POST', requestUrl, data, additionalHeaders || {});
+    }
+    patch(requestUrl, data, additionalHeaders) {
+        return this.request('PATCH', requestUrl, data, additionalHeaders || {});
+    }
+    put(requestUrl, data, additionalHeaders) {
+        return this.request('PUT', requestUrl, data, additionalHeaders || {});
+    }
+    head(requestUrl, additionalHeaders) {
+        return this.request('HEAD', requestUrl, null, additionalHeaders || {});
+    }
+    sendStream(verb, requestUrl, stream, additionalHeaders) {
+        return this.request(verb, requestUrl, stream, additionalHeaders);
+    }
+    /**
+     * Gets a typed object from an endpoint
+     * Be aware that not found returns a null.  Other errors (4xx, 5xx) reject the promise
+     */
+    async getJson(requestUrl, additionalHeaders = {}) {
+        additionalHeaders[Headers.Accept] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.Accept, MediaTypes.ApplicationJson);
+        let res = await this.get(requestUrl, additionalHeaders);
+        return this._processResponse(res, this.requestOptions);
+    }
+    async postJson(requestUrl, obj, additionalHeaders = {}) {
+        let data = JSON.stringify(obj, null, 2);
+        additionalHeaders[Headers.Accept] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.Accept, MediaTypes.ApplicationJson);
+        additionalHeaders[Headers.ContentType] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.ContentType, MediaTypes.ApplicationJson);
+        let res = await this.post(requestUrl, data, additionalHeaders);
+        return this._processResponse(res, this.requestOptions);
+    }
+    async putJson(requestUrl, obj, additionalHeaders = {}) {
+        let data = JSON.stringify(obj, null, 2);
+        additionalHeaders[Headers.Accept] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.Accept, MediaTypes.ApplicationJson);
+        additionalHeaders[Headers.ContentType] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.ContentType, MediaTypes.ApplicationJson);
+        let res = await this.put(requestUrl, data, additionalHeaders);
+        return this._processResponse(res, this.requestOptions);
+    }
+    async patchJson(requestUrl, obj, additionalHeaders = {}) {
+        let data = JSON.stringify(obj, null, 2);
+        additionalHeaders[Headers.Accept] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.Accept, MediaTypes.ApplicationJson);
+        additionalHeaders[Headers.ContentType] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.ContentType, MediaTypes.ApplicationJson);
+        let res = await this.patch(requestUrl, data, additionalHeaders);
+        return this._processResponse(res, this.requestOptions);
+    }
+    /**
+     * Makes a raw http request.
+     * All other methods such as get, post, patch, and request ultimately call this.
+     * Prefer get, del, post and patch
+     */
+    async request(verb, requestUrl, data, headers) {
+        if (this._disposed) {
+            throw new Error('Client has already been disposed.');
+        }
+        let parsedUrl = new URL(requestUrl);
+        let info = this._prepareRequest(verb, parsedUrl, headers);
+        // Only perform retries on reads since writes may not be idempotent.
+        let maxTries = this._allowRetries && RetryableHttpVerbs.indexOf(verb) != -1
+            ? this._maxRetries + 1
+            : 1;
+        let numTries = 0;
+        let response;
+        while (numTries < maxTries) {
+            response = await this.requestRaw(info, data);
+            // Check if it's an authentication challenge
+            if (response &&
+                response.message &&
+                response.message.statusCode === HttpCodes.Unauthorized) {
+                let authenticationHandler;
+                for (let i = 0; i < this.handlers.length; i++) {
+                    if (this.handlers[i].canHandleAuthentication(response)) {
+                        authenticationHandler = this.handlers[i];
+                        break;
+                    }
+                }
+                if (authenticationHandler) {
+                    return authenticationHandler.handleAuthentication(this, info, data);
+                }
+                else {
+                    // We have received an unauthorized response but have no handlers to handle it.
+                    // Let the response return to the caller.
+                    return response;
+                }
+            }
+            let redirectsRemaining = this._maxRedirects;
+            while (HttpRedirectCodes.indexOf(response.message.statusCode) != -1 &&
+                this._allowRedirects &&
+                redirectsRemaining > 0) {
+                const redirectUrl = response.message.headers['location'];
+                if (!redirectUrl) {
+                    // if there's no location to redirect to, we won't
+                    break;
+                }
+                let parsedRedirectUrl = new URL(redirectUrl);
+                if (parsedUrl.protocol == 'https:' &&
+                    parsedUrl.protocol != parsedRedirectUrl.protocol &&
+                    !this._allowRedirectDowngrade) {
+                    throw new Error('Redirect from HTTPS to HTTP protocol. This downgrade is not allowed for security reasons. If you want to allow this behavior, set the allowRedirectDowngrade option to true.');
+                }
+                // we need to finish reading the response before reassigning response
+                // which will leak the open socket.
+                await response.readBody();
+                // strip authorization header if redirected to a different hostname
+                if (parsedRedirectUrl.hostname !== parsedUrl.hostname) {
+                    for (let header in headers) {
+                        // header names are case insensitive
+                        if (header.toLowerCase() === 'authorization') {
+                            delete headers[header];
+                        }
+                    }
+                }
+                // let's make the request with the new redirectUrl
+                info = this._prepareRequest(verb, parsedRedirectUrl, headers);
+                response = await this.requestRaw(info, data);
+                redirectsRemaining--;
+            }
+            if (HttpResponseRetryCodes.indexOf(response.message.statusCode) == -1) {
+                // If not a retry code, return immediately instead of retrying
+                return response;
+            }
+            numTries += 1;
+            if (numTries < maxTries) {
+                await response.readBody();
+                await this._performExponentialBackoff(numTries);
+            }
+        }
+        return response;
+    }
+    /**
+     * Needs to be called if keepAlive is set to true in request options.
+     */
+    dispose() {
+        if (this._agent) {
+            this._agent.destroy();
+        }
+        this._disposed = true;
+    }
+    /**
+     * Raw request.
+     * @param info
+     * @param data
+     */
+    requestRaw(info, data) {
+        return new Promise((resolve, reject) => {
+            let callbackForResult = function (err, res) {
+                if (err) {
+                    reject(err);
+                }
+                resolve(res);
+            };
+            this.requestRawWithCallback(info, data, callbackForResult);
+        });
+    }
+    /**
+     * Raw request with callback.
+     * @param info
+     * @param data
+     * @param onResult
+     */
+    requestRawWithCallback(info, data, onResult) {
+        let socket;
+        if (typeof data === 'string') {
+            info.options.headers['Content-Length'] = Buffer.byteLength(data, 'utf8');
+        }
+        let callbackCalled = false;
+        let handleResult = (err, res) => {
+            if (!callbackCalled) {
+                callbackCalled = true;
+                onResult(err, res);
+            }
+        };
+        let req = info.httpModule.request(info.options, (msg) => {
+            let res = new HttpClientResponse(msg);
+            handleResult(null, res);
+        });
+        req.on('socket', sock => {
+            socket = sock;
+        });
+        // If we ever get disconnected, we want the socket to timeout eventually
+        req.setTimeout(this._socketTimeout || 3 * 60000, () => {
+            if (socket) {
+                socket.end();
+            }
+            handleResult(new Error('Request timeout: ' + info.options.path), null);
+        });
+        req.on('error', function (err) {
+            // err has statusCode property
+            // res should have headers
+            handleResult(err, null);
+        });
+        if (data && typeof data === 'string') {
+            req.write(data, 'utf8');
+        }
+        if (data && typeof data !== 'string') {
+            data.on('close', function () {
+                req.end();
+            });
+            data.pipe(req);
+        }
+        else {
+            req.end();
+        }
+    }
+    /**
+     * Gets an http agent. This function is useful when you need an http agent that handles
+     * routing through a proxy server - depending upon the url and proxy environment variables.
+     * @param serverUrl  The server URL where the request will be sent. For example, https://api.github.com
+     */
+    getAgent(serverUrl) {
+        let parsedUrl = new URL(serverUrl);
+        return this._getAgent(parsedUrl);
+    }
+    _prepareRequest(method, requestUrl, headers) {
+        const info = {};
+        info.parsedUrl = requestUrl;
+        const usingSsl = info.parsedUrl.protocol === 'https:';
+        info.httpModule = usingSsl ? https : http;
+        const defaultPort = usingSsl ? 443 : 80;
+        info.options = {};
+        info.options.host = info.parsedUrl.hostname;
+        info.options.port = info.parsedUrl.port
+            ? parseInt(info.parsedUrl.port)
+            : defaultPort;
+        info.options.path =
+            (info.parsedUrl.pathname || '') + (info.parsedUrl.search || '');
+        info.options.method = method;
+        info.options.headers = this._mergeHeaders(headers);
+        if (this.userAgent != null) {
+            info.options.headers['user-agent'] = this.userAgent;
+        }
+        info.options.agent = this._getAgent(info.parsedUrl);
+        // gives handlers an opportunity to participate
+        if (this.handlers) {
+            this.handlers.forEach(handler => {
+                handler.prepareRequest(info.options);
+            });
+        }
+        return info;
+    }
+    _mergeHeaders(headers) {
+        const lowercaseKeys = obj => Object.keys(obj).reduce((c, k) => ((c[k.toLowerCase()] = obj[k]), c), {});
+        if (this.requestOptions && this.requestOptions.headers) {
+            return Object.assign({}, lowercaseKeys(this.requestOptions.headers), lowercaseKeys(headers));
+        }
+        return lowercaseKeys(headers || {});
+    }
+    _getExistingOrDefaultHeader(additionalHeaders, header, _default) {
+        const lowercaseKeys = obj => Object.keys(obj).reduce((c, k) => ((c[k.toLowerCase()] = obj[k]), c), {});
+        let clientHeader;
+        if (this.requestOptions && this.requestOptions.headers) {
+            clientHeader = lowercaseKeys(this.requestOptions.headers)[header];
+        }
+        return additionalHeaders[header] || clientHeader || _default;
+    }
+    _getAgent(parsedUrl) {
+        let agent;
+        let proxyUrl = pm.getProxyUrl(parsedUrl);
+        let useProxy = proxyUrl && proxyUrl.hostname;
+        if (this._keepAlive && useProxy) {
+            agent = this._proxyAgent;
+        }
+        if (this._keepAlive && !useProxy) {
+            agent = this._agent;
+        }
+        // if agent is already assigned use that agent.
+        if (!!agent) {
+            return agent;
+        }
+        const usingSsl = parsedUrl.protocol === 'https:';
+        let maxSockets = 100;
+        if (!!this.requestOptions) {
+            maxSockets = this.requestOptions.maxSockets || http.globalAgent.maxSockets;
+        }
+        if (useProxy) {
+            // If using proxy, need tunnel
+            if (!tunnel) {
+                tunnel = __nccwpck_require__(4294);
+            }
+            const agentOptions = {
+                maxSockets: maxSockets,
+                keepAlive: this._keepAlive,
+                proxy: {
+                    ...((proxyUrl.username || proxyUrl.password) && {
+                        proxyAuth: `${proxyUrl.username}:${proxyUrl.password}`
+                    }),
+                    host: proxyUrl.hostname,
+                    port: proxyUrl.port
+                }
+            };
+            let tunnelAgent;
+            const overHttps = proxyUrl.protocol === 'https:';
+            if (usingSsl) {
+                tunnelAgent = overHttps ? tunnel.httpsOverHttps : tunnel.httpsOverHttp;
+            }
+            else {
+                tunnelAgent = overHttps ? tunnel.httpOverHttps : tunnel.httpOverHttp;
+            }
+            agent = tunnelAgent(agentOptions);
+            this._proxyAgent = agent;
+        }
+        // if reusing agent across request and tunneling agent isn't assigned create a new agent
+        if (this._keepAlive && !agent) {
+            const options = { keepAlive: this._keepAlive, maxSockets: maxSockets };
+            agent = usingSsl ? new https.Agent(options) : new http.Agent(options);
+            this._agent = agent;
+        }
+        // if not using private agent and tunnel agent isn't setup then use global agent
+        if (!agent) {
+            agent = usingSsl ? https.globalAgent : http.globalAgent;
+        }
+        if (usingSsl && this._ignoreSslError) {
+            // we don't want to set NODE_TLS_REJECT_UNAUTHORIZED=0 since that will affect request for entire process
+            // http.RequestOptions doesn't expose a way to modify RequestOptions.agent.options
+            // we have to cast it to any and change it directly
+            agent.options = Object.assign(agent.options || {}, {
+                rejectUnauthorized: false
+            });
+        }
+        return agent;
+    }
+    _performExponentialBackoff(retryNumber) {
+        retryNumber = Math.min(ExponentialBackoffCeiling, retryNumber);
+        const ms = ExponentialBackoffTimeSlice * Math.pow(2, retryNumber);
+        return new Promise(resolve => setTimeout(() => resolve(), ms));
+    }
+    static dateTimeDeserializer(key, value) {
+        if (typeof value === 'string') {
+            let a = new Date(value);
+            if (!isNaN(a.valueOf())) {
+                return a;
+            }
+        }
+        return value;
+    }
+    async _processResponse(res, options) {
+        return new Promise(async (resolve, reject) => {
+            const statusCode = res.message.statusCode;
+            const response = {
+                statusCode: statusCode,
+                result: null,
+                headers: {}
+            };
+            // not found leads to null obj returned
+            if (statusCode == HttpCodes.NotFound) {
+                resolve(response);
+            }
+            let obj;
+            let contents;
+            // get the result from the body
+            try {
+                contents = await res.readBody();
+                if (contents && contents.length > 0) {
+                    if (options && options.deserializeDates) {
+                        obj = JSON.parse(contents, HttpClient.dateTimeDeserializer);
+                    }
+                    else {
+                        obj = JSON.parse(contents);
+                    }
+                    response.result = obj;
+                }
+                response.headers = res.message.headers;
+            }
+            catch (err) {
+                // Invalid resource (contents not json);  leaving result obj null
+            }
+            // note that 3xx redirects are handled by the http layer.
+            if (statusCode > 299) {
+                let msg;
+                // if exception/error in body, attempt to get better error
+                if (obj && obj.message) {
+                    msg = obj.message;
+                }
+                else if (contents && contents.length > 0) {
+                    // it may be the case that the exception is in the body message as string
+                    msg = contents;
+                }
+                else {
+                    msg = 'Failed request: (' + statusCode + ')';
+                }
+                let err = new HttpClientError(msg, statusCode);
+                err.result = response.result;
+                reject(err);
+            }
+            else {
+                resolve(response);
+            }
+        });
+    }
+}
+exports.HttpClient = HttpClient;
+
+
+/***/ }),
+
+/***/ 6443:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+function getProxyUrl(reqUrl) {
+    let usingSsl = reqUrl.protocol === 'https:';
+    let proxyUrl;
+    if (checkBypass(reqUrl)) {
+        return proxyUrl;
+    }
+    let proxyVar;
+    if (usingSsl) {
+        proxyVar = process.env['https_proxy'] || process.env['HTTPS_PROXY'];
+    }
+    else {
+        proxyVar = process.env['http_proxy'] || process.env['HTTP_PROXY'];
+    }
+    if (proxyVar) {
+        proxyUrl = new URL(proxyVar);
+    }
+    return proxyUrl;
+}
+exports.getProxyUrl = getProxyUrl;
+function checkBypass(reqUrl) {
+    if (!reqUrl.hostname) {
+        return false;
+    }
+    let noProxy = process.env['no_proxy'] || process.env['NO_PROXY'] || '';
+    if (!noProxy) {
+        return false;
+    }
+    // Determine the request port
+    let reqPort;
+    if (reqUrl.port) {
+        reqPort = Number(reqUrl.port);
+    }
+    else if (reqUrl.protocol === 'http:') {
+        reqPort = 80;
+    }
+    else if (reqUrl.protocol === 'https:') {
+        reqPort = 443;
+    }
+    // Format the request hostname and hostname with port
+    let upperReqHosts = [reqUrl.hostname.toUpperCase()];
+    if (typeof reqPort === 'number') {
+        upperReqHosts.push(`${upperReqHosts[0]}:${reqPort}`);
+    }
+    // Compare request host against noproxy
+    for (let upperNoProxyItem of noProxy
+        .split(',')
+        .map(x => x.trim().toUpperCase())
+        .filter(x => x)) {
+        if (upperReqHosts.some(x => x === upperNoProxyItem)) {
+            return true;
+        }
+    }
+    return false;
+}
+exports.checkBypass = checkBypass;
+
 
 /***/ }),
 
@@ -521,7 +1289,7 @@ function _arrayLikeToArray(arr, len) {
 }
 
 module.exports = _arrayLikeToArray;
-module.exports.default = module.exports, module.exports.__esModule = true;
+module.exports["default"] = module.exports, module.exports.__esModule = true;
 
 /***/ }),
 
@@ -533,7 +1301,7 @@ function _arrayWithHoles(arr) {
 }
 
 module.exports = _arrayWithHoles;
-module.exports.default = module.exports, module.exports.__esModule = true;
+module.exports["default"] = module.exports, module.exports.__esModule = true;
 
 /***/ }),
 
@@ -547,7 +1315,7 @@ function _arrayWithoutHoles(arr) {
 }
 
 module.exports = _arrayWithoutHoles;
-module.exports.default = module.exports, module.exports.__esModule = true;
+module.exports["default"] = module.exports, module.exports.__esModule = true;
 
 /***/ }),
 
@@ -563,7 +1331,7 @@ function _assertThisInitialized(self) {
 }
 
 module.exports = _assertThisInitialized;
-module.exports.default = module.exports, module.exports.__esModule = true;
+module.exports["default"] = module.exports, module.exports.__esModule = true;
 
 /***/ }),
 
@@ -577,7 +1345,7 @@ function _classCallCheck(instance, Constructor) {
 }
 
 module.exports = _classCallCheck;
-module.exports.default = module.exports, module.exports.__esModule = true;
+module.exports["default"] = module.exports, module.exports.__esModule = true;
 
 /***/ }),
 
@@ -591,7 +1359,7 @@ var isNativeReflectConstruct = __nccwpck_require__(6497);
 function _construct(Parent, args, Class) {
   if (isNativeReflectConstruct()) {
     module.exports = _construct = Reflect.construct;
-    module.exports.default = module.exports, module.exports.__esModule = true;
+    module.exports["default"] = module.exports, module.exports.__esModule = true;
   } else {
     module.exports = _construct = function _construct(Parent, args, Class) {
       var a = [null];
@@ -602,14 +1370,14 @@ function _construct(Parent, args, Class) {
       return instance;
     };
 
-    module.exports.default = module.exports, module.exports.__esModule = true;
+    module.exports["default"] = module.exports, module.exports.__esModule = true;
   }
 
   return _construct.apply(null, arguments);
 }
 
 module.exports = _construct;
-module.exports.default = module.exports, module.exports.__esModule = true;
+module.exports["default"] = module.exports, module.exports.__esModule = true;
 
 /***/ }),
 
@@ -633,7 +1401,7 @@ function _createClass(Constructor, protoProps, staticProps) {
 }
 
 module.exports = _createClass;
-module.exports.default = module.exports, module.exports.__esModule = true;
+module.exports["default"] = module.exports, module.exports.__esModule = true;
 
 /***/ }),
 
@@ -656,7 +1424,7 @@ function _defineProperty(obj, key, value) {
 }
 
 module.exports = _defineProperty;
-module.exports.default = module.exports, module.exports.__esModule = true;
+module.exports["default"] = module.exports, module.exports.__esModule = true;
 
 /***/ }),
 
@@ -678,12 +1446,12 @@ function _extends() {
     return target;
   };
 
-  module.exports.default = module.exports, module.exports.__esModule = true;
+  module.exports["default"] = module.exports, module.exports.__esModule = true;
   return _extends.apply(this, arguments);
 }
 
 module.exports = _extends;
-module.exports.default = module.exports, module.exports.__esModule = true;
+module.exports["default"] = module.exports, module.exports.__esModule = true;
 
 /***/ }),
 
@@ -694,12 +1462,12 @@ function _getPrototypeOf(o) {
   module.exports = _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
     return o.__proto__ || Object.getPrototypeOf(o);
   };
-  module.exports.default = module.exports, module.exports.__esModule = true;
+  module.exports["default"] = module.exports, module.exports.__esModule = true;
   return _getPrototypeOf(o);
 }
 
 module.exports = _getPrototypeOf;
-module.exports.default = module.exports, module.exports.__esModule = true;
+module.exports["default"] = module.exports, module.exports.__esModule = true;
 
 /***/ }),
 
@@ -724,7 +1492,7 @@ function _inherits(subClass, superClass) {
 }
 
 module.exports = _inherits;
-module.exports.default = module.exports, module.exports.__esModule = true;
+module.exports["default"] = module.exports, module.exports.__esModule = true;
 
 /***/ }),
 
@@ -738,14 +1506,14 @@ function _interopRequireDefault(obj) {
 }
 
 module.exports = _interopRequireDefault;
-module.exports.default = module.exports, module.exports.__esModule = true;
+module.exports["default"] = module.exports, module.exports.__esModule = true;
 
 /***/ }),
 
 /***/ 8429:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-var _typeof = __nccwpck_require__(1042).default;
+var _typeof = (__nccwpck_require__(1042)["default"]);
 
 function _getRequireWildcardCache(nodeInterop) {
   if (typeof WeakMap !== "function") return null;
@@ -798,7 +1566,7 @@ function _interopRequireWildcard(obj, nodeInterop) {
 }
 
 module.exports = _interopRequireWildcard;
-module.exports.default = module.exports, module.exports.__esModule = true;
+module.exports["default"] = module.exports, module.exports.__esModule = true;
 
 /***/ }),
 
@@ -819,7 +1587,7 @@ function _isNativeReflectConstruct() {
 }
 
 module.exports = _isNativeReflectConstruct;
-module.exports.default = module.exports, module.exports.__esModule = true;
+module.exports["default"] = module.exports, module.exports.__esModule = true;
 
 /***/ }),
 
@@ -831,7 +1599,7 @@ function _iterableToArray(iter) {
 }
 
 module.exports = _iterableToArray;
-module.exports.default = module.exports, module.exports.__esModule = true;
+module.exports["default"] = module.exports, module.exports.__esModule = true;
 
 /***/ }),
 
@@ -869,7 +1637,7 @@ function _iterableToArrayLimit(arr, i) {
 }
 
 module.exports = _iterableToArrayLimit;
-module.exports.default = module.exports, module.exports.__esModule = true;
+module.exports["default"] = module.exports, module.exports.__esModule = true;
 
 /***/ }),
 
@@ -881,7 +1649,7 @@ function _nonIterableRest() {
 }
 
 module.exports = _nonIterableRest;
-module.exports.default = module.exports, module.exports.__esModule = true;
+module.exports["default"] = module.exports, module.exports.__esModule = true;
 
 /***/ }),
 
@@ -893,14 +1661,14 @@ function _nonIterableSpread() {
 }
 
 module.exports = _nonIterableSpread;
-module.exports.default = module.exports, module.exports.__esModule = true;
+module.exports["default"] = module.exports, module.exports.__esModule = true;
 
 /***/ }),
 
 /***/ 8104:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-var _typeof = __nccwpck_require__(1042).default;
+var _typeof = (__nccwpck_require__(1042)["default"]);
 
 var assertThisInitialized = __nccwpck_require__(3808);
 
@@ -915,7 +1683,7 @@ function _possibleConstructorReturn(self, call) {
 }
 
 module.exports = _possibleConstructorReturn;
-module.exports.default = module.exports, module.exports.__esModule = true;
+module.exports["default"] = module.exports, module.exports.__esModule = true;
 
 /***/ }),
 
@@ -928,12 +1696,12 @@ function _setPrototypeOf(o, p) {
     return o;
   };
 
-  module.exports.default = module.exports, module.exports.__esModule = true;
+  module.exports["default"] = module.exports, module.exports.__esModule = true;
   return _setPrototypeOf(o, p);
 }
 
 module.exports = _setPrototypeOf;
-module.exports.default = module.exports, module.exports.__esModule = true;
+module.exports["default"] = module.exports, module.exports.__esModule = true;
 
 /***/ }),
 
@@ -953,7 +1721,7 @@ function _slicedToArray(arr, i) {
 }
 
 module.exports = _slicedToArray;
-module.exports.default = module.exports, module.exports.__esModule = true;
+module.exports["default"] = module.exports, module.exports.__esModule = true;
 
 /***/ }),
 
@@ -973,7 +1741,7 @@ function _toConsumableArray(arr) {
 }
 
 module.exports = _toConsumableArray;
-module.exports.default = module.exports, module.exports.__esModule = true;
+module.exports["default"] = module.exports, module.exports.__esModule = true;
 
 /***/ }),
 
@@ -988,20 +1756,20 @@ function _typeof(obj) {
       return typeof obj;
     };
 
-    module.exports.default = module.exports, module.exports.__esModule = true;
+    module.exports["default"] = module.exports, module.exports.__esModule = true;
   } else {
     module.exports = _typeof = function _typeof(obj) {
       return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
     };
 
-    module.exports.default = module.exports, module.exports.__esModule = true;
+    module.exports["default"] = module.exports, module.exports.__esModule = true;
   }
 
   return _typeof(obj);
 }
 
 module.exports = _typeof;
-module.exports.default = module.exports, module.exports.__esModule = true;
+module.exports["default"] = module.exports, module.exports.__esModule = true;
 
 /***/ }),
 
@@ -1020,7 +1788,7 @@ function _unsupportedIterableToArray(o, minLen) {
 }
 
 module.exports = _unsupportedIterableToArray;
-module.exports.default = module.exports, module.exports.__esModule = true;
+module.exports["default"] = module.exports, module.exports.__esModule = true;
 
 /***/ }),
 
@@ -1043,7 +1811,7 @@ var _interopRequireDefault = __nccwpck_require__(3298);
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-exports.default = void 0;
+exports["default"] = void 0;
 
 var _defineProperty2 = _interopRequireDefault(__nccwpck_require__(3561));
 
@@ -1104,7 +1872,7 @@ var _default = function _default() {
   };
 };
 
-exports.default = _default;
+exports["default"] = _default;
 module.exports = exports.default;
 //# sourceMappingURL=index.js.map
 
@@ -1342,7 +2110,7 @@ var _interopRequireWildcard = __nccwpck_require__(8429);
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-exports.default = composite;
+exports["default"] = composite;
 
 var _utils = __nccwpck_require__(7403);
 
@@ -1515,7 +2283,7 @@ Object.defineProperty(exports, "addType", ({
     return MIME.addType;
   }
 }));
-exports.default = void 0;
+exports["default"] = void 0;
 
 var _construct2 = _interopRequireDefault(__nccwpck_require__(3077));
 
@@ -1537,11 +2305,11 @@ var _defineProperty2 = _interopRequireDefault(__nccwpck_require__(3561));
 
 var _typeof2 = _interopRequireDefault(__nccwpck_require__(1042));
 
-var _fs = _interopRequireDefault(__nccwpck_require__(5747));
+var _fs = _interopRequireDefault(__nccwpck_require__(7147));
 
-var _path = _interopRequireDefault(__nccwpck_require__(5622));
+var _path = _interopRequireDefault(__nccwpck_require__(1017));
 
-var _events = _interopRequireDefault(__nccwpck_require__(8614));
+var _events = _interopRequireDefault(__nccwpck_require__(2361));
 
 var _utils = __nccwpck_require__(7403);
 
@@ -2785,7 +3553,7 @@ if (process.env.ENVIRONMENT === 'BROWSER') {
 }
 
 var _default = Jimp;
-exports.default = _default;
+exports["default"] = _default;
 //# sourceMappingURL=index.js.map
 
 /***/ }),
@@ -3365,7 +4133,7 @@ exports.getExtension = getExtension;
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-exports.default = void 0;
+exports["default"] = void 0;
 
 var promisify = function promisify(fun, ctx) {
   for (var _len = arguments.length, args = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
@@ -3385,7 +4153,7 @@ var promisify = function promisify(fun, ctx) {
 };
 
 var _default = promisify;
-exports.default = _default;
+exports["default"] = _default;
 module.exports = exports.default;
 //# sourceMappingURL=promisify.js.map
 
@@ -3404,7 +4172,7 @@ var _interopRequireDefault = __nccwpck_require__(3298);
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-exports.default = configure;
+exports["default"] = configure;
 
 var _toConsumableArray2 = _interopRequireDefault(__nccwpck_require__(9491));
 
@@ -3498,7 +4266,7 @@ var _interopRequireDefault = __nccwpck_require__(3298);
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-exports.default = void 0;
+exports["default"] = void 0;
 
 var _defineProperty2 = _interopRequireDefault(__nccwpck_require__(3561));
 
@@ -3538,7 +4306,7 @@ var _default = function _default() {
   };
 };
 
-exports.default = _default;
+exports["default"] = _default;
 module.exports = exports.default;
 //# sourceMappingURL=index.js.map
 
@@ -3555,7 +4323,7 @@ var _interopRequireDefault = __nccwpck_require__(3298);
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-exports.default = void 0;
+exports["default"] = void 0;
 
 var _defineProperty2 = _interopRequireDefault(__nccwpck_require__(3561));
 
@@ -3606,7 +4374,7 @@ var _default = function _default() {
   };
 };
 
-exports.default = _default;
+exports["default"] = _default;
 module.exports = exports.default;
 //# sourceMappingURL=index.js.map
 
@@ -3623,7 +4391,7 @@ var _interopRequireDefault = __nccwpck_require__(3298);
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-exports.default = void 0;
+exports["default"] = void 0;
 
 var _typeof2 = _interopRequireDefault(__nccwpck_require__(1042));
 
@@ -3712,7 +4480,7 @@ var _default = function _default() {
   };
 };
 
-exports.default = _default;
+exports["default"] = _default;
 module.exports = exports.default;
 //# sourceMappingURL=index.js.map
 
@@ -3745,7 +4513,7 @@ exports.shgTable = shgTable;
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-exports.default = void 0;
+exports["default"] = void 0;
 
 var _utils = __nccwpck_require__(7403);
 
@@ -3919,7 +4687,7 @@ var _default = function _default() {
   };
 };
 
-exports.default = _default;
+exports["default"] = _default;
 module.exports = exports.default;
 //# sourceMappingURL=index.js.map
 
@@ -3934,7 +4702,7 @@ module.exports = exports.default;
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-exports.default = void 0;
+exports["default"] = void 0;
 
 var _utils = __nccwpck_require__(7403);
 
@@ -3979,7 +4747,7 @@ var _default = function _default() {
   };
 };
 
-exports.default = _default;
+exports["default"] = _default;
 module.exports = exports.default;
 //# sourceMappingURL=index.js.map
 
@@ -3996,7 +4764,7 @@ var _interopRequireDefault = __nccwpck_require__(3298);
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-exports.default = void 0;
+exports["default"] = void 0;
 
 var _toConsumableArray2 = _interopRequireDefault(__nccwpck_require__(9491));
 
@@ -4553,7 +5321,7 @@ var _default = function _default() {
   };
 };
 
-exports.default = _default;
+exports["default"] = _default;
 module.exports = exports.default;
 //# sourceMappingURL=index.js.map
 
@@ -4568,7 +5336,7 @@ module.exports = exports.default;
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-exports.default = void 0;
+exports["default"] = void 0;
 
 var _utils = __nccwpck_require__(7403);
 
@@ -4635,7 +5403,7 @@ var _default = function _default() {
   };
 };
 
-exports.default = _default;
+exports["default"] = _default;
 module.exports = exports.default;
 //# sourceMappingURL=index.js.map
 
@@ -4650,7 +5418,7 @@ module.exports = exports.default;
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-exports.default = void 0;
+exports["default"] = void 0;
 
 var _utils = __nccwpck_require__(7403);
 
@@ -4701,7 +5469,7 @@ var _default = function _default() {
   };
 };
 
-exports.default = _default;
+exports["default"] = _default;
 module.exports = exports.default;
 //# sourceMappingURL=index.js.map
 
@@ -4718,7 +5486,7 @@ var _interopRequireDefault = __nccwpck_require__(3298);
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-exports.default = pluginCrop;
+exports["default"] = pluginCrop;
 
 var _typeof2 = _interopRequireDefault(__nccwpck_require__(1042));
 
@@ -4994,7 +5762,7 @@ var _interopRequireDefault = __nccwpck_require__(3298);
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-exports.default = void 0;
+exports["default"] = void 0;
 
 var _typeof2 = _interopRequireDefault(__nccwpck_require__(1042));
 
@@ -5037,7 +5805,7 @@ var _default = function _default() {
   };
 };
 
-exports.default = _default;
+exports["default"] = _default;
 module.exports = exports.default;
 //# sourceMappingURL=index.js.map
 
@@ -5052,7 +5820,7 @@ module.exports = exports.default;
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-exports.default = void 0;
+exports["default"] = void 0;
 
 var _utils = __nccwpck_require__(7403);
 
@@ -5085,7 +5853,7 @@ var _default = function _default() {
   };
 };
 
-exports.default = _default;
+exports["default"] = _default;
 module.exports = exports.default;
 //# sourceMappingURL=index.js.map
 
@@ -5100,7 +5868,7 @@ module.exports = exports.default;
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-exports.default = void 0;
+exports["default"] = void 0;
 
 var _utils = __nccwpck_require__(7403);
 
@@ -5157,7 +5925,7 @@ var _default = function _default() {
   };
 };
 
-exports.default = _default;
+exports["default"] = _default;
 module.exports = exports.default;
 //# sourceMappingURL=index.js.map
 
@@ -5172,7 +5940,7 @@ module.exports = exports.default;
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-exports.default = void 0;
+exports["default"] = void 0;
 
 var _utils = __nccwpck_require__(7403);
 
@@ -5212,7 +5980,7 @@ var _default = function _default() {
   };
 };
 
-exports.default = _default;
+exports["default"] = _default;
 module.exports = exports.default;
 //# sourceMappingURL=index.js.map
 
@@ -5227,7 +5995,7 @@ module.exports = exports.default;
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-exports.default = void 0;
+exports["default"] = void 0;
 
 var _utils = __nccwpck_require__(7403);
 
@@ -5306,7 +6074,7 @@ var _default = function _default() {
   };
 };
 
-exports.default = _default;
+exports["default"] = _default;
 module.exports = exports.default;
 //# sourceMappingURL=index.js.map
 
@@ -5321,7 +6089,7 @@ module.exports = exports.default;
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-exports.default = void 0;
+exports["default"] = void 0;
 
 var _utils = __nccwpck_require__(7403);
 
@@ -5348,7 +6116,7 @@ var _default = function _default() {
   };
 };
 
-exports.default = _default;
+exports["default"] = _default;
 module.exports = exports.default;
 //# sourceMappingURL=index.js.map
 
@@ -5363,7 +6131,7 @@ module.exports = exports.default;
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-exports.default = void 0;
+exports["default"] = void 0;
 
 var _utils = __nccwpck_require__(7403);
 
@@ -5417,7 +6185,7 @@ var _default = function _default() {
   };
 };
 
-exports.default = _default;
+exports["default"] = _default;
 module.exports = exports.default;
 //# sourceMappingURL=index.js.map
 
@@ -5432,7 +6200,7 @@ module.exports = exports.default;
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-exports.default = void 0;
+exports["default"] = void 0;
 
 var _utils = __nccwpck_require__(7403);
 
@@ -5509,7 +6277,7 @@ var _default = function _default() {
   };
 };
 
-exports.default = _default;
+exports["default"] = _default;
 module.exports = exports.default;
 //# sourceMappingURL=index.js.map
 
@@ -5526,13 +6294,13 @@ var _interopRequireDefault = __nccwpck_require__(3298);
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-exports.default = void 0;
+exports["default"] = void 0;
 
 var _typeof2 = _interopRequireDefault(__nccwpck_require__(1042));
 
 var _toConsumableArray2 = _interopRequireDefault(__nccwpck_require__(9491));
 
-var _path = _interopRequireDefault(__nccwpck_require__(5622));
+var _path = _interopRequireDefault(__nccwpck_require__(1017));
 
 var _loadBmfont = _interopRequireDefault(__nccwpck_require__(9919));
 
@@ -5777,7 +6545,7 @@ var _default = function _default() {
   };
 };
 
-exports.default = _default;
+exports["default"] = _default;
 module.exports = exports.default;
 //# sourceMappingURL=index.js.map
 
@@ -5842,7 +6610,7 @@ var _interopRequireDefault = __nccwpck_require__(3298);
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-exports.default = void 0;
+exports["default"] = void 0;
 
 var _utils = __nccwpck_require__(7403);
 
@@ -5928,7 +6696,7 @@ var _default = function _default() {
   };
 };
 
-exports.default = _default;
+exports["default"] = _default;
 module.exports = exports.default;
 //# sourceMappingURL=index.js.map
 
@@ -6629,7 +7397,7 @@ module.exports = {
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-exports.default = void 0;
+exports["default"] = void 0;
 
 var _utils = __nccwpck_require__(7403);
 
@@ -6760,7 +7528,7 @@ var _default = function _default() {
   };
 };
 
-exports.default = _default;
+exports["default"] = _default;
 module.exports = exports.default;
 //# sourceMappingURL=index.js.map
 
@@ -6775,7 +7543,7 @@ module.exports = exports.default;
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-exports.default = void 0;
+exports["default"] = void 0;
 
 var _utils = __nccwpck_require__(7403);
 
@@ -6843,7 +7611,7 @@ var _default = function _default() {
   };
 };
 
-exports.default = _default;
+exports["default"] = _default;
 module.exports = exports.default;
 //# sourceMappingURL=index.js.map
 
@@ -6858,7 +7626,7 @@ module.exports = exports.default;
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-exports.default = void 0;
+exports["default"] = void 0;
 
 var _utils = __nccwpck_require__(7403);
 
@@ -6927,7 +7695,7 @@ var _default = function _default() {
   };
 };
 
-exports.default = _default;
+exports["default"] = _default;
 module.exports = exports.default;
 //# sourceMappingURL=index.js.map
 
@@ -6942,7 +7710,7 @@ module.exports = exports.default;
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-exports.default = void 0;
+exports["default"] = void 0;
 
 var _utils = __nccwpck_require__(7403);
 
@@ -7001,7 +7769,7 @@ var _default = function _default() {
   };
 };
 
-exports.default = _default;
+exports["default"] = _default;
 module.exports = exports.default;
 //# sourceMappingURL=index.js.map
 
@@ -7018,7 +7786,7 @@ var _interopRequireDefault = __nccwpck_require__(3298);
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-exports.default = void 0;
+exports["default"] = void 0;
 
 var _toConsumableArray2 = _interopRequireDefault(__nccwpck_require__(9491));
 
@@ -7084,7 +7852,7 @@ var _default = function _default(jimpEvChange) {
   return _timm.mergeDeep.apply(void 0, (0, _toConsumableArray2["default"])(initializedPlugins));
 };
 
-exports.default = _default;
+exports["default"] = _default;
 module.exports = exports.default;
 //# sourceMappingURL=index.js.map
 
@@ -7101,7 +7869,7 @@ var _interopRequireDefault = __nccwpck_require__(3298);
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-exports.default = void 0;
+exports["default"] = void 0;
 
 var _defineProperty2 = _interopRequireDefault(__nccwpck_require__(3561));
 
@@ -7253,7 +8021,7 @@ var _default = function _default() {
   };
 };
 
-exports.default = _default;
+exports["default"] = _default;
 module.exports = exports.default;
 //# sourceMappingURL=index.js.map
 
@@ -7270,7 +8038,7 @@ var _interopRequireDefault = __nccwpck_require__(3298);
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-exports.default = void 0;
+exports["default"] = void 0;
 
 var _defineProperty2 = _interopRequireDefault(__nccwpck_require__(3561));
 
@@ -7307,7 +8075,7 @@ var _default = function _default() {
   };
 };
 
-exports.default = _default;
+exports["default"] = _default;
 module.exports = exports.default;
 //# sourceMappingURL=index.js.map
 
@@ -7324,7 +8092,7 @@ var _interopRequireDefault = __nccwpck_require__(3298);
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-exports.default = void 0;
+exports["default"] = void 0;
 
 var _timm = __nccwpck_require__(3567);
 
@@ -7342,7 +8110,7 @@ var _default = function _default() {
   return (0, _timm.mergeDeep)((0, _jpeg["default"])(), (0, _png["default"])(), (0, _bmp["default"])(), (0, _tiff["default"])(), (0, _gif["default"])());
 };
 
-exports.default = _default;
+exports["default"] = _default;
 module.exports = exports.default;
 //# sourceMappingURL=index.js.map
 
@@ -8638,7 +9406,7 @@ module.exports = function(imgData, quality) {
 /***/ 4664:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-var Buffer = __nccwpck_require__(4293).Buffer; // for use with browserify
+var Buffer = (__nccwpck_require__(4300).Buffer); // for use with browserify
 
 module.exports = function (a, b) {
     if (!Buffer.isBuffer(a)) return undefined;
@@ -8737,8 +9505,8 @@ if ($defineProperty) {
 /***/ 5443:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-var util = __nccwpck_require__(1669);
-var Stream = __nccwpck_require__(2413).Stream;
+var util = __nccwpck_require__(3837);
+var Stream = (__nccwpck_require__(2781).Stream);
 var DelayedStream = __nccwpck_require__(8611);
 
 module.exports = CombinedStream;
@@ -9813,8 +10581,8 @@ if (typeof process === 'undefined' || process.type === 'renderer' || process.bro
  * Module dependencies.
  */
 
-const tty = __nccwpck_require__(3867);
-const util = __nccwpck_require__(1669);
+const tty = __nccwpck_require__(6224);
+const util = __nccwpck_require__(3837);
 
 /**
  * This is the Node.js implementation of `debug()`.
@@ -10079,8 +10847,8 @@ formatters.O = function (v) {
 /***/ 8611:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-var Stream = __nccwpck_require__(2413).Stream;
-var util = __nccwpck_require__(1669);
+var Stream = (__nccwpck_require__(2781).Stream);
+var util = __nccwpck_require__(3837);
 
 module.exports = DelayedStream;
 function DelayedStream() {
@@ -12722,12 +13490,12 @@ module.exports = input => {
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 var CombinedStream = __nccwpck_require__(5443);
-var util = __nccwpck_require__(1669);
-var path = __nccwpck_require__(5622);
-var http = __nccwpck_require__(8605);
-var https = __nccwpck_require__(7211);
-var parseUrl = __nccwpck_require__(8835).parse;
-var fs = __nccwpck_require__(5747);
+var util = __nccwpck_require__(3837);
+var path = __nccwpck_require__(1017);
+var http = __nccwpck_require__(3685);
+var https = __nccwpck_require__(5687);
+var parseUrl = (__nccwpck_require__(7310).parse);
+var fs = __nccwpck_require__(7147);
 var mime = __nccwpck_require__(3583);
 var asynckit = __nccwpck_require__(4812);
 var populate = __nccwpck_require__(7142);
@@ -13245,10 +14013,10 @@ module.exports = function(dst, src) {
 
 if (global.GENTLY) __nccwpck_require__(4120) = GENTLY.hijack(require);
 
-var util = __nccwpck_require__(1669),
-    fs = __nccwpck_require__(5747),
-    EventEmitter = __nccwpck_require__(8614).EventEmitter,
-    crypto = __nccwpck_require__(6417);
+var util = __nccwpck_require__(3837),
+    fs = __nccwpck_require__(7147),
+    EventEmitter = (__nccwpck_require__(2361).EventEmitter),
+    crypto = __nccwpck_require__(6113);
 
 function File(properties) {
   EventEmitter.call(this);
@@ -13333,19 +14101,19 @@ File.prototype.end = function(cb) {
 
 if (global.GENTLY) __nccwpck_require__(4120) = GENTLY.hijack(require);
 
-var crypto = __nccwpck_require__(6417);
-var fs = __nccwpck_require__(5747);
-var util = __nccwpck_require__(1669),
-    path = __nccwpck_require__(5622),
+var crypto = __nccwpck_require__(6113);
+var fs = __nccwpck_require__(7147);
+var util = __nccwpck_require__(3837),
+    path = __nccwpck_require__(1017),
     File = __nccwpck_require__(8329),
-    MultipartParser = __nccwpck_require__(1323).MultipartParser,
-    QuerystringParser = __nccwpck_require__(825)/* .QuerystringParser */ .l,
-    OctetParser       = __nccwpck_require__(8680)/* .OctetParser */ .h,
-    JSONParser = __nccwpck_require__(715)/* .JSONParser */ .c,
-    StringDecoder = __nccwpck_require__(4304).StringDecoder,
-    EventEmitter = __nccwpck_require__(8614).EventEmitter,
-    Stream = __nccwpck_require__(2413).Stream,
-    os = __nccwpck_require__(2087);
+    MultipartParser = (__nccwpck_require__(1323).MultipartParser),
+    QuerystringParser = (__nccwpck_require__(825)/* .QuerystringParser */ .l),
+    OctetParser       = (__nccwpck_require__(8680)/* .OctetParser */ .h),
+    JSONParser = (__nccwpck_require__(715)/* .JSONParser */ .c),
+    StringDecoder = (__nccwpck_require__(1576).StringDecoder),
+    EventEmitter = (__nccwpck_require__(2361).EventEmitter),
+    Stream = (__nccwpck_require__(2781).Stream),
+    os = __nccwpck_require__(2037);
 
 function IncomingForm(opts) {
   if (!(this instanceof IncomingForm)) return new IncomingForm(opts);
@@ -13896,7 +14664,7 @@ IncomingForm.prototype._maybeEnd = function() {
 /***/ 5265:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-var IncomingForm = __nccwpck_require__(7973)/* .IncomingForm */ .c;
+var IncomingForm = (__nccwpck_require__(7973)/* .IncomingForm */ .c);
 IncomingForm.IncomingForm = IncomingForm;
 module.exports = IncomingForm;
 
@@ -13908,7 +14676,7 @@ module.exports = IncomingForm;
 
 if (global.GENTLY) __nccwpck_require__(4120) = GENTLY.hijack(require);
 
-var Buffer = __nccwpck_require__(4293).Buffer;
+var Buffer = (__nccwpck_require__(4300).Buffer);
 
 function JSONParser(parent) {
   this.parent = parent;
@@ -13943,7 +14711,7 @@ JSONParser.prototype.end = function() {
 /***/ 1323:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
-var Buffer = __nccwpck_require__(4293).Buffer,
+var Buffer = (__nccwpck_require__(4300).Buffer),
     s = 0,
     S =
     { PARSER_UNINITIALIZED: s++,
@@ -14282,8 +15050,8 @@ MultipartParser.prototype.explain = function() {
 /***/ 8680:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
-var EventEmitter = __nccwpck_require__(8614).EventEmitter
-	, util = __nccwpck_require__(1669);
+var EventEmitter = (__nccwpck_require__(2361).EventEmitter)
+	, util = __nccwpck_require__(3837);
 
 function OctetParser(options){
 	if(!(this instanceof OctetParser)) return new OctetParser(options);
@@ -14313,7 +15081,7 @@ if (global.GENTLY) __nccwpck_require__(4120) = GENTLY.hijack(require);
 
 // This is a buffering parser, not quite as nice as the multipart one.
 // If I find time I'll rewrite this to be fully streaming as well
-var querystring = __nccwpck_require__(1191);
+var querystring = __nccwpck_require__(3477);
 
 function QuerystringParser(maxKeys) {
   this.maxKeys = maxKeys;
@@ -15679,7 +16447,7 @@ exports.GifFrame = GifFrame;
 
 /** @namespace GifUtil */
 
-const fs = __nccwpck_require__(5747);
+const fs = __nccwpck_require__(7147);
 const ImageQ = __nccwpck_require__(9054);
 
 const BitmapImage = __nccwpck_require__(2540);
@@ -19532,7 +20300,7 @@ var _interopRequireDefault = __nccwpck_require__(3298);
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-exports.default = void 0;
+exports["default"] = void 0;
 
 var _custom = _interopRequireDefault(__nccwpck_require__(9472));
 
@@ -19545,7 +20313,7 @@ var _default = (0, _custom["default"])({
   plugins: [_plugins["default"]]
 });
 
-exports.default = _default;
+exports["default"] = _default;
 module.exports = exports.default;
 //# sourceMappingURL=index.js.map
 
@@ -21513,9 +22281,9 @@ function getImageDataFromImage(idOrElement){
 /***/ 9919:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-var fs = __nccwpck_require__(5747)
-var url = __nccwpck_require__(8835)
-var path = __nccwpck_require__(5622)
+var fs = __nccwpck_require__(7147)
+var url = __nccwpck_require__(7310)
+var path = __nccwpck_require__(1017)
 var request = __nccwpck_require__(6130)
 var parseASCII = __nccwpck_require__(5807)
 var parseXML = __nccwpck_require__(1199)
@@ -21944,7 +22712,7 @@ module.exports = LRUCache
  * @private
  */
 
-var http = __nccwpck_require__(8605);
+var http = __nccwpck_require__(3685);
 
 /**
  * Module exports.
@@ -22016,7 +22784,7 @@ function getBasicNodeMethods() {
  * Module exports.
  */
 
-module.exports = __nccwpck_require__(3313)
+module.exports = __nccwpck_require__(3765)
 
 
 /***/ }),
@@ -22040,7 +22808,7 @@ module.exports = __nccwpck_require__(3313)
  */
 
 var db = __nccwpck_require__(7426)
-var extname = __nccwpck_require__(5622).extname
+var extname = (__nccwpck_require__(1017).extname)
 
 /**
  * Module variables.
@@ -22220,8 +22988,8 @@ function populateMaps (extensions, types) {
 /***/ 5018:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-var path = __nccwpck_require__(5622);
-var fs = __nccwpck_require__(5747);
+var path = __nccwpck_require__(1017);
+var fs = __nccwpck_require__(7147);
 
 function Mime() {
   // Map of extension -> mime type
@@ -22306,7 +23074,7 @@ Mime.prototype.extension = function(mimeType) {
 var mime = new Mime();
 
 // Define built-in types
-mime.define(__nccwpck_require__(2274));
+mime.define(__nccwpck_require__(5799));
 
 // Default type
 mime.default_type = mime.lookup('bin');
@@ -22335,8 +23103,8 @@ module.exports = mime;
 /***/ 6186:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-var path = __nccwpck_require__(5622);
-var fs = __nccwpck_require__(5747);
+var path = __nccwpck_require__(1017);
+var fs = __nccwpck_require__(7147);
 var _0777 = parseInt('0777', 8);
 
 module.exports = mkdirP.mkdirp = mkdirP.mkdirP = mkdirP;
@@ -28319,7 +29087,7 @@ var gPO = (typeof Reflect === 'function' ? Reflect.getPrototypeOf : Object.getPr
         : null
 );
 
-var inspectCustom = __nccwpck_require__(1413).custom;
+var inspectCustom = (__nccwpck_require__(1413).custom);
 var inspectSymbol = inspectCustom && isSymbol(inspectCustom) ? inspectCustom : null;
 var toStringTag = typeof Symbol === 'function' && typeof Symbol.toStringTag !== 'undefined' ? Symbol.toStringTag : null;
 
@@ -28762,7 +29530,7 @@ function arrObjKeys(obj, inspect) {
 /***/ 1413:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-module.exports = __nccwpck_require__(1669).inspect;
+module.exports = __nccwpck_require__(3837).inspect;
 
 
 /***/ }),
@@ -29589,7 +30357,7 @@ try { exports.GifWriter = GifWriter; exports.GifReader = GifReader } catch(e) {}
 // Top level file is just a mixin of submodules & constants
 
 
-var assign    = __nccwpck_require__(5483).assign;
+var assign    = (__nccwpck_require__(5483).assign);
 
 var deflate   = __nccwpck_require__(7265);
 var inflate   = __nccwpck_require__(6522);
@@ -36868,7 +37636,7 @@ function parseIntList(data) {
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
-var _typeof=typeof Symbol==='function'&&typeof Symbol.iterator==='symbol'?function(obj){return typeof obj}:function(obj){return obj&&typeof Symbol==='function'&&obj.constructor===Symbol&&obj!==Symbol.prototype?'symbol':typeof obj};var http=__nccwpck_require__(8605);var https=__nccwpck_require__(7211);var url=__nccwpck_require__(8835);var qs=__nccwpck_require__(1191);var zlib=__nccwpck_require__(8761);var util=__nccwpck_require__(1669);var phin=function phin(opts,cb){if(typeof opts!=='string'){if(!opts.hasOwnProperty('url')){throw new Error('Missing url option from options for request method.')}}var addr=(typeof opts==='undefined'?'undefined':_typeof(opts))==='object'?url.parse(opts.url):url.parse(opts);var options={'hostname':addr.hostname,'port':addr.port||(addr.protocol.toLowerCase()==='http:'?80:443),'path':addr.path,'method':'GET','headers':{},'auth':addr.auth||null,'parse':'none','stream':false};if((typeof opts==='undefined'?'undefined':_typeof(opts))==='object'){options=Object.assign(options,opts)}options.port=Number(options.port);if(options.hasOwnProperty('timeout'))delete options.timeout;if(options.compressed===true){options.headers['accept-encoding']='gzip, deflate'}if(opts.hasOwnProperty('form')){if(_typeof(opts.form)!=='object'){throw new Error('phin \'form\' option must be of type Object if present.')}var formDataString=qs.stringify(opts.form);options.headers['Content-Type']='application/x-www-form-urlencoded';options.headers['Content-Length']=Buffer.byteLength(formDataString);opts.data=formDataString}var req=void 0;var resHandler=function resHandler(res){var stream=res;if(options.compressed===true){if(res.headers['content-encoding']==='gzip'){stream=res.pipe(zlib.createGunzip())}else if(res.headers['content-encoding']==='deflate'){stream=res.pipe(zlib.createInflate())}}if(options.stream===true){res.stream=stream;if(cb)cb(null,res)}else{res.body=new Buffer([]);stream.on('data',function(chunk){res.body=Buffer.concat([res.body,chunk])});stream.on('end',function(){if(cb){if(options.parse==='json'){try{res.body=JSON.parse(res.body.toString())}catch(err){cb('Invalid JSON received.',res);return}}cb(null,res)}})}};switch(addr.protocol.toLowerCase()){case'http:':req=http.request(options,resHandler);break;case'https:':req=https.request(options,resHandler);break;default:if(cb)cb(new Error('Invalid / unknown URL protocol. Expected HTTP or HTTPS.'),null);return;}if(typeof opts.timeout==='number'){req.setTimeout(opts.timeout,function(){req.abort();if(cb)cb(new Error('Timeout has been reached.'),null);cb=null})}req.on('error',function(err){if(cb)cb(err,null)});if(opts.hasOwnProperty('data')){var postData=opts.data;if(!(opts.data instanceof Buffer)&&_typeof(opts.data)==='object'){var contentType=options.headers['content-type']||options.headers['Content-Type'];if(contentType==='application/x-www-form-urlencoded'){postData=qs.stringify(opts.data)}else{try{postData=JSON.stringify(opts.data)}catch(err){if(cb)cb(new Error('Couldn\'t stringify object. (Likely due to a circular reference.)'),null)}}}req.write(postData)}req.end()};phin.promisified=function(opts,http){return new Promise(function(resolve,reject){phin(opts,function(err,res){if(err){reject(err)}else{resolve(res)}},http)})};if(util.promisify){phin[util.promisify.custom]=phin.promisified}module.exports=phin;
+var _typeof=typeof Symbol==='function'&&typeof Symbol.iterator==='symbol'?function(obj){return typeof obj}:function(obj){return obj&&typeof Symbol==='function'&&obj.constructor===Symbol&&obj!==Symbol.prototype?'symbol':typeof obj};var http=__nccwpck_require__(3685);var https=__nccwpck_require__(5687);var url=__nccwpck_require__(7310);var qs=__nccwpck_require__(3477);var zlib=__nccwpck_require__(9796);var util=__nccwpck_require__(3837);var phin=function phin(opts,cb){if(typeof opts!=='string'){if(!opts.hasOwnProperty('url')){throw new Error('Missing url option from options for request method.')}}var addr=(typeof opts==='undefined'?'undefined':_typeof(opts))==='object'?url.parse(opts.url):url.parse(opts);var options={'hostname':addr.hostname,'port':addr.port||(addr.protocol.toLowerCase()==='http:'?80:443),'path':addr.path,'method':'GET','headers':{},'auth':addr.auth||null,'parse':'none','stream':false};if((typeof opts==='undefined'?'undefined':_typeof(opts))==='object'){options=Object.assign(options,opts)}options.port=Number(options.port);if(options.hasOwnProperty('timeout'))delete options.timeout;if(options.compressed===true){options.headers['accept-encoding']='gzip, deflate'}if(opts.hasOwnProperty('form')){if(_typeof(opts.form)!=='object'){throw new Error('phin \'form\' option must be of type Object if present.')}var formDataString=qs.stringify(opts.form);options.headers['Content-Type']='application/x-www-form-urlencoded';options.headers['Content-Length']=Buffer.byteLength(formDataString);opts.data=formDataString}var req=void 0;var resHandler=function resHandler(res){var stream=res;if(options.compressed===true){if(res.headers['content-encoding']==='gzip'){stream=res.pipe(zlib.createGunzip())}else if(res.headers['content-encoding']==='deflate'){stream=res.pipe(zlib.createInflate())}}if(options.stream===true){res.stream=stream;if(cb)cb(null,res)}else{res.body=new Buffer([]);stream.on('data',function(chunk){res.body=Buffer.concat([res.body,chunk])});stream.on('end',function(){if(cb){if(options.parse==='json'){try{res.body=JSON.parse(res.body.toString())}catch(err){cb('Invalid JSON received.',res);return}}cb(null,res)}})}};switch(addr.protocol.toLowerCase()){case'http:':req=http.request(options,resHandler);break;case'https:':req=https.request(options,resHandler);break;default:if(cb)cb(new Error('Invalid / unknown URL protocol. Expected HTTP or HTTPS.'),null);return;}if(typeof opts.timeout==='number'){req.setTimeout(opts.timeout,function(){req.abort();if(cb)cb(new Error('Timeout has been reached.'),null);cb=null})}req.on('error',function(err){if(cb)cb(err,null)});if(opts.hasOwnProperty('data')){var postData=opts.data;if(!(opts.data instanceof Buffer)&&_typeof(opts.data)==='object'){var contentType=options.headers['content-type']||options.headers['Content-Type'];if(contentType==='application/x-www-form-urlencoded'){postData=qs.stringify(opts.data)}else{try{postData=JSON.stringify(opts.data)}catch(err){if(cb)cb(new Error('Couldn\'t stringify object. (Likely due to a circular reference.)'),null)}}}req.write(postData)}req.end()};phin.promisified=function(opts,http){return new Promise(function(resolve,reject){phin(opts,function(err,res){if(err){reject(err)}else{resolve(res)}},http)})};if(util.promisify){phin[util.promisify.custom]=phin.promisified}module.exports=phin;
 
 
 /***/ }),
@@ -37461,8 +38229,8 @@ module.exports = function(dataIn, width, height, options) {
 
 
 
-var util = __nccwpck_require__(1669);
-var Stream = __nccwpck_require__(2413);
+var util = __nccwpck_require__(3837);
+var Stream = __nccwpck_require__(2781);
 
 
 var ChunkStream = module.exports = function() {
@@ -37969,7 +38737,7 @@ module.exports = function(pxData, width, height, options, bpp) {
 "use strict";
 
 
-var util = __nccwpck_require__(1669);
+var util = __nccwpck_require__(3837);
 var ChunkStream = __nccwpck_require__(4036);
 var Filter = __nccwpck_require__(6601);
 
@@ -38403,8 +39171,8 @@ exports.getInterlaceIterator = function(width) {
 "use strict";
 
 
-var util = __nccwpck_require__(1669);
-var Stream = __nccwpck_require__(2413);
+var util = __nccwpck_require__(3837);
+var Stream = __nccwpck_require__(2781);
 var constants = __nccwpck_require__(3316);
 var Packer = __nccwpck_require__(1710);
 
@@ -38457,7 +39225,7 @@ PackerAsync.prototype.pack = function(data, width, height, gamma) {
 
 
 var hasSyncZlib = true;
-var zlib = __nccwpck_require__(8761);
+var zlib = __nccwpck_require__(9796);
 if (!zlib.deflateSync) {
   hasSyncZlib = false;
 }
@@ -38516,7 +39284,7 @@ var constants = __nccwpck_require__(3316);
 var CrcStream = __nccwpck_require__(5987);
 var bitPacker = __nccwpck_require__(6659);
 var filter = __nccwpck_require__(7581);
-var zlib = __nccwpck_require__(8761);
+var zlib = __nccwpck_require__(9796);
 
 var Packer = module.exports = function(options) {
   this._options = options;
@@ -38651,8 +39419,8 @@ module.exports = function paethPredictor(left, above, upLeft) {
 "use strict";
 
 
-var util = __nccwpck_require__(1669);
-var zlib = __nccwpck_require__(8761);
+var util = __nccwpck_require__(3837);
+var zlib = __nccwpck_require__(9796);
 var ChunkStream = __nccwpck_require__(4036);
 var FilterAsync = __nccwpck_require__(528);
 var Parser = __nccwpck_require__(2225);
@@ -38824,7 +39592,7 @@ ParserAsync.prototype._complete = function(filteredData) {
 
 
 var hasSyncZlib = true;
-var zlib = __nccwpck_require__(8761);
+var zlib = __nccwpck_require__(9796);
 var inflateSync = __nccwpck_require__(5331);
 if (!zlib.deflateSync) {
   hasSyncZlib = false;
@@ -39265,8 +40033,8 @@ exports.write = function(png, options) {
 "use strict";
 
 
-var util = __nccwpck_require__(1669);
-var Stream = __nccwpck_require__(2413);
+var util = __nccwpck_require__(3837);
+var Stream = __nccwpck_require__(2781);
 var Parser = __nccwpck_require__(699);
 var Packer = __nccwpck_require__(2584);
 var PNGSync = __nccwpck_require__(1436);
@@ -39446,11 +40214,11 @@ PNG.prototype.adjustGamma = function() {
 "use strict";
 
 
-var assert = __nccwpck_require__(2357).ok;
-var zlib = __nccwpck_require__(8761);
-var util = __nccwpck_require__(1669);
+var assert = (__nccwpck_require__(3728).ok);
+var zlib = __nccwpck_require__(9796);
+var util = __nccwpck_require__(3837);
 
-var kMaxLength = __nccwpck_require__(4293).kMaxLength;
+var kMaxLength = (__nccwpck_require__(4300).kMaxLength);
 
 function Inflate(opts) {
   if (!(this instanceof Inflate)) {
@@ -41472,7 +42240,7 @@ try {
 
   var Stream
   try {
-    Stream = __nccwpck_require__(2413).Stream
+    Stream = (__nccwpck_require__(2781).Stream)
   } catch (ex) {
     Stream = function () {}
   }
@@ -41542,7 +42310,7 @@ try {
       typeof Buffer.isBuffer === 'function' &&
       Buffer.isBuffer(data)) {
       if (!this._decoder) {
-        var SD = __nccwpck_require__(4304).StringDecoder
+        var SD = (__nccwpck_require__(1576).StringDecoder)
         this._decoder = new SD('utf8')
       }
       data = this._decoder.write(data)
@@ -44189,7 +44957,7 @@ module.exports = prerelease
 
 /***/ }),
 
-/***/ 7499:
+/***/ 6417:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 const compare = __nccwpck_require__(4309)
@@ -44258,10 +45026,10 @@ module.exports = {
   re: internalRe.re,
   src: internalRe.src,
   tokens: internalRe.t,
-  SEMVER_SPEC_VERSION: __nccwpck_require__(2293).SEMVER_SPEC_VERSION,
+  SEMVER_SPEC_VERSION: (__nccwpck_require__(2293).SEMVER_SPEC_VERSION),
   SemVer: __nccwpck_require__(8088),
-  compareIdentifiers: __nccwpck_require__(2463).compareIdentifiers,
-  rcompareIdentifiers: __nccwpck_require__(2463).rcompareIdentifiers,
+  compareIdentifiers: (__nccwpck_require__(2463).compareIdentifiers),
+  rcompareIdentifiers: (__nccwpck_require__(2463).rcompareIdentifiers),
   parse: __nccwpck_require__(5925),
   valid: __nccwpck_require__(9601),
   clean: __nccwpck_require__(8848),
@@ -44272,7 +45040,7 @@ module.exports = {
   patch: __nccwpck_require__(2866),
   prerelease: __nccwpck_require__(4016),
   compare: __nccwpck_require__(4309),
-  rcompare: __nccwpck_require__(7499),
+  rcompare: __nccwpck_require__(6417),
   compareLoose: __nccwpck_require__(2804),
   compareBuild: __nccwpck_require__(2156),
   sort: __nccwpck_require__(1426),
@@ -45282,8 +46050,8 @@ module.exports = function getSideChannel() {
 /***/ 1062:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const _ = __nccwpck_require__(3571);
-const fs = __nccwpck_require__(5747);
+const _ = __nccwpck_require__(5067);
+const fs = __nccwpck_require__(7147);
 const moment = __nccwpck_require__(9623);
 const Jimp = __nccwpck_require__(3794);
 const SpotifyWebApi = __nccwpck_require__(4138);
@@ -45904,9 +46672,9 @@ if (typeof process === 'undefined' || process.type === 'renderer' || process.bro
 /**
  * Module dependencies.
  */
-var tty = __nccwpck_require__(3867);
+var tty = __nccwpck_require__(6224);
 
-var util = __nccwpck_require__(1669);
+var util = __nccwpck_require__(3837);
 /**
  * This is the Node.js implementation of `debug()`.
  */
@@ -46084,12 +46852,12 @@ formatters.O = function (v) {
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 var CombinedStream = __nccwpck_require__(5443);
-var util = __nccwpck_require__(1669);
-var path = __nccwpck_require__(5622);
-var http = __nccwpck_require__(8605);
-var https = __nccwpck_require__(7211);
-var parseUrl = __nccwpck_require__(8835).parse;
-var fs = __nccwpck_require__(5747);
+var util = __nccwpck_require__(3837);
+var path = __nccwpck_require__(1017);
+var http = __nccwpck_require__(3685);
+var https = __nccwpck_require__(5687);
+var parseUrl = (__nccwpck_require__(7310).parse);
+var fs = __nccwpck_require__(7147);
 var mime = __nccwpck_require__(3583);
 var asynckit = __nccwpck_require__(4812);
 var populate = __nccwpck_require__(9907);
@@ -48655,9 +49423,9 @@ module.exports = isObject;
  * Module dependencies.
  */
 
-const CookieJar = __nccwpck_require__(5507).CookieJar;
-const CookieAccess = __nccwpck_require__(5507).CookieAccessInfo;
-const parse = __nccwpck_require__(8835).parse;
+const CookieJar = (__nccwpck_require__(5507).CookieJar);
+const CookieAccess = (__nccwpck_require__(5507).CookieAccessInfo);
+const parse = (__nccwpck_require__(7310).parse);
 const request = __nccwpck_require__(5958);
 const AgentBase = __nccwpck_require__(6514);
 let methods = __nccwpck_require__(8752);
@@ -48759,22 +49527,22 @@ const debug = __nccwpck_require__(1474)('superagent');
 const formidable = __nccwpck_require__(5265);
 const FormData = __nccwpck_require__(4639);
 const Response = __nccwpck_require__(7085);
-const parse = __nccwpck_require__(8835).parse;
-const format = __nccwpck_require__(8835).format;
-const resolve = __nccwpck_require__(8835).resolve;
+const parse = (__nccwpck_require__(7310).parse);
+const format = (__nccwpck_require__(7310).format);
+const resolve = (__nccwpck_require__(7310).resolve);
 let methods = __nccwpck_require__(8752);
-const Stream = __nccwpck_require__(2413);
+const Stream = __nccwpck_require__(2781);
 const utils = __nccwpck_require__(3045);
-const unzip = __nccwpck_require__(4844)/* .unzip */ .R;
+const unzip = (__nccwpck_require__(4844)/* .unzip */ .R);
 const extend = __nccwpck_require__(8171);
 const mime = __nccwpck_require__(5018);
-const https = __nccwpck_require__(7211);
-const http = __nccwpck_require__(8605);
-const fs = __nccwpck_require__(5747);
+const https = __nccwpck_require__(5687);
+const http = __nccwpck_require__(3685);
+const fs = __nccwpck_require__(7147);
 const qs = __nccwpck_require__(2760);
-const zlib = __nccwpck_require__(8761);
-const util = __nccwpck_require__(1669);
-const pkg = __nccwpck_require__(6202);
+const zlib = __nccwpck_require__(9796);
+const util = __nccwpck_require__(3837);
+const pkg = __nccwpck_require__(3121);
 const RequestBase = __nccwpck_require__(7577);
 const CookieJar = __nccwpck_require__(5507);
 
@@ -49999,8 +50767,8 @@ module.exports = function(res, fn){
  * Module dependencies.
  */
 
-const util = __nccwpck_require__(1669);
-const Stream = __nccwpck_require__(2413);
+const util = __nccwpck_require__(3837);
+const Stream = __nccwpck_require__(2781);
 const ResponseBase = __nccwpck_require__(2802);
 
 /**
@@ -50130,9 +50898,9 @@ Response.prototype.toJSON = function() {
  * Module dependencies.
  */
 
-const StringDecoder = __nccwpck_require__(4304).StringDecoder;
-const Stream = __nccwpck_require__(2413);
-const zlib = __nccwpck_require__(8761);
+const StringDecoder = (__nccwpck_require__(1576).StringDecoder);
+const Stream = __nccwpck_require__(2781);
+const zlib = __nccwpck_require__(9796);
 
 /**
  * Buffers response data events and re-emits when they're unzipped.
@@ -53432,7 +54200,7 @@ module.exports = isObject;
  * Module dependencies.
  */
 // eslint-disable-next-line node/no-deprecated-api
-var _require = __nccwpck_require__(8835),
+var _require = __nccwpck_require__(7310),
     parse = _require.parse;
 
 var _require2 = __nccwpck_require__(5507),
@@ -53554,23 +54322,23 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-var Stream = __nccwpck_require__(2413);
+var Stream = __nccwpck_require__(2781);
 
-var util = __nccwpck_require__(1669);
+var util = __nccwpck_require__(3837);
 
-var net = __nccwpck_require__(1631);
+var net = __nccwpck_require__(1808);
 
-var tls = __nccwpck_require__(8818); // eslint-disable-next-line node/no-deprecated-api
+var tls = __nccwpck_require__(4404); // eslint-disable-next-line node/no-deprecated-api
 
 
-var _require = __nccwpck_require__(8835),
+var _require = __nccwpck_require__(7310),
     parse = _require.parse;
 
 var semver = __nccwpck_require__(1383);
 
 var http2; // eslint-disable-next-line node/no-unsupported-features/node-builtins
 
-if (semver.gte(process.version, 'v10.10.0')) http2 = __nccwpck_require__(7565);else throw new Error('superagent: this version of Node.js does not support http2');
+if (semver.gte(process.version, 'v10.10.0')) http2 = __nccwpck_require__(5158);else throw new Error('superagent: this version of Node.js does not support http2');
 var _http2$constants = http2.constants,
     HTTP2_HEADER_PATH = _http2$constants.HTTP2_HEADER_PATH,
     HTTP2_HEADER_STATUS = _http2$constants.HTTP2_HEADER_STATUS,
@@ -53780,22 +54548,22 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
  * Module dependencies.
  */
 // eslint-disable-next-line node/no-deprecated-api
-var _require = __nccwpck_require__(8835),
+var _require = __nccwpck_require__(7310),
     parse = _require.parse,
     format = _require.format,
     resolve = _require.resolve;
 
-var Stream = __nccwpck_require__(2413);
+var Stream = __nccwpck_require__(2781);
 
-var https = __nccwpck_require__(7211);
+var https = __nccwpck_require__(5687);
 
-var http = __nccwpck_require__(8605);
+var http = __nccwpck_require__(3685);
 
-var fs = __nccwpck_require__(5747);
+var fs = __nccwpck_require__(7147);
 
-var zlib = __nccwpck_require__(8761);
+var zlib = __nccwpck_require__(9796);
 
-var util = __nccwpck_require__(1669);
+var util = __nccwpck_require__(3837);
 
 var qs = __nccwpck_require__(2760);
 
@@ -55283,9 +56051,9 @@ module.exports = function (res, fn) {
 /**
  * Module dependencies.
  */
-var util = __nccwpck_require__(1669);
+var util = __nccwpck_require__(3837);
 
-var Stream = __nccwpck_require__(2413);
+var Stream = __nccwpck_require__(2781);
 
 var ResponseBase = __nccwpck_require__(8637);
 /**
@@ -55416,12 +56184,12 @@ Response.prototype.toJSON = function () {
 /**
  * Module dependencies.
  */
-var _require = __nccwpck_require__(4304),
+var _require = __nccwpck_require__(1576),
     StringDecoder = _require.StringDecoder;
 
-var Stream = __nccwpck_require__(2413);
+var Stream = __nccwpck_require__(2781);
 
-var zlib = __nccwpck_require__(8761);
+var zlib = __nccwpck_require__(9796);
 /**
  * Buffers response data events and re-emits when they're unzipped.
  *
@@ -56661,7 +57429,7 @@ module.exports = {"application/andrew-inset":["ez"],"application/applixware":["a
 
 "use strict";
 
-const os = __nccwpck_require__(2087);
+const os = __nccwpck_require__(2037);
 const hasFlag = __nccwpck_require__(1621);
 
 const env = process.env;
@@ -56822,7 +57590,7 @@ exports.mergeDeep = mergeDeep;
 exports.mergeIn = mergeIn;
 exports.omit = omit;
 exports.addDefaults = addDefaults;
-exports.default = void 0;
+exports["default"] = void 0;
 
 /* eslint-disable @typescript-eslint/ban-types */
 
@@ -57466,7 +58234,7 @@ const timm = {
   addDefaults
 };
 var _default = timm;
-exports.default = _default;
+exports["default"] = _default;
 
 /***/ }),
 
@@ -58672,6 +59440,286 @@ else {
 
 /***/ }),
 
+/***/ 4294:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+module.exports = __nccwpck_require__(4219);
+
+
+/***/ }),
+
+/***/ 4219:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+
+var net = __nccwpck_require__(1808);
+var tls = __nccwpck_require__(4404);
+var http = __nccwpck_require__(3685);
+var https = __nccwpck_require__(5687);
+var events = __nccwpck_require__(2361);
+var assert = __nccwpck_require__(3728);
+var util = __nccwpck_require__(3837);
+
+
+exports.httpOverHttp = httpOverHttp;
+exports.httpsOverHttp = httpsOverHttp;
+exports.httpOverHttps = httpOverHttps;
+exports.httpsOverHttps = httpsOverHttps;
+
+
+function httpOverHttp(options) {
+  var agent = new TunnelingAgent(options);
+  agent.request = http.request;
+  return agent;
+}
+
+function httpsOverHttp(options) {
+  var agent = new TunnelingAgent(options);
+  agent.request = http.request;
+  agent.createSocket = createSecureSocket;
+  agent.defaultPort = 443;
+  return agent;
+}
+
+function httpOverHttps(options) {
+  var agent = new TunnelingAgent(options);
+  agent.request = https.request;
+  return agent;
+}
+
+function httpsOverHttps(options) {
+  var agent = new TunnelingAgent(options);
+  agent.request = https.request;
+  agent.createSocket = createSecureSocket;
+  agent.defaultPort = 443;
+  return agent;
+}
+
+
+function TunnelingAgent(options) {
+  var self = this;
+  self.options = options || {};
+  self.proxyOptions = self.options.proxy || {};
+  self.maxSockets = self.options.maxSockets || http.Agent.defaultMaxSockets;
+  self.requests = [];
+  self.sockets = [];
+
+  self.on('free', function onFree(socket, host, port, localAddress) {
+    var options = toOptions(host, port, localAddress);
+    for (var i = 0, len = self.requests.length; i < len; ++i) {
+      var pending = self.requests[i];
+      if (pending.host === options.host && pending.port === options.port) {
+        // Detect the request to connect same origin server,
+        // reuse the connection.
+        self.requests.splice(i, 1);
+        pending.request.onSocket(socket);
+        return;
+      }
+    }
+    socket.destroy();
+    self.removeSocket(socket);
+  });
+}
+util.inherits(TunnelingAgent, events.EventEmitter);
+
+TunnelingAgent.prototype.addRequest = function addRequest(req, host, port, localAddress) {
+  var self = this;
+  var options = mergeOptions({request: req}, self.options, toOptions(host, port, localAddress));
+
+  if (self.sockets.length >= this.maxSockets) {
+    // We are over limit so we'll add it to the queue.
+    self.requests.push(options);
+    return;
+  }
+
+  // If we are under maxSockets create a new one.
+  self.createSocket(options, function(socket) {
+    socket.on('free', onFree);
+    socket.on('close', onCloseOrRemove);
+    socket.on('agentRemove', onCloseOrRemove);
+    req.onSocket(socket);
+
+    function onFree() {
+      self.emit('free', socket, options);
+    }
+
+    function onCloseOrRemove(err) {
+      self.removeSocket(socket);
+      socket.removeListener('free', onFree);
+      socket.removeListener('close', onCloseOrRemove);
+      socket.removeListener('agentRemove', onCloseOrRemove);
+    }
+  });
+};
+
+TunnelingAgent.prototype.createSocket = function createSocket(options, cb) {
+  var self = this;
+  var placeholder = {};
+  self.sockets.push(placeholder);
+
+  var connectOptions = mergeOptions({}, self.proxyOptions, {
+    method: 'CONNECT',
+    path: options.host + ':' + options.port,
+    agent: false,
+    headers: {
+      host: options.host + ':' + options.port
+    }
+  });
+  if (options.localAddress) {
+    connectOptions.localAddress = options.localAddress;
+  }
+  if (connectOptions.proxyAuth) {
+    connectOptions.headers = connectOptions.headers || {};
+    connectOptions.headers['Proxy-Authorization'] = 'Basic ' +
+        new Buffer(connectOptions.proxyAuth).toString('base64');
+  }
+
+  debug('making CONNECT request');
+  var connectReq = self.request(connectOptions);
+  connectReq.useChunkedEncodingByDefault = false; // for v0.6
+  connectReq.once('response', onResponse); // for v0.6
+  connectReq.once('upgrade', onUpgrade);   // for v0.6
+  connectReq.once('connect', onConnect);   // for v0.7 or later
+  connectReq.once('error', onError);
+  connectReq.end();
+
+  function onResponse(res) {
+    // Very hacky. This is necessary to avoid http-parser leaks.
+    res.upgrade = true;
+  }
+
+  function onUpgrade(res, socket, head) {
+    // Hacky.
+    process.nextTick(function() {
+      onConnect(res, socket, head);
+    });
+  }
+
+  function onConnect(res, socket, head) {
+    connectReq.removeAllListeners();
+    socket.removeAllListeners();
+
+    if (res.statusCode !== 200) {
+      debug('tunneling socket could not be established, statusCode=%d',
+        res.statusCode);
+      socket.destroy();
+      var error = new Error('tunneling socket could not be established, ' +
+        'statusCode=' + res.statusCode);
+      error.code = 'ECONNRESET';
+      options.request.emit('error', error);
+      self.removeSocket(placeholder);
+      return;
+    }
+    if (head.length > 0) {
+      debug('got illegal response body from proxy');
+      socket.destroy();
+      var error = new Error('got illegal response body from proxy');
+      error.code = 'ECONNRESET';
+      options.request.emit('error', error);
+      self.removeSocket(placeholder);
+      return;
+    }
+    debug('tunneling connection has established');
+    self.sockets[self.sockets.indexOf(placeholder)] = socket;
+    return cb(socket);
+  }
+
+  function onError(cause) {
+    connectReq.removeAllListeners();
+
+    debug('tunneling socket could not be established, cause=%s\n',
+          cause.message, cause.stack);
+    var error = new Error('tunneling socket could not be established, ' +
+                          'cause=' + cause.message);
+    error.code = 'ECONNRESET';
+    options.request.emit('error', error);
+    self.removeSocket(placeholder);
+  }
+};
+
+TunnelingAgent.prototype.removeSocket = function removeSocket(socket) {
+  var pos = this.sockets.indexOf(socket)
+  if (pos === -1) {
+    return;
+  }
+  this.sockets.splice(pos, 1);
+
+  var pending = this.requests.shift();
+  if (pending) {
+    // If we have pending requests and a socket gets closed a new one
+    // needs to be created to take over in the pool for the one that closed.
+    this.createSocket(pending, function(socket) {
+      pending.request.onSocket(socket);
+    });
+  }
+};
+
+function createSecureSocket(options, cb) {
+  var self = this;
+  TunnelingAgent.prototype.createSocket.call(self, options, function(socket) {
+    var hostHeader = options.request.getHeader('host');
+    var tlsOptions = mergeOptions({}, self.options, {
+      socket: socket,
+      servername: hostHeader ? hostHeader.replace(/:.*$/, '') : options.host
+    });
+
+    // 0 is dummy port for v0.6
+    var secureSocket = tls.connect(0, tlsOptions);
+    self.sockets[self.sockets.indexOf(socket)] = secureSocket;
+    cb(secureSocket);
+  });
+}
+
+
+function toOptions(host, port, localAddress) {
+  if (typeof host === 'string') { // since v0.10
+    return {
+      host: host,
+      port: port,
+      localAddress: localAddress
+    };
+  }
+  return host; // for v0.11 or later
+}
+
+function mergeOptions(target) {
+  for (var i = 1, len = arguments.length; i < len; ++i) {
+    var overrides = arguments[i];
+    if (typeof overrides === 'object') {
+      var keys = Object.keys(overrides);
+      for (var j = 0, keyLen = keys.length; j < keyLen; ++j) {
+        var k = keys[j];
+        if (overrides[k] !== undefined) {
+          target[k] = overrides[k];
+        }
+      }
+    }
+  }
+  return target;
+}
+
+
+var debug;
+if (process.env.NODE_DEBUG && /\btunnel\b/.test(process.env.NODE_DEBUG)) {
+  debug = function() {
+    var args = Array.prototype.slice.call(arguments);
+    if (typeof args[0] === 'string') {
+      args[0] = 'TUNNEL: ' + args[0];
+    } else {
+      args.unshift('TUNNEL:');
+    }
+    console.error.apply(console, args);
+  }
+} else {
+  debug = function() {};
+}
+exports.debug = debug; // for test
+
+
+/***/ }),
+
 /***/ 6303:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
@@ -59653,7 +60701,7 @@ UTIF._copyTile = function(tb, tw, th, b, w, h, xoff, yoff)
 
   builder = __nccwpck_require__(2958);
 
-  defaults = __nccwpck_require__(7251).defaults;
+  defaults = (__nccwpck_require__(7251).defaults);
 
   requiresCDATA = function(entry) {
     return typeof entry === "string" && (entry.indexOf('&') >= 0 || entry.indexOf('>') >= 0 || entry.indexOf('<') >= 0);
@@ -59868,15 +60916,15 @@ UTIF._copyTile = function(tb, tw, th, b, w, h, xoff, yoff)
 
   sax = __nccwpck_require__(2043);
 
-  events = __nccwpck_require__(8614);
+  events = __nccwpck_require__(2361);
 
   bom = __nccwpck_require__(2624);
 
   processors = __nccwpck_require__(9236);
 
-  setImmediate = __nccwpck_require__(8213).setImmediate;
+  setImmediate = (__nccwpck_require__(9512).setImmediate);
 
-  defaults = __nccwpck_require__(7251).defaults;
+  defaults = (__nccwpck_require__(7251).defaults);
 
   isEmpty = function(thing) {
     return typeof thing === "object" && (thing != null) && Object.keys(thing).length === 0;
@@ -61057,7 +62105,7 @@ UTIF._copyTile = function(tb, tw, th, b, w, h, xoff, yoff)
     extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     hasProp = {}.hasOwnProperty;
 
-  isObject = __nccwpck_require__(8229).isObject;
+  isObject = (__nccwpck_require__(8229).isObject);
 
   XMLNode = __nccwpck_require__(7608);
 
@@ -61220,7 +62268,7 @@ UTIF._copyTile = function(tb, tw, th, b, w, h, xoff, yoff)
     extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     hasProp = {}.hasOwnProperty;
 
-  isObject = __nccwpck_require__(8229).isObject;
+  isObject = (__nccwpck_require__(8229).isObject);
 
   XMLNode = __nccwpck_require__(7608);
 
@@ -61270,7 +62318,7 @@ UTIF._copyTile = function(tb, tw, th, b, w, h, xoff, yoff)
     extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     hasProp = {}.hasOwnProperty;
 
-  isObject = __nccwpck_require__(8229).isObject;
+  isObject = (__nccwpck_require__(8229).isObject);
 
   XMLNode = __nccwpck_require__(7608);
 
@@ -61463,7 +62511,7 @@ UTIF._copyTile = function(tb, tw, th, b, w, h, xoff, yoff)
     extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     hasProp = {}.hasOwnProperty;
 
-  isPlainObject = __nccwpck_require__(8229).isPlainObject;
+  isPlainObject = (__nccwpck_require__(8229).isPlainObject);
 
   XMLDOMImplementation = __nccwpck_require__(8310);
 
@@ -64127,7 +65175,7 @@ UTIF._copyTile = function(tb, tw, th, b, w, h, xoff, yoff)
   var NodeType, WriterState, XMLCData, XMLComment, XMLDTDAttList, XMLDTDElement, XMLDTDEntity, XMLDTDNotation, XMLDeclaration, XMLDocType, XMLDummy, XMLElement, XMLProcessingInstruction, XMLRaw, XMLText, XMLWriterBase, assign,
     hasProp = {}.hasOwnProperty;
 
-  assign = __nccwpck_require__(8229).assign;
+  assign = (__nccwpck_require__(8229).assign);
 
   NodeType = __nccwpck_require__(9267);
 
@@ -65165,7 +66213,182 @@ module.exports = { learnPlaylistName, listPlaylists };
 
 /***/ }),
 
-/***/ 1641:
+/***/ 4120:
+/***/ ((module) => {
+
+function webpackEmptyContext(req) {
+	var e = new Error("Cannot find module '" + req + "'");
+	e.code = 'MODULE_NOT_FOUND';
+	throw e;
+}
+webpackEmptyContext.keys = () => ([]);
+webpackEmptyContext.resolve = webpackEmptyContext;
+webpackEmptyContext.id = 4120;
+module.exports = webpackEmptyContext;
+
+/***/ }),
+
+/***/ 3728:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("assert");
+
+/***/ }),
+
+/***/ 4300:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("buffer");
+
+/***/ }),
+
+/***/ 6113:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("crypto");
+
+/***/ }),
+
+/***/ 2361:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("events");
+
+/***/ }),
+
+/***/ 7147:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("fs");
+
+/***/ }),
+
+/***/ 3685:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("http");
+
+/***/ }),
+
+/***/ 5158:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("http2");
+
+/***/ }),
+
+/***/ 5687:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("https");
+
+/***/ }),
+
+/***/ 1808:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("net");
+
+/***/ }),
+
+/***/ 2037:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("os");
+
+/***/ }),
+
+/***/ 1017:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("path");
+
+/***/ }),
+
+/***/ 3477:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("querystring");
+
+/***/ }),
+
+/***/ 2781:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("stream");
+
+/***/ }),
+
+/***/ 1576:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("string_decoder");
+
+/***/ }),
+
+/***/ 9512:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("timers");
+
+/***/ }),
+
+/***/ 4404:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("tls");
+
+/***/ }),
+
+/***/ 6224:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("tty");
+
+/***/ }),
+
+/***/ 7310:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("url");
+
+/***/ }),
+
+/***/ 3837:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("util");
+
+/***/ }),
+
+/***/ 9796:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("zlib");
+
+/***/ }),
+
+/***/ 6717:
 /***/ ((__unused_webpack_module, exports) => {
 
 //     Underscore.js 1.13.1
@@ -67330,7 +68553,7 @@ exports.zip = zip;
 
 /***/ }),
 
-/***/ 3571:
+/***/ 5067:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 //     Underscore.js 1.13.1
@@ -67338,7 +68561,7 @@ exports.zip = zip;
 //     (c) 2009-2021 Jeremy Ashkenas, Julian Gonggrijp, and DocumentCloud and Investigative Reporters & Editors
 //     Underscore may be freely distributed under the MIT license.
 
-var underscoreNodeF = __nccwpck_require__(1641);
+var underscoreNodeF = __nccwpck_require__(6717);
 
 
 
@@ -67348,22 +68571,7 @@ module.exports = underscoreNodeF._;
 
 /***/ }),
 
-/***/ 4120:
-/***/ ((module) => {
-
-function webpackEmptyContext(req) {
-	var e = new Error("Cannot find module '" + req + "'");
-	e.code = 'MODULE_NOT_FOUND';
-	throw e;
-}
-webpackEmptyContext.keys = () => ([]);
-webpackEmptyContext.resolve = webpackEmptyContext;
-webpackEmptyContext.id = 4120;
-module.exports = webpackEmptyContext;
-
-/***/ }),
-
-/***/ 3313:
+/***/ 3765:
 /***/ ((module) => {
 
 "use strict";
@@ -67371,7 +68579,7 @@ module.exports = JSON.parse('{"application/1d-interleaved-parityfec":{"source":"
 
 /***/ }),
 
-/***/ 2274:
+/***/ 5799:
 /***/ ((module) => {
 
 "use strict";
@@ -67379,171 +68587,11 @@ module.exports = JSON.parse('{"application/andrew-inset":["ez"],"application/app
 
 /***/ }),
 
-/***/ 6202:
+/***/ 3121:
 /***/ ((module) => {
 
 "use strict";
 module.exports = JSON.parse('{"name":"superagent","version":"3.8.3","description":"elegant & feature rich browser / node HTTP with a fluent API","scripts":{"prepare":"make all","test":"make test"},"keywords":["http","ajax","request","agent"],"license":"MIT","author":"TJ Holowaychuk <tj@vision-media.ca>","contributors":["Kornel Lesiński <kornel@geekhood.net>","Peter Lyons <pete@peterlyons.com>","Hunter Loftis <hunter@hunterloftis.com>"],"repository":{"type":"git","url":"git://github.com/visionmedia/superagent.git"},"dependencies":{"component-emitter":"^1.2.0","cookiejar":"^2.1.0","debug":"^3.1.0","extend":"^3.0.0","form-data":"^2.3.1","formidable":"^1.2.0","methods":"^1.1.1","mime":"^1.4.1","qs":"^6.5.1","readable-stream":"^2.3.5"},"devDependencies":{"Base64":"^1.0.1","basic-auth-connect":"^1.0.0","body-parser":"^1.18.2","browserify":"^14.1.0","cookie-parser":"^1.4.3","express":"^4.16.3","express-session":"^1.15.6","marked":"0.3.12","mocha":"^3.5.3","multer":"^1.3.0","should":"^11.2.0","should-http":"^0.1.1","zuul":"^3.11.1"},"browser":{"./lib/node/index.js":"./lib/client.js","./test/support/server.js":"./test/support/blank.js"},"component":{"scripts":{"superagent":"lib/client.js"}},"main":"./lib/node/index.js","engines":{"node":">= 4.0"}}');
-
-/***/ }),
-
-/***/ 2357:
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("assert");
-
-/***/ }),
-
-/***/ 4293:
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("buffer");
-
-/***/ }),
-
-/***/ 6417:
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("crypto");
-
-/***/ }),
-
-/***/ 8614:
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("events");
-
-/***/ }),
-
-/***/ 5747:
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("fs");
-
-/***/ }),
-
-/***/ 8605:
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("http");
-
-/***/ }),
-
-/***/ 7565:
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("http2");
-
-/***/ }),
-
-/***/ 7211:
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("https");
-
-/***/ }),
-
-/***/ 1631:
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("net");
-
-/***/ }),
-
-/***/ 2087:
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("os");
-
-/***/ }),
-
-/***/ 5622:
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("path");
-
-/***/ }),
-
-/***/ 1191:
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("querystring");
-
-/***/ }),
-
-/***/ 2413:
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("stream");
-
-/***/ }),
-
-/***/ 4304:
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("string_decoder");
-
-/***/ }),
-
-/***/ 8213:
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("timers");
-
-/***/ }),
-
-/***/ 8818:
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("tls");
-
-/***/ }),
-
-/***/ 3867:
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("tty");
-
-/***/ }),
-
-/***/ 8835:
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("url");
-
-/***/ }),
-
-/***/ 1669:
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("util");
-
-/***/ }),
-
-/***/ 8761:
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("zlib");
 
 /***/ })
 
