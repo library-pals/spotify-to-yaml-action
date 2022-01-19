@@ -1,4 +1,4 @@
-const core = require("@actions/core");
+const { setFailed } = require("@actions/core");
 const SpotifyWebApi = require("spotify-web-api-node");
 
 async function listPlaylists(listName) {
@@ -16,7 +16,7 @@ async function listPlaylists(listName) {
   const { body } = await spotifyApi.getUserPlaylists(username);
   const findPlaylist = body.items.find((list) => list.name === listName);
   if (!findPlaylist) {
-    core.setFailed(`Could not find playlist "${listName}". Is it private?`);
+    setFailed(`Could not find playlist "${listName}". Is it private?`);
     return;
   }
   const {
