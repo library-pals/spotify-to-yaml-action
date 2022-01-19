@@ -1,0 +1,930 @@
+{
+  "href": "https://api.spotify.com/v1/users/katydecorah/playlists?offset=0&limit=20",
+  "items": [
+    {
+      "collaborative": false,
+      "description": "",
+      "external_urls": {
+        "spotify": "https://open.spotify.com/playlist/4n0hWKFk5V2rYktdCqf3Es"
+      },
+      "href": "https://api.spotify.com/v1/playlists/4n0hWKFk5V2rYktdCqf3Es",
+      "id": "4n0hWKFk5V2rYktdCqf3Es",
+      "images": [
+        {
+          "height": 640,
+          "url": "https://mosaic.scdn.co/640/ab67616d0000b2730313500bba4a7bbaa97fb256ab67616d0000b27358f36e6815a6044f9a565445ab67616d0000b2738fdd390d5c455dfade53224aab67616d0000b273c66f9bf7a5c0de0dcf2c68e6",
+          "width": 640
+        },
+        {
+          "height": 300,
+          "url": "https://mosaic.scdn.co/300/ab67616d0000b2730313500bba4a7bbaa97fb256ab67616d0000b27358f36e6815a6044f9a565445ab67616d0000b2738fdd390d5c455dfade53224aab67616d0000b273c66f9bf7a5c0de0dcf2c68e6",
+          "width": 300
+        },
+        {
+          "height": 60,
+          "url": "https://mosaic.scdn.co/60/ab67616d0000b2730313500bba4a7bbaa97fb256ab67616d0000b27358f36e6815a6044f9a565445ab67616d0000b2738fdd390d5c455dfade53224aab67616d0000b273c66f9bf7a5c0de0dcf2c68e6",
+          "width": 60
+        }
+      ],
+      "name": "2021/2022 Winter",
+      "owner": {
+        "display_name": "katydecorah",
+        "external_urls": {
+          "spotify": "https://open.spotify.com/user/katydecorah"
+        },
+        "href": "https://api.spotify.com/v1/users/katydecorah",
+        "id": "katydecorah",
+        "type": "user",
+        "uri": "spotify:user:katydecorah"
+      },
+      "primary_color": null,
+      "public": true,
+      "snapshot_id": "NyxmYmRmOGJiOWJhZGQ1YTljMmEzZGZjYTE2NThkNDQ0MzQxY2E2Mjhm",
+      "tracks": {
+        "href": "https://api.spotify.com/v1/playlists/4n0hWKFk5V2rYktdCqf3Es/tracks",
+        "total": 5
+      },
+      "type": "playlist",
+      "uri": "spotify:playlist:4n0hWKFk5V2rYktdCqf3Es"
+    },
+    {
+      "collaborative": false,
+      "description": "",
+      "external_urls": {
+        "spotify": "https://open.spotify.com/playlist/2YnPs9UNBkJpswmsRNwQ1o"
+      },
+      "href": "https://api.spotify.com/v1/playlists/2YnPs9UNBkJpswmsRNwQ1o",
+      "id": "2YnPs9UNBkJpswmsRNwQ1o",
+      "images": [
+        {
+          "height": 640,
+          "url": "https://mosaic.scdn.co/640/ab67616d0000b27304a205b54b5c1fbae8543efaab67616d0000b27364fa86e376b0279aa49a1832ab67616d0000b273acddc5a09b8cb4730995b60aab67616d0000b273ba738766498bddccae3d319a",
+          "width": 640
+        },
+        {
+          "height": 300,
+          "url": "https://mosaic.scdn.co/300/ab67616d0000b27304a205b54b5c1fbae8543efaab67616d0000b27364fa86e376b0279aa49a1832ab67616d0000b273acddc5a09b8cb4730995b60aab67616d0000b273ba738766498bddccae3d319a",
+          "width": 300
+        },
+        {
+          "height": 60,
+          "url": "https://mosaic.scdn.co/60/ab67616d0000b27304a205b54b5c1fbae8543efaab67616d0000b27364fa86e376b0279aa49a1832ab67616d0000b273acddc5a09b8cb4730995b60aab67616d0000b273ba738766498bddccae3d319a",
+          "width": 60
+        }
+      ],
+      "name": "2021 Fall",
+      "owner": {
+        "display_name": "katydecorah",
+        "external_urls": {
+          "spotify": "https://open.spotify.com/user/katydecorah"
+        },
+        "href": "https://api.spotify.com/v1/users/katydecorah",
+        "id": "katydecorah",
+        "type": "user",
+        "uri": "spotify:user:katydecorah"
+      },
+      "primary_color": null,
+      "public": true,
+      "snapshot_id": "MjYsZTU2OTBmMjY1NGYwNzA1NTFiYmFkODU2YjE5Y2ZlZWJkM2U5MDY3Zg==",
+      "tracks": {
+        "href": "https://api.spotify.com/v1/playlists/2YnPs9UNBkJpswmsRNwQ1o/tracks",
+        "total": 19
+      },
+      "type": "playlist",
+      "uri": "spotify:playlist:2YnPs9UNBkJpswmsRNwQ1o"
+    },
+    {
+      "collaborative": false,
+      "description": "",
+      "external_urls": {
+        "spotify": "https://open.spotify.com/playlist/5CWFqwcSoRK7AFfWH4nJyL"
+      },
+      "href": "https://api.spotify.com/v1/playlists/5CWFqwcSoRK7AFfWH4nJyL",
+      "id": "5CWFqwcSoRK7AFfWH4nJyL",
+      "images": [
+        {
+          "height": 640,
+          "url": "https://mosaic.scdn.co/640/ab67616d0000b27348c43ac8893d844ce72c7d78ab67616d0000b2738be26b6c162ff72ca4666ba6ab67616d0000b273954021f8a1011120b81d3c3dab67616d0000b273c3e1a36beb533dfd20d026e1",
+          "width": 640
+        },
+        {
+          "height": 300,
+          "url": "https://mosaic.scdn.co/300/ab67616d0000b27348c43ac8893d844ce72c7d78ab67616d0000b2738be26b6c162ff72ca4666ba6ab67616d0000b273954021f8a1011120b81d3c3dab67616d0000b273c3e1a36beb533dfd20d026e1",
+          "width": 300
+        },
+        {
+          "height": 60,
+          "url": "https://mosaic.scdn.co/60/ab67616d0000b27348c43ac8893d844ce72c7d78ab67616d0000b2738be26b6c162ff72ca4666ba6ab67616d0000b273954021f8a1011120b81d3c3dab67616d0000b273c3e1a36beb533dfd20d026e1",
+          "width": 60
+        }
+      ],
+      "name": "2021 Summer",
+      "owner": {
+        "display_name": "katydecorah",
+        "external_urls": {
+          "spotify": "https://open.spotify.com/user/katydecorah"
+        },
+        "href": "https://api.spotify.com/v1/users/katydecorah",
+        "id": "katydecorah",
+        "type": "user",
+        "uri": "spotify:user:katydecorah"
+      },
+      "primary_color": null,
+      "public": true,
+      "snapshot_id": "MTIsZjg0ZDI4ODcyOTRhMjAwNjRlZWZiYTAzZGZkYzAyZTY3OTdkN2NmNA==",
+      "tracks": {
+        "href": "https://api.spotify.com/v1/playlists/5CWFqwcSoRK7AFfWH4nJyL/tracks",
+        "total": 10
+      },
+      "type": "playlist",
+      "uri": "spotify:playlist:5CWFqwcSoRK7AFfWH4nJyL"
+    },
+    {
+      "collaborative": false,
+      "description": "",
+      "external_urls": {
+        "spotify": "https://open.spotify.com/playlist/7mFsBF8QumtlFFKtLjmPHX"
+      },
+      "href": "https://api.spotify.com/v1/playlists/7mFsBF8QumtlFFKtLjmPHX",
+      "id": "7mFsBF8QumtlFFKtLjmPHX",
+      "images": [
+        {
+          "height": 640,
+          "url": "https://mosaic.scdn.co/640/ab67616d0000b273397376c7c030b0148afa8b84ab67616d0000b2733d8862ec690ae8b93e09e5a7ab67616d0000b273cccf26996353f3cf1395c6beab67616d0000b273d7bfffb17cdea14e9db023fa",
+          "width": 640
+        },
+        {
+          "height": 300,
+          "url": "https://mosaic.scdn.co/300/ab67616d0000b273397376c7c030b0148afa8b84ab67616d0000b2733d8862ec690ae8b93e09e5a7ab67616d0000b273cccf26996353f3cf1395c6beab67616d0000b273d7bfffb17cdea14e9db023fa",
+          "width": 300
+        },
+        {
+          "height": 60,
+          "url": "https://mosaic.scdn.co/60/ab67616d0000b273397376c7c030b0148afa8b84ab67616d0000b2733d8862ec690ae8b93e09e5a7ab67616d0000b273cccf26996353f3cf1395c6beab67616d0000b273d7bfffb17cdea14e9db023fa",
+          "width": 60
+        }
+      ],
+      "name": "2021 Spring",
+      "owner": {
+        "display_name": "katydecorah",
+        "external_urls": {
+          "spotify": "https://open.spotify.com/user/katydecorah"
+        },
+        "href": "https://api.spotify.com/v1/users/katydecorah",
+        "id": "katydecorah",
+        "type": "user",
+        "uri": "spotify:user:katydecorah"
+      },
+      "primary_color": null,
+      "public": true,
+      "snapshot_id": "MTQsYWQ0ZjRlOTU4ZDNkYmVlNWU2ZTcxODJkZjY5Njk0MTJjMDdmY2QzNg==",
+      "tracks": {
+        "href": "https://api.spotify.com/v1/playlists/7mFsBF8QumtlFFKtLjmPHX/tracks",
+        "total": 10
+      },
+      "type": "playlist",
+      "uri": "spotify:playlist:7mFsBF8QumtlFFKtLjmPHX"
+    },
+    {
+      "collaborative": false,
+      "description": "",
+      "external_urls": {
+        "spotify": "https://open.spotify.com/playlist/0qh8IIIuVZYXwCGUjDaOte"
+      },
+      "href": "https://api.spotify.com/v1/playlists/0qh8IIIuVZYXwCGUjDaOte",
+      "id": "0qh8IIIuVZYXwCGUjDaOte",
+      "images": [
+        {
+          "height": 640,
+          "url": "https://mosaic.scdn.co/640/ab67616d0000b273118d61b4fd991b7e20b0357dab67616d0000b273a72b208caef4256ac711da9aab67616d0000b273d477accf80ce761a09b37935ab67616d0000b273ec60b68c1e96fc315d26c3be",
+          "width": 640
+        },
+        {
+          "height": 300,
+          "url": "https://mosaic.scdn.co/300/ab67616d0000b273118d61b4fd991b7e20b0357dab67616d0000b273a72b208caef4256ac711da9aab67616d0000b273d477accf80ce761a09b37935ab67616d0000b273ec60b68c1e96fc315d26c3be",
+          "width": 300
+        },
+        {
+          "height": 60,
+          "url": "https://mosaic.scdn.co/60/ab67616d0000b273118d61b4fd991b7e20b0357dab67616d0000b273a72b208caef4256ac711da9aab67616d0000b273d477accf80ce761a09b37935ab67616d0000b273ec60b68c1e96fc315d26c3be",
+          "width": 60
+        }
+      ],
+      "name": "2020/2021 Winter",
+      "owner": {
+        "display_name": "katydecorah",
+        "external_urls": {
+          "spotify": "https://open.spotify.com/user/katydecorah"
+        },
+        "href": "https://api.spotify.com/v1/users/katydecorah",
+        "id": "katydecorah",
+        "type": "user",
+        "uri": "spotify:user:katydecorah"
+      },
+      "primary_color": null,
+      "public": true,
+      "snapshot_id": "MTEsODZjNWI0ZTM0Nzk2Y2QzNzQ4OTQ0ODliYzZhMjUyZmE0OTdiOWFmNw==",
+      "tracks": {
+        "href": "https://api.spotify.com/v1/playlists/0qh8IIIuVZYXwCGUjDaOte/tracks",
+        "total": 10
+      },
+      "type": "playlist",
+      "uri": "spotify:playlist:0qh8IIIuVZYXwCGUjDaOte"
+    },
+    {
+      "collaborative": false,
+      "description": "",
+      "external_urls": {
+        "spotify": "https://open.spotify.com/playlist/4agH4GMKH1eOX5jNiy7Yob"
+      },
+      "href": "https://api.spotify.com/v1/playlists/4agH4GMKH1eOX5jNiy7Yob",
+      "id": "4agH4GMKH1eOX5jNiy7Yob",
+      "images": [
+        {
+          "height": 640,
+          "url": "https://mosaic.scdn.co/640/ab67616d0000b27386cbfceb235044232b83e134ab67616d0000b2738bdd96c287e600e92be9a138ab67616d0000b273c517087e3144cd07e3b3f28aab67616d0000b273ebeb9eaa715bf4c4d005c500",
+          "width": 640
+        },
+        {
+          "height": 300,
+          "url": "https://mosaic.scdn.co/300/ab67616d0000b27386cbfceb235044232b83e134ab67616d0000b2738bdd96c287e600e92be9a138ab67616d0000b273c517087e3144cd07e3b3f28aab67616d0000b273ebeb9eaa715bf4c4d005c500",
+          "width": 300
+        },
+        {
+          "height": 60,
+          "url": "https://mosaic.scdn.co/60/ab67616d0000b27386cbfceb235044232b83e134ab67616d0000b2738bdd96c287e600e92be9a138ab67616d0000b273c517087e3144cd07e3b3f28aab67616d0000b273ebeb9eaa715bf4c4d005c500",
+          "width": 60
+        }
+      ],
+      "name": "2020 Fall",
+      "owner": {
+        "display_name": "katydecorah",
+        "external_urls": {
+          "spotify": "https://open.spotify.com/user/katydecorah"
+        },
+        "href": "https://api.spotify.com/v1/users/katydecorah",
+        "id": "katydecorah",
+        "type": "user",
+        "uri": "spotify:user:katydecorah"
+      },
+      "primary_color": null,
+      "public": true,
+      "snapshot_id": "MTEsY2VlYjM2MzhhODAxMzA2ZmFhNjAwNDBlNTEzMTZiYmNjMjBjZjM3Yg==",
+      "tracks": {
+        "href": "https://api.spotify.com/v1/playlists/4agH4GMKH1eOX5jNiy7Yob/tracks",
+        "total": 8
+      },
+      "type": "playlist",
+      "uri": "spotify:playlist:4agH4GMKH1eOX5jNiy7Yob"
+    },
+    {
+      "collaborative": false,
+      "description": "",
+      "external_urls": {
+        "spotify": "https://open.spotify.com/playlist/4TYVWODXmIzcpRAPbutZJY"
+      },
+      "href": "https://api.spotify.com/v1/playlists/4TYVWODXmIzcpRAPbutZJY",
+      "id": "4TYVWODXmIzcpRAPbutZJY",
+      "images": [
+        {
+          "height": 640,
+          "url": "https://mosaic.scdn.co/640/ab67616d0000b27304e86aa52cf087896593ecc4ab67616d0000b2732531aa2aaaf24967018ddd9dab67616d0000b2736b21c30a3138b4f2ea0fd987ab67616d0000b273dc257528de9cb87bedd86fbe",
+          "width": 640
+        },
+        {
+          "height": 300,
+          "url": "https://mosaic.scdn.co/300/ab67616d0000b27304e86aa52cf087896593ecc4ab67616d0000b2732531aa2aaaf24967018ddd9dab67616d0000b2736b21c30a3138b4f2ea0fd987ab67616d0000b273dc257528de9cb87bedd86fbe",
+          "width": 300
+        },
+        {
+          "height": 60,
+          "url": "https://mosaic.scdn.co/60/ab67616d0000b27304e86aa52cf087896593ecc4ab67616d0000b2732531aa2aaaf24967018ddd9dab67616d0000b2736b21c30a3138b4f2ea0fd987ab67616d0000b273dc257528de9cb87bedd86fbe",
+          "width": 60
+        }
+      ],
+      "name": "2020 Summer",
+      "owner": {
+        "display_name": "katydecorah",
+        "external_urls": {
+          "spotify": "https://open.spotify.com/user/katydecorah"
+        },
+        "href": "https://api.spotify.com/v1/users/katydecorah",
+        "id": "katydecorah",
+        "type": "user",
+        "uri": "spotify:user:katydecorah"
+      },
+      "primary_color": null,
+      "public": true,
+      "snapshot_id": "OSxmNmUzOWUzN2I4YjM1NzZjNmIzMjFjMjg3NDhjYmRhZmJiYWUzM2Uz",
+      "tracks": {
+        "href": "https://api.spotify.com/v1/playlists/4TYVWODXmIzcpRAPbutZJY/tracks",
+        "total": 9
+      },
+      "type": "playlist",
+      "uri": "spotify:playlist:4TYVWODXmIzcpRAPbutZJY"
+    },
+    {
+      "collaborative": false,
+      "description": "",
+      "external_urls": {
+        "spotify": "https://open.spotify.com/playlist/34Qr5nHjfSK3M6qQKKXmcG"
+      },
+      "href": "https://api.spotify.com/v1/playlists/34Qr5nHjfSK3M6qQKKXmcG",
+      "id": "34Qr5nHjfSK3M6qQKKXmcG",
+      "images": [
+        {
+          "height": 640,
+          "url": "https://mosaic.scdn.co/640/ab67616d0000b2731243e4a5b3cee3d6d1c6719eab67616d0000b2732b6ae3c3eabbe1438d740396ab67616d0000b27351821588d4adb169df7fac15ab67616d0000b273cff2ac3aabd44061c5abe484",
+          "width": 640
+        },
+        {
+          "height": 300,
+          "url": "https://mosaic.scdn.co/300/ab67616d0000b2731243e4a5b3cee3d6d1c6719eab67616d0000b2732b6ae3c3eabbe1438d740396ab67616d0000b27351821588d4adb169df7fac15ab67616d0000b273cff2ac3aabd44061c5abe484",
+          "width": 300
+        },
+        {
+          "height": 60,
+          "url": "https://mosaic.scdn.co/60/ab67616d0000b2731243e4a5b3cee3d6d1c6719eab67616d0000b2732b6ae3c3eabbe1438d740396ab67616d0000b27351821588d4adb169df7fac15ab67616d0000b273cff2ac3aabd44061c5abe484",
+          "width": 60
+        }
+      ],
+      "name": "2020 Spring",
+      "owner": {
+        "display_name": "katydecorah",
+        "external_urls": {
+          "spotify": "https://open.spotify.com/user/katydecorah"
+        },
+        "href": "https://api.spotify.com/v1/users/katydecorah",
+        "id": "katydecorah",
+        "type": "user",
+        "uri": "spotify:user:katydecorah"
+      },
+      "primary_color": null,
+      "public": true,
+      "snapshot_id": "MTUsYmNkNDZmZGZmY2ZhNjI1YWFiZDViN2U3N2Q5NTliMWU2N2ViZWEzNQ==",
+      "tracks": {
+        "href": "https://api.spotify.com/v1/playlists/34Qr5nHjfSK3M6qQKKXmcG/tracks",
+        "total": 14
+      },
+      "type": "playlist",
+      "uri": "spotify:playlist:34Qr5nHjfSK3M6qQKKXmcG"
+    },
+    {
+      "collaborative": false,
+      "description": "",
+      "external_urls": {
+        "spotify": "https://open.spotify.com/playlist/6WvYJKhyl11k5r870GEhb3"
+      },
+      "href": "https://api.spotify.com/v1/playlists/6WvYJKhyl11k5r870GEhb3",
+      "id": "6WvYJKhyl11k5r870GEhb3",
+      "images": [
+        {
+          "height": 640,
+          "url": "https://mosaic.scdn.co/640/ab67616d0000b2732f9bcb08d20c511cb00682e9ab67616d0000b27388fc8e310ed68f0b1b42ca68ab67616d0000b2738f2e42fe3700e291c7237d50ab67616d0000b273e39005089ff390e8ce115161",
+          "width": 640
+        },
+        {
+          "height": 300,
+          "url": "https://mosaic.scdn.co/300/ab67616d0000b2732f9bcb08d20c511cb00682e9ab67616d0000b27388fc8e310ed68f0b1b42ca68ab67616d0000b2738f2e42fe3700e291c7237d50ab67616d0000b273e39005089ff390e8ce115161",
+          "width": 300
+        },
+        {
+          "height": 60,
+          "url": "https://mosaic.scdn.co/60/ab67616d0000b2732f9bcb08d20c511cb00682e9ab67616d0000b27388fc8e310ed68f0b1b42ca68ab67616d0000b2738f2e42fe3700e291c7237d50ab67616d0000b273e39005089ff390e8ce115161",
+          "width": 60
+        }
+      ],
+      "name": "2019/2020 Winter",
+      "owner": {
+        "display_name": "katydecorah",
+        "external_urls": {
+          "spotify": "https://open.spotify.com/user/katydecorah"
+        },
+        "href": "https://api.spotify.com/v1/users/katydecorah",
+        "id": "katydecorah",
+        "type": "user",
+        "uri": "spotify:user:katydecorah"
+      },
+      "primary_color": null,
+      "public": true,
+      "snapshot_id": "MTMsZmNmZGQ2NDU0ZDIxYjdjZmNlNzEwNmMzYmY0ZGRhMWU3ZjhjMDFhYg==",
+      "tracks": {
+        "href": "https://api.spotify.com/v1/playlists/6WvYJKhyl11k5r870GEhb3/tracks",
+        "total": 12
+      },
+      "type": "playlist",
+      "uri": "spotify:playlist:6WvYJKhyl11k5r870GEhb3"
+    },
+    {
+      "collaborative": false,
+      "description": "",
+      "external_urls": {
+        "spotify": "https://open.spotify.com/playlist/5NULqjoD6v0QSEXPdN680R"
+      },
+      "href": "https://api.spotify.com/v1/playlists/5NULqjoD6v0QSEXPdN680R",
+      "id": "5NULqjoD6v0QSEXPdN680R",
+      "images": [
+        {
+          "height": 640,
+          "url": "https://mosaic.scdn.co/640/ab67616d0000b27309aac24602df64beba654653ab67616d0000b2732590c2d33bd70c8bf059591bab67616d0000b273682d7b9b596b57030c80ab97ab67616d0000b273be228ec07a9ed827fecc5bb2",
+          "width": 640
+        },
+        {
+          "height": 300,
+          "url": "https://mosaic.scdn.co/300/ab67616d0000b27309aac24602df64beba654653ab67616d0000b2732590c2d33bd70c8bf059591bab67616d0000b273682d7b9b596b57030c80ab97ab67616d0000b273be228ec07a9ed827fecc5bb2",
+          "width": 300
+        },
+        {
+          "height": 60,
+          "url": "https://mosaic.scdn.co/60/ab67616d0000b27309aac24602df64beba654653ab67616d0000b2732590c2d33bd70c8bf059591bab67616d0000b273682d7b9b596b57030c80ab97ab67616d0000b273be228ec07a9ed827fecc5bb2",
+          "width": 60
+        }
+      ],
+      "name": "2019 Most Listened",
+      "owner": {
+        "display_name": "katydecorah",
+        "external_urls": {
+          "spotify": "https://open.spotify.com/user/katydecorah"
+        },
+        "href": "https://api.spotify.com/v1/users/katydecorah",
+        "id": "katydecorah",
+        "type": "user",
+        "uri": "spotify:user:katydecorah"
+      },
+      "primary_color": null,
+      "public": true,
+      "snapshot_id": "MixlOWU5NmU4ZWNhYjM5NDRjYzQzYmI3NDE2YWMzNDMzOTJkNTIzODIy",
+      "tracks": {
+        "href": "https://api.spotify.com/v1/playlists/5NULqjoD6v0QSEXPdN680R/tracks",
+        "total": 10
+      },
+      "type": "playlist",
+      "uri": "spotify:playlist:5NULqjoD6v0QSEXPdN680R"
+    },
+    {
+      "collaborative": false,
+      "description": "",
+      "external_urls": {
+        "spotify": "https://open.spotify.com/playlist/36glSgHQjhDhfvSv0fZVce"
+      },
+      "href": "https://api.spotify.com/v1/playlists/36glSgHQjhDhfvSv0fZVce",
+      "id": "36glSgHQjhDhfvSv0fZVce",
+      "images": [
+        {
+          "height": 640,
+          "url": "https://mosaic.scdn.co/640/ab67616d0000b2731907d123cbd10ec49966ae4aab67616d0000b273347e279afa16f264c0d48699ab67616d0000b273412e18ab5452ac84eafe5c9dab67616d0000b273a144b05da83aa22e793fcf9e",
+          "width": 640
+        },
+        {
+          "height": 300,
+          "url": "https://mosaic.scdn.co/300/ab67616d0000b2731907d123cbd10ec49966ae4aab67616d0000b273347e279afa16f264c0d48699ab67616d0000b273412e18ab5452ac84eafe5c9dab67616d0000b273a144b05da83aa22e793fcf9e",
+          "width": 300
+        },
+        {
+          "height": 60,
+          "url": "https://mosaic.scdn.co/60/ab67616d0000b2731907d123cbd10ec49966ae4aab67616d0000b273347e279afa16f264c0d48699ab67616d0000b273412e18ab5452ac84eafe5c9dab67616d0000b273a144b05da83aa22e793fcf9e",
+          "width": 60
+        }
+      ],
+      "name": "2019 Fall",
+      "owner": {
+        "display_name": "katydecorah",
+        "external_urls": {
+          "spotify": "https://open.spotify.com/user/katydecorah"
+        },
+        "href": "https://api.spotify.com/v1/users/katydecorah",
+        "id": "katydecorah",
+        "type": "user",
+        "uri": "spotify:user:katydecorah"
+      },
+      "primary_color": null,
+      "public": true,
+      "snapshot_id": "MTUsMDRmZDhmYzZlNzFhNmE0N2U1N2E0Y2Q5MDVjYzQ5YWZhZjI5MGEzZQ==",
+      "tracks": {
+        "href": "https://api.spotify.com/v1/playlists/36glSgHQjhDhfvSv0fZVce/tracks",
+        "total": 12
+      },
+      "type": "playlist",
+      "uri": "spotify:playlist:36glSgHQjhDhfvSv0fZVce"
+    },
+    {
+      "collaborative": false,
+      "description": "",
+      "external_urls": {
+        "spotify": "https://open.spotify.com/playlist/3d3wHAa3YJNPiu7V1iVnAM"
+      },
+      "href": "https://api.spotify.com/v1/playlists/3d3wHAa3YJNPiu7V1iVnAM",
+      "id": "3d3wHAa3YJNPiu7V1iVnAM",
+      "images": [
+        {
+          "height": 640,
+          "url": "https://mosaic.scdn.co/640/ab67616d0000b273a814b51bace5b6fa9a91395eab67616d0000b273b8e15b0e05b490186c589f20ab67616d0000b273e21252f94100e8e0227b05b9ab67616d0000b273fcf2c6a7912e1dae770e0061",
+          "width": 640
+        },
+        {
+          "height": 300,
+          "url": "https://mosaic.scdn.co/300/ab67616d0000b273a814b51bace5b6fa9a91395eab67616d0000b273b8e15b0e05b490186c589f20ab67616d0000b273e21252f94100e8e0227b05b9ab67616d0000b273fcf2c6a7912e1dae770e0061",
+          "width": 300
+        },
+        {
+          "height": 60,
+          "url": "https://mosaic.scdn.co/60/ab67616d0000b273a814b51bace5b6fa9a91395eab67616d0000b273b8e15b0e05b490186c589f20ab67616d0000b273e21252f94100e8e0227b05b9ab67616d0000b273fcf2c6a7912e1dae770e0061",
+          "width": 60
+        }
+      ],
+      "name": "2019 Summer",
+      "owner": {
+        "display_name": "katydecorah",
+        "external_urls": {
+          "spotify": "https://open.spotify.com/user/katydecorah"
+        },
+        "href": "https://api.spotify.com/v1/users/katydecorah",
+        "id": "katydecorah",
+        "type": "user",
+        "uri": "spotify:user:katydecorah"
+      },
+      "primary_color": null,
+      "public": true,
+      "snapshot_id": "MjEsM2FkYTUzZTQxNDlhMWI0YTc5MDcwYjJhOTI0MmNlYmVmZTJmNGNkOQ==",
+      "tracks": {
+        "href": "https://api.spotify.com/v1/playlists/3d3wHAa3YJNPiu7V1iVnAM/tracks",
+        "total": 20
+      },
+      "type": "playlist",
+      "uri": "spotify:playlist:3d3wHAa3YJNPiu7V1iVnAM"
+    },
+    {
+      "collaborative": false,
+      "description": "",
+      "external_urls": {
+        "spotify": "https://open.spotify.com/playlist/7CoxaKdAb7YLfP75U7Z4K4"
+      },
+      "href": "https://api.spotify.com/v1/playlists/7CoxaKdAb7YLfP75U7Z4K4",
+      "id": "7CoxaKdAb7YLfP75U7Z4K4",
+      "images": [
+        {
+          "height": 640,
+          "url": "https://mosaic.scdn.co/640/ab67616d0000b2732590c2d33bd70c8bf059591bab67616d0000b27334ada4918af92f62608e15c8ab67616d0000b2733f97aa55a201124c756b00b0ab67616d0000b2737731e024560a0cae6544ab90",
+          "width": 640
+        },
+        {
+          "height": 300,
+          "url": "https://mosaic.scdn.co/300/ab67616d0000b2732590c2d33bd70c8bf059591bab67616d0000b27334ada4918af92f62608e15c8ab67616d0000b2733f97aa55a201124c756b00b0ab67616d0000b2737731e024560a0cae6544ab90",
+          "width": 300
+        },
+        {
+          "height": 60,
+          "url": "https://mosaic.scdn.co/60/ab67616d0000b2732590c2d33bd70c8bf059591bab67616d0000b27334ada4918af92f62608e15c8ab67616d0000b2733f97aa55a201124c756b00b0ab67616d0000b2737731e024560a0cae6544ab90",
+          "width": 60
+        }
+      ],
+      "name": "2019 Spring",
+      "owner": {
+        "display_name": "katydecorah",
+        "external_urls": {
+          "spotify": "https://open.spotify.com/user/katydecorah"
+        },
+        "href": "https://api.spotify.com/v1/users/katydecorah",
+        "id": "katydecorah",
+        "type": "user",
+        "uri": "spotify:user:katydecorah"
+      },
+      "primary_color": null,
+      "public": true,
+      "snapshot_id": "MTYsNDdhOTc1OTNjMDE5ZmFjZmU3ZWJkZGEzNDg3NTQzN2RlMzExNzA4Yg==",
+      "tracks": {
+        "href": "https://api.spotify.com/v1/playlists/7CoxaKdAb7YLfP75U7Z4K4/tracks",
+        "total": 15
+      },
+      "type": "playlist",
+      "uri": "spotify:playlist:7CoxaKdAb7YLfP75U7Z4K4"
+    },
+    {
+      "collaborative": false,
+      "description": "",
+      "external_urls": {
+        "spotify": "https://open.spotify.com/playlist/1ACh1ktp8IqSzcmZPynOyZ"
+      },
+      "href": "https://api.spotify.com/v1/playlists/1ACh1ktp8IqSzcmZPynOyZ",
+      "id": "1ACh1ktp8IqSzcmZPynOyZ",
+      "images": [
+        {
+          "height": 640,
+          "url": "https://mosaic.scdn.co/640/ab67616d0000b273476f9490de2fe4fa589dac93ab67616d0000b273682d7b9b596b57030c80ab97ab67616d0000b273be228ec07a9ed827fecc5bb2ab67616d0000b273c93e5d445758bfd4a9693686",
+          "width": 640
+        },
+        {
+          "height": 300,
+          "url": "https://mosaic.scdn.co/300/ab67616d0000b273476f9490de2fe4fa589dac93ab67616d0000b273682d7b9b596b57030c80ab97ab67616d0000b273be228ec07a9ed827fecc5bb2ab67616d0000b273c93e5d445758bfd4a9693686",
+          "width": 300
+        },
+        {
+          "height": 60,
+          "url": "https://mosaic.scdn.co/60/ab67616d0000b273476f9490de2fe4fa589dac93ab67616d0000b273682d7b9b596b57030c80ab97ab67616d0000b273be228ec07a9ed827fecc5bb2ab67616d0000b273c93e5d445758bfd4a9693686",
+          "width": 60
+        }
+      ],
+      "name": "2018/2019 Winter",
+      "owner": {
+        "display_name": "katydecorah",
+        "external_urls": {
+          "spotify": "https://open.spotify.com/user/katydecorah"
+        },
+        "href": "https://api.spotify.com/v1/users/katydecorah",
+        "id": "katydecorah",
+        "type": "user",
+        "uri": "spotify:user:katydecorah"
+      },
+      "primary_color": null,
+      "public": true,
+      "snapshot_id": "MjAsNjZjY2UzYTEwMTM1YjQ2MWQ2ZDJlZTViYTRiYWQ0ODc1MDc2OGJjMQ==",
+      "tracks": {
+        "href": "https://api.spotify.com/v1/playlists/1ACh1ktp8IqSzcmZPynOyZ/tracks",
+        "total": 19
+      },
+      "type": "playlist",
+      "uri": "spotify:playlist:1ACh1ktp8IqSzcmZPynOyZ"
+    },
+    {
+      "collaborative": false,
+      "description": "",
+      "external_urls": {
+        "spotify": "https://open.spotify.com/playlist/2n1S6lfhHQPw88L3M9iZEO"
+      },
+      "href": "https://api.spotify.com/v1/playlists/2n1S6lfhHQPw88L3M9iZEO",
+      "id": "2n1S6lfhHQPw88L3M9iZEO",
+      "images": [
+        {
+          "height": 640,
+          "url": "https://mosaic.scdn.co/640/ab67616d0000b2730af2276ae66a42e73eb07683ab67616d0000b2731a77dcf678ed87012d3872a8ab67616d0000b2732a6d5874f32d3af2ad795253ab67616d0000b273c30d59775ce5ef3f59138f59",
+          "width": 640
+        },
+        {
+          "height": 300,
+          "url": "https://mosaic.scdn.co/300/ab67616d0000b2730af2276ae66a42e73eb07683ab67616d0000b2731a77dcf678ed87012d3872a8ab67616d0000b2732a6d5874f32d3af2ad795253ab67616d0000b273c30d59775ce5ef3f59138f59",
+          "width": 300
+        },
+        {
+          "height": 60,
+          "url": "https://mosaic.scdn.co/60/ab67616d0000b2730af2276ae66a42e73eb07683ab67616d0000b2731a77dcf678ed87012d3872a8ab67616d0000b2732a6d5874f32d3af2ad795253ab67616d0000b273c30d59775ce5ef3f59138f59",
+          "width": 60
+        }
+      ],
+      "name": "2018 Most Listened",
+      "owner": {
+        "display_name": "katydecorah",
+        "external_urls": {
+          "spotify": "https://open.spotify.com/user/katydecorah"
+        },
+        "href": "https://api.spotify.com/v1/users/katydecorah",
+        "id": "katydecorah",
+        "type": "user",
+        "uri": "spotify:user:katydecorah"
+      },
+      "primary_color": null,
+      "public": true,
+      "snapshot_id": "Miw0MTJkYjUzNDdhMzRjYmYyYTNiY2E3ZWU0MjhjZjlkM2Y2ZDc5NDFk",
+      "tracks": {
+        "href": "https://api.spotify.com/v1/playlists/2n1S6lfhHQPw88L3M9iZEO/tracks",
+        "total": 10
+      },
+      "type": "playlist",
+      "uri": "spotify:playlist:2n1S6lfhHQPw88L3M9iZEO"
+    },
+    {
+      "collaborative": false,
+      "description": "",
+      "external_urls": {
+        "spotify": "https://open.spotify.com/playlist/1FB9MmDZgPdNIBH9YyoepE"
+      },
+      "href": "https://api.spotify.com/v1/playlists/1FB9MmDZgPdNIBH9YyoepE",
+      "id": "1FB9MmDZgPdNIBH9YyoepE",
+      "images": [
+        {
+          "height": 640,
+          "url": "https://mosaic.scdn.co/640/ab67616d0000b2731853c2f76e3f82e54c71a19bab67616d0000b273431ac6e6f393acf475730ec6ab67616d0000b273a51a17c35fc98156ee4cd6caab67616d0000b273e5cc66bbe0317cd701381467",
+          "width": 640
+        },
+        {
+          "height": 300,
+          "url": "https://mosaic.scdn.co/300/ab67616d0000b2731853c2f76e3f82e54c71a19bab67616d0000b273431ac6e6f393acf475730ec6ab67616d0000b273a51a17c35fc98156ee4cd6caab67616d0000b273e5cc66bbe0317cd701381467",
+          "width": 300
+        },
+        {
+          "height": 60,
+          "url": "https://mosaic.scdn.co/60/ab67616d0000b2731853c2f76e3f82e54c71a19bab67616d0000b273431ac6e6f393acf475730ec6ab67616d0000b273a51a17c35fc98156ee4cd6caab67616d0000b273e5cc66bbe0317cd701381467",
+          "width": 60
+        }
+      ],
+      "name": "2018 Fall",
+      "owner": {
+        "display_name": "katydecorah",
+        "external_urls": {
+          "spotify": "https://open.spotify.com/user/katydecorah"
+        },
+        "href": "https://api.spotify.com/v1/users/katydecorah",
+        "id": "katydecorah",
+        "type": "user",
+        "uri": "spotify:user:katydecorah"
+      },
+      "primary_color": null,
+      "public": true,
+      "snapshot_id": "MTksMzRlMDY1MDI5YjdlYzIxMDYzOTcyYjE1ZWU4N2UzMDhhNzIwOGFiMw==",
+      "tracks": {
+        "href": "https://api.spotify.com/v1/playlists/1FB9MmDZgPdNIBH9YyoepE/tracks",
+        "total": 16
+      },
+      "type": "playlist",
+      "uri": "spotify:playlist:1FB9MmDZgPdNIBH9YyoepE"
+    },
+    {
+      "collaborative": false,
+      "description": "",
+      "external_urls": {
+        "spotify": "https://open.spotify.com/playlist/4u1pzVFovceHYnEEWkG2rH"
+      },
+      "href": "https://api.spotify.com/v1/playlists/4u1pzVFovceHYnEEWkG2rH",
+      "id": "4u1pzVFovceHYnEEWkG2rH",
+      "images": [
+        {
+          "height": 640,
+          "url": "https://mosaic.scdn.co/640/ab67616d0000b273166db0cfab9a5b99923e83b8ab67616d0000b273612217f361aa2a52d74bf10fab67616d0000b273c9ef08879350a57e5f1d7ca2ab67616d0000b273fb22c7162d3867dc3c2af466",
+          "width": 640
+        },
+        {
+          "height": 300,
+          "url": "https://mosaic.scdn.co/300/ab67616d0000b273166db0cfab9a5b99923e83b8ab67616d0000b273612217f361aa2a52d74bf10fab67616d0000b273c9ef08879350a57e5f1d7ca2ab67616d0000b273fb22c7162d3867dc3c2af466",
+          "width": 300
+        },
+        {
+          "height": 60,
+          "url": "https://mosaic.scdn.co/60/ab67616d0000b273166db0cfab9a5b99923e83b8ab67616d0000b273612217f361aa2a52d74bf10fab67616d0000b273c9ef08879350a57e5f1d7ca2ab67616d0000b273fb22c7162d3867dc3c2af466",
+          "width": 60
+        }
+      ],
+      "name": "2018 Summer",
+      "owner": {
+        "display_name": "katydecorah",
+        "external_urls": {
+          "spotify": "https://open.spotify.com/user/katydecorah"
+        },
+        "href": "https://api.spotify.com/v1/users/katydecorah",
+        "id": "katydecorah",
+        "type": "user",
+        "uri": "spotify:user:katydecorah"
+      },
+      "primary_color": null,
+      "public": true,
+      "snapshot_id": "MjksYzNhNDc1NDhkMzQxYmNlZDY3YTQyMjE3NGFlOTgzZmZhODQ3OWJlYg==",
+      "tracks": {
+        "href": "https://api.spotify.com/v1/playlists/4u1pzVFovceHYnEEWkG2rH/tracks",
+        "total": 24
+      },
+      "type": "playlist",
+      "uri": "spotify:playlist:4u1pzVFovceHYnEEWkG2rH"
+    },
+    {
+      "collaborative": false,
+      "description": "",
+      "external_urls": {
+        "spotify": "https://open.spotify.com/playlist/72M0GKExdxNDzodTVKjFqz"
+      },
+      "href": "https://api.spotify.com/v1/playlists/72M0GKExdxNDzodTVKjFqz",
+      "id": "72M0GKExdxNDzodTVKjFqz",
+      "images": [
+        {
+          "height": 640,
+          "url": "https://mosaic.scdn.co/640/ab67616d0000b2730af2276ae66a42e73eb07683ab67616d0000b2737925eefd51f04e467801adc3ab67616d0000b273b5d9c8de465654c20d77305cab67616d0000b273b794cd4d3c8d463efbe0a211",
+          "width": 640
+        },
+        {
+          "height": 300,
+          "url": "https://mosaic.scdn.co/300/ab67616d0000b2730af2276ae66a42e73eb07683ab67616d0000b2737925eefd51f04e467801adc3ab67616d0000b273b5d9c8de465654c20d77305cab67616d0000b273b794cd4d3c8d463efbe0a211",
+          "width": 300
+        },
+        {
+          "height": 60,
+          "url": "https://mosaic.scdn.co/60/ab67616d0000b2730af2276ae66a42e73eb07683ab67616d0000b2737925eefd51f04e467801adc3ab67616d0000b273b5d9c8de465654c20d77305cab67616d0000b273b794cd4d3c8d463efbe0a211",
+          "width": 60
+        }
+      ],
+      "name": "2018 Spring",
+      "owner": {
+        "display_name": "katydecorah",
+        "external_urls": {
+          "spotify": "https://open.spotify.com/user/katydecorah"
+        },
+        "href": "https://api.spotify.com/v1/users/katydecorah",
+        "id": "katydecorah",
+        "type": "user",
+        "uri": "spotify:user:katydecorah"
+      },
+      "primary_color": null,
+      "public": true,
+      "snapshot_id": "MTksMTAzM2QwMTlhNzAxODUzMTZlNTA2Zjc0MDc2ZGFmYzQ1N2Y0MjVlMw==",
+      "tracks": {
+        "href": "https://api.spotify.com/v1/playlists/72M0GKExdxNDzodTVKjFqz/tracks",
+        "total": 15
+      },
+      "type": "playlist",
+      "uri": "spotify:playlist:72M0GKExdxNDzodTVKjFqz"
+    },
+    {
+      "collaborative": false,
+      "description": "",
+      "external_urls": {
+        "spotify": "https://open.spotify.com/playlist/3Mj2JUdRfv2NDCqeikM9hv"
+      },
+      "href": "https://api.spotify.com/v1/playlists/3Mj2JUdRfv2NDCqeikM9hv",
+      "id": "3Mj2JUdRfv2NDCqeikM9hv",
+      "images": [
+        {
+          "height": 640,
+          "url": "https://mosaic.scdn.co/640/ab67616d0000b27371f9f97b468e77fc173e225cab67616d0000b2737cf4b38c0780f7d565bb3a00ab67616d0000b273c74554207eff9893c4cf5fc2ab67616d0000b273d20a91d818565e5cc26da1b4",
+          "width": 640
+        },
+        {
+          "height": 300,
+          "url": "https://mosaic.scdn.co/300/ab67616d0000b27371f9f97b468e77fc173e225cab67616d0000b2737cf4b38c0780f7d565bb3a00ab67616d0000b273c74554207eff9893c4cf5fc2ab67616d0000b273d20a91d818565e5cc26da1b4",
+          "width": 300
+        },
+        {
+          "height": 60,
+          "url": "https://mosaic.scdn.co/60/ab67616d0000b27371f9f97b468e77fc173e225cab67616d0000b2737cf4b38c0780f7d565bb3a00ab67616d0000b273c74554207eff9893c4cf5fc2ab67616d0000b273d20a91d818565e5cc26da1b4",
+          "width": 60
+        }
+      ],
+      "name": "Favorites",
+      "owner": {
+        "display_name": "katydecorah",
+        "external_urls": {
+          "spotify": "https://open.spotify.com/user/katydecorah"
+        },
+        "href": "https://api.spotify.com/v1/users/katydecorah",
+        "id": "katydecorah",
+        "type": "user",
+        "uri": "spotify:user:katydecorah"
+      },
+      "primary_color": null,
+      "public": true,
+      "snapshot_id": "MzMsOGE5MDQ1YTYzYzM3YjE4Y2EyYmNjNTdlNTIwMWE4ZDM3NTEyM2VlNg==",
+      "tracks": {
+        "href": "https://api.spotify.com/v1/playlists/3Mj2JUdRfv2NDCqeikM9hv/tracks",
+        "total": 158
+      },
+      "type": "playlist",
+      "uri": "spotify:playlist:3Mj2JUdRfv2NDCqeikM9hv"
+    },
+    {
+      "collaborative": false,
+      "description": "",
+      "external_urls": {
+        "spotify": "https://open.spotify.com/playlist/0EXTe6h9sAjUkX1kwpE2y3"
+      },
+      "href": "https://api.spotify.com/v1/playlists/0EXTe6h9sAjUkX1kwpE2y3",
+      "id": "0EXTe6h9sAjUkX1kwpE2y3",
+      "images": [
+        {
+          "height": 640,
+          "url": "https://mosaic.scdn.co/640/ab67616d0000b2731a77dcf678ed87012d3872a8ab67616d0000b2734c0833d43b573119bae56ed6ab67616d0000b2737bebcd2260ef90d7cb7ec0fbab67616d0000b273f7c44fa252e99f919b7ceef3",
+          "width": 640
+        },
+        {
+          "height": 300,
+          "url": "https://mosaic.scdn.co/300/ab67616d0000b2731a77dcf678ed87012d3872a8ab67616d0000b2734c0833d43b573119bae56ed6ab67616d0000b2737bebcd2260ef90d7cb7ec0fbab67616d0000b273f7c44fa252e99f919b7ceef3",
+          "width": 300
+        },
+        {
+          "height": 60,
+          "url": "https://mosaic.scdn.co/60/ab67616d0000b2731a77dcf678ed87012d3872a8ab67616d0000b2734c0833d43b573119bae56ed6ab67616d0000b2737bebcd2260ef90d7cb7ec0fbab67616d0000b273f7c44fa252e99f919b7ceef3",
+          "width": 60
+        }
+      ],
+      "name": "2017/2018 Winter",
+      "owner": {
+        "display_name": "katydecorah",
+        "external_urls": {
+          "spotify": "https://open.spotify.com/user/katydecorah"
+        },
+        "href": "https://api.spotify.com/v1/users/katydecorah",
+        "id": "katydecorah",
+        "type": "user",
+        "uri": "spotify:user:katydecorah"
+      },
+      "primary_color": null,
+      "public": true,
+      "snapshot_id": "OSw2N2JjYWQ3OWEzZWU4Yjk0OGY1Y2JhZmU2ZWMyNDljMTcyYzkxNDQw",
+      "tracks": {
+        "href": "https://api.spotify.com/v1/playlists/0EXTe6h9sAjUkX1kwpE2y3/tracks",
+        "total": 7
+      },
+      "type": "playlist",
+      "uri": "spotify:playlist:0EXTe6h9sAjUkX1kwpE2y3"
+    }
+  ],
+  "limit": 20,
+  "next": "https://api.spotify.com/v1/users/katydecorah/playlists?offset=20&limit=20",
+  "offset": 0,
+  "previous": null,
+  "total": 76
+}
