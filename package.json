@@ -6,7 +6,6 @@
   "scripts": {
     "pretest": "npm run lint",
     "test": "jest",
-    "precommit": "lint-staged",
     "lint": "eslint .",
     "pretty-quick": "pretty-quick",
     "build": "ncc build src/index.js",
