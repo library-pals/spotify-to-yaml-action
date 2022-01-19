@@ -1,6 +1,6 @@
-const { exportVariable } = require("@actions/core");
+import { exportVariable } from "@actions/core";
 
-function learnPlaylistName() {
+export default function learnPlaylistName() {
   const today = new Date();
   const month = process.env.MONTH || today.getMonth();
   const year = process.env.YEAR || today.getFullYear();
@@ -14,5 +14,3 @@ function learnPlaylistName() {
   exportVariable("playlist", name);
   return name;
 }
-
-module.exports = learnPlaylistName;

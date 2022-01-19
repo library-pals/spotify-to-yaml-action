@@ -1,7 +1,7 @@
-const { setFailed } = require("@actions/core");
-const SpotifyWebApi = require("spotify-web-api-node");
+import { setFailed } from "@actions/core";
+import SpotifyWebApi from "spotify-web-api-node";
 
-async function listPlaylists(listName) {
+export default async function listPlaylists(listName) {
   const spotifyApi = new SpotifyWebApi({
     clientId: process.env.SpotifyClientID,
     clientSecret: process.env.SpotifyClientSecret,
@@ -31,5 +31,3 @@ async function listPlaylists(listName) {
     },
   };
 }
-
-module.exports = listPlaylists;

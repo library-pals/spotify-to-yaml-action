@@ -1,4 +1,4 @@
-const listPlaylists = require("../list-playlists");
+import listPlaylists from "../list-playlists";
 
 jest.mock("spotify-web-api-node", () => {
   return jest.fn().mockImplementation(() => {

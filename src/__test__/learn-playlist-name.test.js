@@ -1,6 +1,4 @@
-"use strict";
-
-const learnPlaylistName = require("../learn-playlist-name.js");
+import learnPlaylistName from "../learn-playlist-name.js";
 
 process.env.YEAR = 2019;
 

@@ -44743,14 +44743,14 @@ module.exports = compareBuild
 /***/ 2804:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const compare = __nccwpck_require__(4309)
+const compare = __nccwpck_require__(9834)
 const compareLoose = (a, b) => compare(a, b, true)
 module.exports = compareLoose
 
 
 /***/ }),
 
-/***/ 4309:
+/***/ 9834:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 const SemVer = __nccwpck_require__(8088)
@@ -44795,7 +44795,7 @@ module.exports = diff
 /***/ 1898:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const compare = __nccwpck_require__(4309)
+const compare = __nccwpck_require__(9834)
 const eq = (a, b, loose) => compare(a, b, loose) === 0
 module.exports = eq
 
@@ -44805,7 +44805,7 @@ module.exports = eq
 /***/ 4123:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const compare = __nccwpck_require__(4309)
+const compare = __nccwpck_require__(9834)
 const gt = (a, b, loose) => compare(a, b, loose) > 0
 module.exports = gt
 
@@ -44815,7 +44815,7 @@ module.exports = gt
 /***/ 5522:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const compare = __nccwpck_require__(4309)
+const compare = __nccwpck_require__(9834)
 const gte = (a, b, loose) => compare(a, b, loose) >= 0
 module.exports = gte
 
@@ -44847,7 +44847,7 @@ module.exports = inc
 /***/ 194:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const compare = __nccwpck_require__(4309)
+const compare = __nccwpck_require__(9834)
 const lt = (a, b, loose) => compare(a, b, loose) < 0
 module.exports = lt
 
@@ -44857,7 +44857,7 @@ module.exports = lt
 /***/ 7520:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const compare = __nccwpck_require__(4309)
+const compare = __nccwpck_require__(9834)
 const lte = (a, b, loose) => compare(a, b, loose) <= 0
 module.exports = lte
 
@@ -44887,7 +44887,7 @@ module.exports = minor
 /***/ 6017:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const compare = __nccwpck_require__(4309)
+const compare = __nccwpck_require__(9834)
 const neq = (a, b, loose) => compare(a, b, loose) !== 0
 module.exports = neq
 
@@ -44960,7 +44960,7 @@ module.exports = prerelease
 /***/ 6417:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const compare = __nccwpck_require__(4309)
+const compare = __nccwpck_require__(9834)
 const rcompare = (a, b, loose) => compare(b, a, loose)
 module.exports = rcompare
 
@@ -45039,7 +45039,7 @@ module.exports = {
   minor: __nccwpck_require__(8447),
   patch: __nccwpck_require__(2866),
   prerelease: __nccwpck_require__(4016),
-  compare: __nccwpck_require__(4309),
+  compare: __nccwpck_require__(9834),
   rcompare: __nccwpck_require__(6417),
   compareLoose: __nccwpck_require__(2804),
   compareBuild: __nccwpck_require__(2156),
@@ -45609,7 +45609,7 @@ module.exports = outside
 // that includes the same versions that the original range does
 // If the original range is shorter than the simplified one, return that.
 const satisfies = __nccwpck_require__(6055)
-const compare = __nccwpck_require__(4309)
+const compare = __nccwpck_require__(9834)
 module.exports = (versions, range, options) => {
   const set = []
   let min = null
@@ -45660,7 +45660,7 @@ const Range = __nccwpck_require__(9828)
 const Comparator = __nccwpck_require__(1532)
 const { ANY } = Comparator
 const satisfies = __nccwpck_require__(6055)
-const compare = __nccwpck_require__(4309)
+const compare = __nccwpck_require__(9834)
 
 // Complex range `r1 || r2 || ...` is a subset of `R1 || R2 || ...` iff:
 // - Every simple range `r1, r2, ...` is a null set, OR
@@ -66124,95 +66124,6 @@ try {
 
 /***/ }),
 
-/***/ 4351:
-/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
-
-const {
-  formatTracks,
-  saveImage,
-  updateMain,
-} = __nccwpck_require__(1062);
-const core = __nccwpck_require__(2186);
-const SpotifyWebApi = __nccwpck_require__(5337);
-
-function learnPlaylistName() {
-  return new Promise((resolve) => {
-    const today = new Date();
-    const month = process.env.MONTH || today.getMonth();
-    const year = process.env.YEAR || today.getFullYear();
-    const season = {
-      2: "Winter",
-      5: "Spring",
-      8: "Summer",
-      11: "Fall",
-    };
-    const name = `${month == 2 ? `${year - 1}/${year}` : year} ${
-      season[month]
-    }`;
-    core.exportVariable("playlist", name);
-    resolve(name);
-  });
-}
-
-function listPlaylists(listName) {
-  const spotifyApi = new SpotifyWebApi({
-    clientId: process.env.SpotifyClientID,
-    clientSecret: process.env.SpotifyClientSecret,
-  });
-
-  return spotifyApi
-    .clientCredentialsGrant()
-    .then((data) => {
-      spotifyApi.setAccessToken(data.body["access_token"]);
-      return spotifyApi
-        .getUserPlaylists(process.env.SpotifyUser)
-        .then(({ body }) => {
-          const findPlaylist = body.items.find(
-            (list) => list.name === listName
-          );
-          if (!findPlaylist) {
-            core.setFailed(
-              `Could not find playlist "${listName}". Is it private?`
-            );
-            return;
-          }
-          return findPlaylist;
-        })
-        .then(({ name, external_urls, id, images }) => {
-          return spotifyApi.getPlaylistTracks(id).then(({ body }) => {
-            return {
-              name,
-              external_urls,
-              images,
-              tracks: {
-                items: body.items,
-              },
-            };
-          });
-        })
-        .catch((err) => err);
-    })
-    .catch((err) => err);
-}
-
-try {
-  learnPlaylistName()
-    .then((listName) => listPlaylists(listName))
-    .then(formatTracks)
-    // save tracks to playlists.yml
-    .then((data) => updateMain(data))
-    // save image to img/staging/
-    .then((data) => saveImage(data))
-    .catch((err) => core.setFailed(err.message));
-} catch (error) {
-  core.setFailed(error.message);
-}
-
-module.exports = { learnPlaylistName, listPlaylists };
-
-
-/***/ }),
-
 /***/ 4120:
 /***/ ((module) => {
 
@@ -68631,9 +68542,44 @@ module.exports = JSON.parse('{"name":"superagent","version":"3.8.3","description
 /******/ 	}
 /******/ 	
 /************************************************************************/
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	(() => {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__nccwpck_require__.n = (module) => {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				() => (module['default']) :
+/******/ 				() => (module);
+/******/ 			__nccwpck_require__.d(getter, { a: getter });
+/******/ 			return getter;
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__nccwpck_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__nccwpck_require__.o(definition, key) && !__nccwpck_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
 /******/ 		__nccwpck_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__nccwpck_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/node module decorator */
@@ -68650,12 +68596,104 @@ module.exports = JSON.parse('{"name":"superagent","version":"3.8.3","description
 /******/ 	if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = __dirname + "/";
 /******/ 	
 /************************************************************************/
-/******/ 	
-/******/ 	// startup
-/******/ 	// Load entry module and return exports
-/******/ 	// This entry module is referenced by other modules so it can't be inlined
-/******/ 	var __webpack_exports__ = __nccwpck_require__(4351);
-/******/ 	module.exports = __webpack_exports__;
-/******/ 	
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be in strict mode.
+(() => {
+"use strict";
+// ESM COMPAT FLAG
+__nccwpck_require__.r(__webpack_exports__);
+
+// EXPORTS
+__nccwpck_require__.d(__webpack_exports__, {
+  "action": () => (/* binding */ action),
+  "default": () => (/* binding */ src)
+});
+
+// EXTERNAL MODULE: ./node_modules/spotify-to-jekyll/index.js
+var spotify_to_jekyll = __nccwpck_require__(1062);
+// EXTERNAL MODULE: ./node_modules/@actions/core/lib/core.js
+var core = __nccwpck_require__(2186);
+;// CONCATENATED MODULE: ./src/learn-playlist-name.js
+
+
+function learnPlaylistName() {
+  const today = new Date();
+  const month = process.env.MONTH || today.getMonth();
+  const year = process.env.YEAR || today.getFullYear();
+  const season = {
+    2: "Winter",
+    5: "Spring",
+    8: "Summer",
+    11: "Fall",
+  };
+  const name = `${month == 2 ? `${year - 1}/${year}` : year} ${season[month]}`;
+  (0,core.exportVariable)("playlist", name);
+  return name;
+}
+
+// EXTERNAL MODULE: ./node_modules/spotify-web-api-node/src/server.js
+var server = __nccwpck_require__(5337);
+var server_default = /*#__PURE__*/__nccwpck_require__.n(server);
+;// CONCATENATED MODULE: ./src/list-playlists.js
+
+
+
+async function listPlaylists(listName) {
+  const spotifyApi = new (server_default())({
+    clientId: process.env.SpotifyClientID,
+    clientSecret: process.env.SpotifyClientSecret,
+  });
+  const username = process.env.SpotifyUser;
+  const {
+    body: { access_token },
+  } = await spotifyApi.clientCredentialsGrant();
+
+  spotifyApi.setAccessToken(access_token);
+
+  const { body } = await spotifyApi.getUserPlaylists(username);
+  const findPlaylist = body.items.find((list) => list.name === listName);
+  if (!findPlaylist) {
+    (0,core.setFailed)(`Could not find playlist "${listName}". Is it private?`);
+    return;
+  }
+  const {
+    body: { items },
+  } = await spotifyApi.getPlaylistTracks(findPlaylist.id);
+  return {
+    name: findPlaylist.name,
+    external_urls: findPlaylist.external_urls,
+    images: findPlaylist.images,
+    tracks: {
+      items,
+    },
+  };
+}
+
+;// CONCATENATED MODULE: ./src/index.js
+
+
+
+
+
+async function action() {
+  try {
+    const playlistName = learnPlaylistName();
+    const playlist = await listPlaylists(playlistName);
+    (0,core.info)(playlist);
+    const formatPlaylist = await (0,spotify_to_jekyll.formatTracks)(playlist);
+    // save tracks to playlists.yml
+    await (0,spotify_to_jekyll.updateMain)(formatPlaylist);
+    // save image to img/staging/
+    await (0,spotify_to_jekyll.saveImage)(formatPlaylist);
+  } catch (error) {
+    (0,core.setFailed)(error.message);
+  }
+}
+
+/* harmony default export */ const src = (action());
+
+})();
+
+module.exports = __webpack_exports__;
 /******/ })()
 ;

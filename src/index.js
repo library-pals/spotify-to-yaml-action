@@ -1,13 +1,13 @@
-const {
+import {
   formatTracks,
   saveImage,
   updateMain,
-} = require("spotify-to-jekyll/index.js");
-const { setFailed, info } = require("@actions/core");
-const learnPlaylistName = require("./learn-playlist-name");
-const listPlaylists = require("./list-playlists");
+} from "spotify-to-jekyll/index.js";
+import { setFailed, info } from "@actions/core";
+import learnPlaylistName from "./learn-playlist-name";
+import listPlaylists from "./list-playlists";
 
-async function action() {
+export async function action() {
   try {
     const playlistName = learnPlaylistName();
     const playlist = await listPlaylists(playlistName);
@@ -22,4 +22,4 @@ async function action() {
   }
 }
 
-module.exports = action;
+export default action();

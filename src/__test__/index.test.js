@@ -1,11 +1,11 @@
-const action = require("..");
-const {
+import { action } from "..";
+import {
   formatTracks,
   updateMain,
   saveImage,
-} = require("spotify-to-jekyll/index.js");
-const spotifyToJekyll = require("spotify-to-jekyll/index.js");
-const { exportVariable, info } = require("@actions/core");
+} from "spotify-to-jekyll/index.js";
+import spotifyToJekyll from "spotify-to-jekyll/index.js";
+import { exportVariable, info } from "@actions/core";
 
 jest.mock("@actions/core");
 jest.mock("spotify-to-jekyll/index.js");
