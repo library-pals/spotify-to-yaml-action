@@ -1,8 +1,6 @@
-import {
-  formatTracks,
-  saveImage,
-  updateMain,
-} from "spotify-to-jekyll/index.js";
+import formatTracks from "spotify-to-jekyll/src/format-tracks.js";
+import updateMain from "spotify-to-jekyll/src/update-main.js";
+import saveImage from "spotify-to-jekyll/src/save-image.js";
 import { setFailed, info } from "@actions/core";
 import learnPlaylistName from "./learn-playlist-name";
 import listPlaylists from "./list-playlists";

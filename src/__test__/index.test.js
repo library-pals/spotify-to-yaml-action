@@ -1,14 +1,13 @@
 import { action } from "..";
-import {
-  formatTracks,
-  updateMain,
-  saveImage,
-} from "spotify-to-jekyll/index.js";
-import spotifyToJekyll from "spotify-to-jekyll/index.js";
+import formatTracks from "spotify-to-jekyll/src/format-tracks.js";
+import updateMain from "spotify-to-jekyll/src/update-main.js";
+import saveImage from "spotify-to-jekyll/src/save-image.js";
 import { exportVariable, info } from "@actions/core";
 
 jest.mock("@actions/core");
-jest.mock("spotify-to-jekyll/index.js");
+jest.mock("spotify-to-jekyll/src/format-tracks.js");
+jest.mock("spotify-to-jekyll/src/update-main.js");
+jest.mock("spotify-to-jekyll/src/save-image.js");
 jest.mock("fs");
 jest.mock("spotify-web-api-node", () => {
   return jest.fn().mockImplementation(() => {
@@ -37,7 +36,6 @@ describe("action", () => {
   test("works", async () => {
     process.env.MONTH = 11;
     process.env.YEAR = 2021;
-    jest.spyOn(spotifyToJekyll, "playlist").mockImplementation(() => {});
     await action();
     expect(exportVariable).toHaveBeenCalledWith("playlist", "2021 Fall");
     expect(info).toHaveBeenCalled();

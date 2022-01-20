@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "@actions/core": "^1.6.0",
-    "spotify-to-jekyll": "^0.4.0",
+    "spotify-to-jekyll": "^1.0.0",
     "spotify-web-api-node": "^5.0.2"
   },
   "directories": {
@@ -40,5 +40,10 @@
   "bugs": {
     "url": "https://github.com/katydecorah/spotify-to-jekyll-action/issues"
   },
-  "homepage": "https://github.com/katydecorah/spotify-to-jekyll-action#readme"
+  "homepage": "https://github.com/katydecorah/spotify-to-jekyll-action#readme",
+  "jest": {
+    "transformIgnorePatterns": [
+      "node_modules/(?!spotify-to-jekyll)"
+    ]
+  }
 }
