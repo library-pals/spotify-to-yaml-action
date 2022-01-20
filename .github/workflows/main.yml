@@ -18,8 +18,9 @@ jobs:
           MONTH: "11"
           YEAR: "2021"
       - name: Save the thumbnail
-        run: mkdir img/playlists && curl "${{ env.PlaylistImage }}" -o "img/playlists/${{ env.PlaylistImageOutput }}"
+        run: curl "${{ env.PlaylistImage }}" -o "img/playlists/${{ env.PlaylistImageOutput }}"
       - name: Commit files
+        if: success()
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
