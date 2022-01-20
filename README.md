@@ -10,7 +10,9 @@ To use this action, create a new workflow in `.github/workflows` and modify it a
 
 ```yml
 name: Save Spotify playlist
-# on: push
+on:
+  schedule:
+    - cron: "00 01 20 Mar,Jun,Sep,Dec *"
 
 jobs:
   spotify_to_jekyll:
