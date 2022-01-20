@@ -18,7 +18,7 @@ You must also set the following [secrets to your repository](https://docs.github
 
 To use this action, create a new workflow in `.github/workflows` and modify it as needed:
 
-````yml
+```yml
 name: Save Spotify playlist
 on:
   schedule:
@@ -33,9 +33,12 @@ jobs:
         uses: actions/checkout@v2
       - name: Save the playlist
         uses: katydecorah/spotify-to-jekyll-action@v5.0.0
+        with:
+          spotifyUser: "katydecorah"
         env:
           SpotifyClientID: ${{ secrets.SpotifyClientID }}
           SpotifyClientSecret: ${{ secrets.SpotifyClientSecret}}
+          SpotifyUser: ${{ secrets.SpotifyUser }}
       - name: Save the thumbnail
         run: curl "${{ env.PlaylistImage }}" -o "img/playlists/${{ env.PlaylistImageOutput }}"
       - name: Commit files
@@ -44,5 +47,11 @@ jobs:
           git config --local user.name "GitHub Action"
           git add -A && git commit -m "🎵 ${{ env.playlist }}"
           git push
-```<!-- END GENERATED DOCUMENTATION -->
+```
+
+## Action options
+
+- `spotifyUser`: Required. Your Spotify username.
+
+<!-- END GENERATED DOCUMENTATION -->
 ````
