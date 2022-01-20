@@ -20724,7 +20724,7 @@ function updateMain(data, fileName) {
         try {
             const newContents = yield buildNewMain(data, fileName);
             if (!newContents) {
-                (0,lib_core.setFailed)('Unable to add playlist');
+                (0,lib_core.setFailed)("Unable to add playlist");
                 return;
             }
             return yield (0,promises_namespaceObject.writeFile)(fileName, newContents);
@@ -20849,7 +20849,7 @@ var src_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argu
 function action() {
     return src_awaiter(this, void 0, void 0, function* () {
         try {
-            const fileName = (0,lib_core.getInput)('fileName');
+            const fileName = (0,lib_core.getInput)("fileName");
             const playlistName = learnPlaylistName();
             const playlist = (yield listPlaylists(playlistName));
             // export image variable to be downloaded latter
