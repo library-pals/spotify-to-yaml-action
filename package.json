@@ -48,7 +48,7 @@
   "jest": {
     "clearMocks": true,
     "transformIgnorePatterns": [
-      "node_modules/(?!spotify-to-yaml)"
+      "node_modules/(?!spotify-to-jekyll)"
     ]
   }
 }
