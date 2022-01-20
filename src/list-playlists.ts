@@ -1,14 +1,7 @@
 import { setFailed } from "@actions/core";
 import SpotifyWebApi from "spotify-web-api-node";
-
-export type Playlist = {
-  name: string;
-  external_urls: string;
-  images: string;
-  tracks: {
-    items: {};
-  };
-};
+import formatTracks from "spotify-to-jekyll/src/format-tracks.js";
+import { Playlist } from "./index.js";
 
 export default async function listPlaylists(
   listName: string
@@ -33,12 +26,12 @@ export default async function listPlaylists(
   const {
     body: { items },
   } = await spotifyApi.getPlaylistTracks(findPlaylist.id);
-  return {
+  return formatTracks({
     name: findPlaylist.name,
     external_urls: findPlaylist.external_urls,
     images: findPlaylist.images,
     tracks: {
       items,
     },
-  };
+  });
 }

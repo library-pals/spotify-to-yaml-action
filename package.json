@@ -46,6 +46,7 @@
   },
   "homepage": "https://github.com/katydecorah/spotify-to-jekyll-action#readme",
   "jest": {
+    "clearMocks": true,
     "transformIgnorePatterns": [
       "node_modules/(?!spotify-to-jekyll)"
     ]
