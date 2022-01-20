@@ -10,23 +10,24 @@ Turn a Spotify playlist into a Jekyll post.
 To use this action, create a new workflow in `.github/workflows` and modify it as needed:
 
 ```yml
+name: Save Spotify playlist
 # on: [push]
 
 jobs:
   spotify_to_jekyll:
-    runs-on: ubuntu-latest
+    runs-on: macOS-latest
     name: Save Spotify playlist and thumbnail
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Fetch playlist
+      - name: Save the playlist
         uses: katydecorah/spotify-to-jekyll-action@v5.0.0
         env:
           SpotifyClientID: ${{ secrets.SpotifyClientID }}
           SpotifyClientSecret: ${{ secrets.SpotifyClientSecret}}
           SpotifyUser: ${{ secrets.SpotifyUser }}
           UpdateDataFile: playlists.yml
-      - name: Download the thumbnail
+      - name: Save the thumbnail
         run: curl "${{ env.PlaylistImage }}" -o "img/playlists/${{ env.PlaylistImageOutput }}"
       - name: Commit files
         run: |
