@@ -1,6 +1,10 @@
-# spotify-to-jekyll-action
+# spotify-to-yaml-action
 
-Export a seaonsal Spotify playlist to YAML.
+Export a seasonal Spotify playlist to YAML.
+
+At the end of each season, the workflow will fetch last season's playlists, add the the contents to `_data/playlist.yml` and save the playlist thumbnail image to the repository.
+
+## Set up
 
 This workflow assumes that you named your Spotify playlists using the following format: `YYYY {season}`. Examples:
 
@@ -32,7 +36,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Save the playlist
-        uses: katydecorah/spotify-to-jekyll-action@v5.0.0
+        uses: katydecorah/spotify-to-yaml-action@v5.0.0
         with:
           spotifyUser: "katydecorah"
         env:
@@ -54,4 +58,3 @@ jobs:
 - `spotifyUser`: Required. Your Spotify username.
 
 <!-- END GENERATED DOCUMENTATION -->
-````

@@ -1,7 +1,7 @@
 {
-  "name": "spotify-to-jekyll-action",
+  "name": "spotify-to-yaml-action",
   "version": "5.0.0",
-  "description": "Turn a Spotify playlist into a Jekyll post",
+  "description": "Export a seasonal Spotify playlist to YAML.",
   "main": "dist/index.js",
   "scripts": {
     "pretest": "npm run lint",
@@ -39,16 +39,16 @@
   "keywords": [],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/katydecorah/spotify-to-jekyll-action.git"
+    "url": "git+https://github.com/katydecorah/spotify-to-yaml-action.git"
   },
   "bugs": {
-    "url": "https://github.com/katydecorah/spotify-to-jekyll-action/issues"
+    "url": "https://github.com/katydecorah/spotify-to-yaml-action/issues"
   },
-  "homepage": "https://github.com/katydecorah/spotify-to-jekyll-action#readme",
+  "homepage": "https://github.com/katydecorah/spotify-to-yaml-action#readme",
   "jest": {
     "clearMocks": true,
     "transformIgnorePatterns": [
-      "node_modules/(?!spotify-to-jekyll)"
+      "node_modules/(?!spotify-to-yaml)"
     ]
   }
 }
