@@ -8,3 +8,6 @@ inputs:
   spotifyUser:
     description: Your Spotify username.
     required: true
+  fileName:
+    description: The YAML file to write your playlists.
+    default: _data/playlists.yml
