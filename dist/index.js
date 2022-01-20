@@ -16991,10 +16991,10 @@ function action() {
             const playlist = (yield listPlaylists(playlistName));
             // export image variable to be downloaded latter
             if (playlist.image) {
-                (0,core.exportVariable)("PlaylistImageOutput", `playlist-${playlist.formatted_name}.png`);
+                (0,core.exportVariable)("PlaylistImageOutput", `${playlist.formatted_name}.png`);
                 (0,core.exportVariable)("PlaylistImage", playlist.image);
                 // replace Spotify image url with local version
-                playlist.image = `playlist-${playlist.formatted_name}.png`;
+                playlist.image = `${playlist.formatted_name}.png`;
             }
             // save tracks to playlists.yml
             yield updateMain(playlist);
