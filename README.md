@@ -34,6 +34,4 @@ jobs:
           git config --local user.name "GitHub Action"
           git commit -am "🎵 ${{ env.playlist }}"
           git push
-```
-
-<!-- END GENERATED DOCUMENTATION -->
+```<!-- END GENERATED DOCUMENTATION -->
