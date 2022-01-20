@@ -6,10 +6,12 @@ At the end of each season, the workflow will fetch last season's playlists, add 
 
 ## Set up
 
-This workflow assumes that you named your Spotify playlists using the following format: `YYYY {season}`. Examples:
+This workflow requires that you name your Spotify playlists using the following format: `YYYY {season}`. Examples:
 
 - `2021 Fall`
 - `2021/2022 Winter`
+- `2022 Spring`
+- `2022 Summer`
 
 You must also set the following [secrets to your repository](https://docs.github.com/en/actions/security-guides/encrypted-secrets#creating-encrypted-secrets-for-a-repository) to connect to Spotify. You can find these values from the [Spotify API dashboard](https://developer.spotify.com/dashboard):
 
