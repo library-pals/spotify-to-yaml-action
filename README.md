@@ -1,6 +1,16 @@
 # spotify-to-jekyll-action
 
-Export a Spotify playlist to YAML.
+Export a seaonsal Spotify playlist to YAML.
+
+This workflow assumes that you named your Spotify playlists using the following format: `YYYY {season}`. Examples:
+
+- `2021 Fall`
+- `2021/2022 Winter`
+
+You must also set the following [secrets to your repository](https://docs.github.com/en/actions/security-guides/encrypted-secrets#creating-encrypted-secrets-for-a-repository) to connect to Spotify. You can find these values from the [Spotify API dashboard](https://developer.spotify.com/dashboard):
+
+- `SpotifyClientID`
+- `SpotifyClientSecret`
 
 <!-- START GENERATED DOCUMENTATION -->
 
@@ -8,7 +18,7 @@ Export a Spotify playlist to YAML.
 
 To use this action, create a new workflow in `.github/workflows` and modify it as needed:
 
-```yml
+````yml
 name: Save Spotify playlist
 on:
   schedule:
@@ -26,8 +36,6 @@ jobs:
         env:
           SpotifyClientID: ${{ secrets.SpotifyClientID }}
           SpotifyClientSecret: ${{ secrets.SpotifyClientSecret}}
-          SpotifyUser: ${{ secrets.SpotifyUser }}
-          UpdateDataFile: playlists.yml
       - name: Save the thumbnail
         run: curl "${{ env.PlaylistImage }}" -o "img/playlists/${{ env.PlaylistImageOutput }}"
       - name: Commit files

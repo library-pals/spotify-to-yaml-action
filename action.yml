@@ -3,3 +3,8 @@ description: "Generate a Jekyll post from a Spotify playlist"
 runs:
   using: "node16"
   main: "dist/index.js"
+
+inputs:
+  spotifyUser:
+    description: Your Spotify username.
+    required: true

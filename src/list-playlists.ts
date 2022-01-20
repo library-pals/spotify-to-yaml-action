@@ -1,4 +1,4 @@
-import { setFailed } from "@actions/core";
+import { setFailed, getInput } from "@actions/core";
 import SpotifyWebApi from "spotify-web-api-node";
 import formatTracks from "spotify-to-jekyll/src/format-tracks.js";
 import { Playlist } from "./index.js";
@@ -10,7 +10,7 @@ export default async function listPlaylists(
     clientId: process.env.SpotifyClientID,
     clientSecret: process.env.SpotifyClientSecret,
   });
-  const username = process.env.SpotifyUser;
+  const username = getInput("spotifyUser");
   const {
     body: { access_token },
   } = await spotifyApi.clientCredentialsGrant();
