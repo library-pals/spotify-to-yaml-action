@@ -44,7 +44,7 @@ describe("action", () => {
     expect(exportVariable).toHaveBeenNthCalledWith(
       2,
       "PlaylistImageOutput",
-      "playlist-2021-fall.png"
+      "2021-fall.png"
     );
     expect(exportVariable).toHaveBeenNthCalledWith(
       3,
@@ -55,7 +55,7 @@ describe("action", () => {
       Array [
         Object {
           "formatted_name": "2021-fall",
-          "image": "playlist-2021-fall.png",
+          "image": "2021-fall.png",
           "name": "2021 Fall",
           "tracks": Array [
             Object {

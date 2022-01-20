@@ -21,13 +21,10 @@ export async function action() {
     const playlist = (await listPlaylists(playlistName)) as Playlist;
     // export image variable to be downloaded latter
     if (playlist.image) {
-      exportVariable(
-        "PlaylistImageOutput",
-        `playlist-${playlist.formatted_name}.png`
-      );
+      exportVariable("PlaylistImageOutput", `${playlist.formatted_name}.png`);
       exportVariable("PlaylistImage", playlist.image);
       // replace Spotify image url with local version
-      playlist.image = `playlist-${playlist.formatted_name}.png`;
+      playlist.image = `${playlist.formatted_name}.png`;
     }
     // save tracks to playlists.yml
     await updateMain(playlist);
