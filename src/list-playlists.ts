@@ -1,7 +1,18 @@
 import { setFailed } from "@actions/core";
 import SpotifyWebApi from "spotify-web-api-node";
 
-export default async function listPlaylists(listName) {
+export type Playlist = {
+  name: string;
+  external_urls: string;
+  images: string;
+  tracks: {
+    items: {};
+  };
+};
+
+export default async function listPlaylists(
+  listName: string
+): Promise<Playlist | undefined> {
   const spotifyApi = new SpotifyWebApi({
     clientId: process.env.SpotifyClientID,
     clientSecret: process.env.SpotifyClientSecret,

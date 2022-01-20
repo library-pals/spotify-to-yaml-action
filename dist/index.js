@@ -54860,85 +54860,97 @@ async function saveImage(data) {
 
 // EXTERNAL MODULE: ./node_modules/@actions/core/lib/core.js
 var core = __nccwpck_require__(2186);
-;// CONCATENATED MODULE: ./src/learn-playlist-name.js
-
+;// CONCATENATED MODULE: ./src/learn-playlist-name.ts
 
 function learnPlaylistName() {
-  const today = new Date();
-  const month = process.env.MONTH || today.getMonth();
-  const year = process.env.YEAR || today.getFullYear();
-  const season = {
-    2: "Winter",
-    5: "Spring",
-    8: "Summer",
-    11: "Fall",
-  };
-  const name = `${month == 2 ? `${year - 1}/${year}` : year} ${season[month]}`;
-  (0,core.exportVariable)("playlist", name);
-  return name;
+    const today = new Date();
+    const month = process.env.MONTH ? parseInt(process.env.MONTH) : today.getMonth();
+    const year = process.env.YEAR ? parseInt(process.env.YEAR) : today.getFullYear();
+    const season = {
+        2: "Winter",
+        5: "Spring",
+        8: "Summer",
+        11: "Fall",
+    };
+    const name = `${month == 2 ? `${year - 1}/${year}` : year} ${season[month]}`;
+    (0,core.exportVariable)("playlist", name);
+    return name;
 }
 
 // EXTERNAL MODULE: ./node_modules/spotify-web-api-node/src/server.js
 var server = __nccwpck_require__(5337);
 var server_default = /*#__PURE__*/__nccwpck_require__.n(server);
-;// CONCATENATED MODULE: ./src/list-playlists.js
+;// CONCATENATED MODULE: ./src/list-playlists.ts
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 
 
-
-async function listPlaylists(listName) {
-  const spotifyApi = new (server_default())({
-    clientId: process.env.SpotifyClientID,
-    clientSecret: process.env.SpotifyClientSecret,
-  });
-  const username = process.env.SpotifyUser;
-  const {
-    body: { access_token },
-  } = await spotifyApi.clientCredentialsGrant();
-
-  spotifyApi.setAccessToken(access_token);
-
-  const { body } = await spotifyApi.getUserPlaylists(username);
-  const findPlaylist = body.items.find((list) => list.name === listName);
-  if (!findPlaylist) {
-    (0,core.setFailed)(`Could not find playlist "${listName}". Is it private?`);
-    return;
-  }
-  const {
-    body: { items },
-  } = await spotifyApi.getPlaylistTracks(findPlaylist.id);
-  return {
-    name: findPlaylist.name,
-    external_urls: findPlaylist.external_urls,
-    images: findPlaylist.images,
-    tracks: {
-      items,
-    },
-  };
+function listPlaylists(listName) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const spotifyApi = new (server_default())({
+            clientId: process.env.SpotifyClientID,
+            clientSecret: process.env.SpotifyClientSecret,
+        });
+        const username = process.env.SpotifyUser;
+        const { body: { access_token }, } = yield spotifyApi.clientCredentialsGrant();
+        spotifyApi.setAccessToken(access_token);
+        const { body } = yield spotifyApi.getUserPlaylists(username);
+        const findPlaylist = body.items.find((list) => list.name === listName);
+        if (!findPlaylist) {
+            (0,core.setFailed)(`Could not find playlist "${listName}". Is it private?`);
+            return;
+        }
+        const { body: { items }, } = yield spotifyApi.getPlaylistTracks(findPlaylist.id);
+        return {
+            name: findPlaylist.name,
+            external_urls: findPlaylist.external_urls,
+            images: findPlaylist.images,
+            tracks: {
+                items,
+            },
+        };
+    });
 }
 
-;// CONCATENATED MODULE: ./src/index.js
+;// CONCATENATED MODULE: ./src/index.ts
+var src_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 
 
 
 
 
 
-
-async function action() {
-  try {
-    const playlistName = learnPlaylistName();
-    const playlist = await listPlaylists(playlistName);
-    (0,core.info)(playlist);
-    const formatPlaylist = await formatTracks(playlist);
-    // save tracks to playlists.yml
-    await updateMain(formatPlaylist);
-    // save image to img/staging/
-    await saveImage(formatPlaylist);
-  } catch (error) {
-    (0,core.setFailed)(error.message);
-  }
+function action() {
+    return src_awaiter(this, void 0, void 0, function* () {
+        try {
+            const playlistName = learnPlaylistName();
+            const playlist = yield listPlaylists(playlistName);
+            const formatPlaylist = yield formatTracks(playlist);
+            // save tracks to playlists.yml
+            yield updateMain(formatPlaylist);
+            // save image to img/staging/
+            yield saveImage(formatPlaylist);
+        }
+        catch (error) {
+            (0,core.setFailed)(error.message);
+        }
+    });
 }
-
 /* harmony default export */ const src = (action());
 
 })();

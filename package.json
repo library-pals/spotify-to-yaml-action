@@ -8,7 +8,7 @@
     "test": "jest",
     "lint": "eslint .",
     "pretty-quick": "pretty-quick",
-    "build": "ncc build src/index.js",
+    "build": "ncc build src/index.ts",
     "prepare": "husky install"
   },
   "author": "Katy DeCorah",
@@ -16,13 +16,17 @@
   "devDependencies": {
     "@babel/eslint-parser": "^7.16.5",
     "@babel/preset-env": "^7.16.10",
+    "@babel/preset-typescript": "^7.16.7",
+    "@types/jest": "^27.4.0",
+    "@types/node": "^17.0.10",
     "@vercel/ncc": "^0.33.1",
     "eslint": "^8.7.0",
     "eslint-config-prettier": "^8.3.0",
     "husky": "^7.0.4",
     "jest": "^27.4.7",
     "prettier": "^2.5.1",
-    "pretty-quick": "^3.1.3"
+    "pretty-quick": "^3.1.3",
+    "typescript": "^4.5.4"
   },
   "dependencies": {
     "@actions/core": "^1.6.0",
