@@ -25,8 +25,9 @@ jobs:
           SpotifyClientID: ${{ secrets.SpotifyClientID }}
           SpotifyClientSecret: ${{ secrets.SpotifyClientSecret}}
           SpotifyUser: ${{ secrets.SpotifyUser }}
-          ImgDir: img/playlists
           UpdateDataFile: playlists.yml
+      - name: Download the thumbnail
+        run: curl "${{ env.PlaylistImage }}" -o "img/playlists/${{ env.PlaylistImageOutput }}"
       - name: Commit files
         run: |
           git config --local user.email "action@github.com"
