@@ -6,7 +6,7 @@
   "scripts": {
     "pretest": "npm run lint",
     "test": "jest",
-    "lint": "eslint .",
+    "lint": "eslint src/**/*.ts",
     "pretty-quick": "pretty-quick",
     "build": "ncc build src/index.ts",
     "prepare": "husky install"
