@@ -16949,7 +16949,7 @@ function listPlaylists(listName) {
             clientId: process.env.SpotifyClientID,
             clientSecret: process.env.SpotifyClientSecret,
         });
-        const username = process.env.SpotifyUser;
+        const username = (0,core.getInput)('spotifyUser');
         const { body: { access_token }, } = yield spotifyApi.clientCredentialsGrant();
         spotifyApi.setAccessToken(access_token);
         const { body } = yield spotifyApi.getUserPlaylists(username);
