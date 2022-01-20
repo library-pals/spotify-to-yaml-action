@@ -24,5 +24,5 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git commit -am "🎵 ${{ env.playlist }}"
+          git add -A && git commit -m "🎵 ${{ env.playlist }}"
           git push
