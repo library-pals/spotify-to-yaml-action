@@ -59,4 +59,6 @@ jobs:
 
 - `spotifyUser`: Required. Your Spotify username.
 
+- `fileName`: The YAML file to write your playlists. Default: `_data/playlists.yml`.
+
 <!-- END GENERATED DOCUMENTATION -->
