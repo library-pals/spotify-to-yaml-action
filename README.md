@@ -1,7 +1,6 @@
 # spotify-to-jekyll-action
 
-Turn a Spotify playlist into a Jekyll post.
-
+Export a Spotify playlist to YAML.
 
 <!-- START GENERATED DOCUMENTATION -->
 
@@ -9,7 +8,7 @@ Turn a Spotify playlist into a Jekyll post.
 
 To use this action, create a new workflow in `.github/workflows` and modify it as needed:
 
-```yml
+````yml
 name: Save Spotify playlist
 # on: [push]
 
@@ -36,3 +35,4 @@ jobs:
           git add -am "🎵 ${{ env.playlist }}"
           git push
 ```<!-- END GENERATED DOCUMENTATION -->
+````
