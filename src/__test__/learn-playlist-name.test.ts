@@ -1,13 +1,13 @@
 import { exportVariable } from "@actions/core";
-import learnPlaylistName from "../learn-playlist-name.js";
+import learnPlaylistName from "../learn-playlist-name";
 
-process.env.YEAR = 2019;
+process.env.YEAR = "2019";
 
 jest.mock("@actions/core");
 
 describe("learnPlaylistName", () => {
   test("Summer", () => {
-    process.env.MONTH = 8;
+    process.env.MONTH = "8";
     expect(learnPlaylistName()).toEqual(`${process.env.YEAR} Summer`);
     expect(exportVariable).toHaveBeenCalledWith(
       "playlist",
@@ -16,7 +16,7 @@ describe("learnPlaylistName", () => {
   });
 
   test("Fall", () => {
-    process.env.MONTH = 11;
+    process.env.MONTH = "11";
     expect(learnPlaylistName()).toEqual(`${process.env.YEAR} Fall`);
     expect(exportVariable).toHaveBeenCalledWith(
       "playlist",
@@ -25,13 +25,13 @@ describe("learnPlaylistName", () => {
   });
 
   test("Winter", () => {
-    process.env.MONTH = 2;
+    process.env.MONTH = "2";
     expect(learnPlaylistName()).toEqual(
-      `${process.env.YEAR - 1}/${process.env.YEAR} Winter`
+      `${parseInt(process.env.YEAR) - 1}/${process.env.YEAR} Winter`
     );
     expect(exportVariable).toHaveBeenCalledWith(
       "playlist",
-      `${process.env.YEAR} Winter`
+      `${parseInt(process.env.YEAR) - 1}/${process.env.YEAR} Winter`
     );
   });
 

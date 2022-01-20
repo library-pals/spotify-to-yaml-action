@@ -14,7 +14,7 @@ export default function learnPlaylistName(): string {
     8: "Summer",
     11: "Fall",
   };
-  const name = `${month == 2 ? `${year - 1}/${year}` : year} ${season[month]}`;
+  const name = `${month === 2 ? `${year - 1}/${year}` : year} ${season[month]}`;
   exportVariable("playlist", name);
   return name;
 }

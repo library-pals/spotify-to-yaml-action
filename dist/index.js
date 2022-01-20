@@ -54864,15 +54864,19 @@ var core = __nccwpck_require__(2186);
 
 function learnPlaylistName() {
     const today = new Date();
-    const month = process.env.MONTH ? parseInt(process.env.MONTH) : today.getMonth();
-    const year = process.env.YEAR ? parseInt(process.env.YEAR) : today.getFullYear();
+    const month = process.env.MONTH
+        ? parseInt(process.env.MONTH)
+        : today.getMonth();
+    const year = process.env.YEAR
+        ? parseInt(process.env.YEAR)
+        : today.getFullYear();
     const season = {
         2: "Winter",
         5: "Spring",
         8: "Summer",
         11: "Fall",
     };
-    const name = `${month == 2 ? `${year - 1}/${year}` : year} ${season[month]}`;
+    const name = `${month === 2 ? `${year - 1}/${year}` : year} ${season[month]}`;
     (0,core.exportVariable)("playlist", name);
     return name;
 }
@@ -54939,8 +54943,8 @@ function action() {
     return src_awaiter(this, void 0, void 0, function* () {
         try {
             const playlistName = learnPlaylistName();
-            const playlist = yield listPlaylists(playlistName);
-            const formatPlaylist = yield formatTracks(playlist);
+            const playlist = (yield listPlaylists(playlistName));
+            const formatPlaylist = (yield formatTracks(playlist));
             // save tracks to playlists.yml
             yield updateMain(formatPlaylist);
             // save image to img/staging/
