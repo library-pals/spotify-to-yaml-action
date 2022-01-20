@@ -38,7 +38,7 @@ describe("action", () => {
     process.env.YEAR = "2021";
     await action();
     expect(exportVariable).toHaveBeenCalledWith("playlist", "2021 Fall");
-    expect(formatTracks).toHaveBeenCalled();
+    expect(formatTracks.mock.calls[1]).toMatchSnapshot();
     expect(updateMain).toHaveBeenCalled();
     expect(saveImage).toHaveBeenCalled();
   });
