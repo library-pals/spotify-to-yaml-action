@@ -8,9 +8,9 @@ Export a Spotify playlist to YAML.
 
 To use this action, create a new workflow in `.github/workflows` and modify it as needed:
 
-````yml
+```yml
 name: Save Spotify playlist
-on: push
+# on: push
 
 jobs:
   spotify_to_jekyll:
@@ -26,15 +26,13 @@ jobs:
           SpotifyClientSecret: ${{ secrets.SpotifyClientSecret}}
           SpotifyUser: ${{ secrets.SpotifyUser }}
           UpdateDataFile: playlists.yml
-          MONTH: "11"
-          YEAR: "2021"
       - name: Save the thumbnail
         run: curl "${{ env.PlaylistImage }}" -o "img/playlists/${{ env.PlaylistImageOutput }}"
       - name: Commit files
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git commit -am "🎵 ${{ env.playlist }}"
+          git add -A && git commit -m "🎵 ${{ env.playlist }}"
           git push
 ```<!-- END GENERATED DOCUMENTATION -->
 ````
