@@ -6,13 +6,9 @@ import { setFailed } from "@actions/core";
 export default async function updateMain(data: Playlist, fileName: string) {
   try {
     const newContents = await buildNewMain(data, fileName);
-    if (!newContents) {
-      setFailed("Unable to add playlist");
-      return;
-    }
     return await writeFile(fileName, newContents);
   } catch (error) {
-    setFailed(error);
+    throw new Error(error);
   }
 }
 
@@ -33,6 +29,6 @@ export async function buildNewMain(data: Playlist, fileName: string) {
     const json = [...(currentPlaylists && [...currentJson]), newPlaylist];
     return dump(json);
   } catch (error) {
-    setFailed(error);
+    throw new Error(error);
   }
 }

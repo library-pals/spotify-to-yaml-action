@@ -1,4 +1,3 @@
-import { setFailed } from "@actions/core";
 import { promises } from "fs";
 import updateMain from "../write-file";
 
@@ -82,12 +81,14 @@ describe("updateMain", () => {
   test("write fails", async () => {
     jest.spyOn(promises, "writeFile").mockRejectedValue("Error");
     jest.spyOn(promises, "readFile").mockImplementation();
-    await updateMain(playlist, "myfile.yml");
-    expect(setFailed).toHaveBeenCalledWith("Error");
+    await expect(
+      updateMain(playlist, "myfile.yml")
+    ).rejects.toMatchInlineSnapshot(`[Error: Error]`);
   });
   test("read fails", async () => {
     jest.spyOn(promises, "readFile").mockRejectedValue("Error");
-    await updateMain(playlist, "myfile.yml");
-    expect(setFailed).toHaveBeenCalledWith("Error");
+    await expect(
+      updateMain(playlist, "myfile.yml")
+    ).rejects.toMatchInlineSnapshot(`[Error: Error: Error]`);
   });
 });

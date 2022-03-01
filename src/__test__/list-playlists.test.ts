@@ -1,3 +1,4 @@
+import { setFailed } from "@actions/core";
 import listPlaylists from "../list-playlists";
 
 jest.mock("spotify-web-api-node", () => {
@@ -132,5 +133,12 @@ describe("listPlaylists", () => {
         "url": "https://open.spotify.com/playlist/2YnPs9UNBkJpswmsRNwQ1o",
       }
     `);
+  });
+
+  test("cannot find", async () => {
+    await listPlaylists("2022 Fall");
+    expect(setFailed).toHaveBeenCalledWith(
+      'Could not find playlist "2022 Fall". Is it private?'
+    );
   });
 });
