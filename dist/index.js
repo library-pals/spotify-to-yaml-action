@@ -20704,8 +20704,6 @@ var jsYaml = {
 /* harmony default export */ const js_yaml = ((/* unused pure expression or super */ null && (jsYaml)));
 
 
-// EXTERNAL MODULE: ./node_modules/@actions/core/lib/core.js
-var lib_core = __nccwpck_require__(2186);
 ;// CONCATENATED MODULE: ./src/write-file.ts
 var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -20718,19 +20716,14 @@ var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argume
 };
 
 
-
 function updateMain(data, fileName) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const newContents = yield buildNewMain(data, fileName);
-            if (!newContents) {
-                (0,lib_core.setFailed)("Unable to add playlist");
-                return;
-            }
             return yield (0,promises_namespaceObject.writeFile)(fileName, newContents);
         }
         catch (error) {
-            (0,lib_core.setFailed)(error);
+            throw new Error(error);
         }
     });
 }
@@ -20752,11 +20745,13 @@ function buildNewMain(data, fileName) {
             return dump(json);
         }
         catch (error) {
-            (0,lib_core.setFailed)(error);
+            throw new Error(error);
         }
     });
 }
 
+// EXTERNAL MODULE: ./node_modules/@actions/core/lib/core.js
+var lib_core = __nccwpck_require__(2186);
 ;// CONCATENATED MODULE: ./src/learn-playlist-name.ts
 
 function learnPlaylistName() {
