@@ -36,7 +36,7 @@ jobs:
     name: Save Spotify playlist and thumbnail
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Save the playlist
         uses: katydecorah/spotify-to-yaml-action@v7.0.0
         with:
