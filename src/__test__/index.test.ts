@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import { action } from "..";
 import * as UpdateMain from "../write-file";
 import * as core from "@actions/core";

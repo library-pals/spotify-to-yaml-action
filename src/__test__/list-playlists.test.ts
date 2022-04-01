@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import { setFailed } from "@actions/core";
 import listPlaylists from "../list-playlists";
 
