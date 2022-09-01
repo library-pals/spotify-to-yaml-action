@@ -67,7 +67,7 @@ describe("action", () => {
     );
     expect(updateMainSpy.mock.calls[0]).toMatchSnapshot();
     expect(writeFileSpy.mock.calls[0]).toMatchInlineSnapshot(`
-      Array [
+      [
         "_data/playlists.yml",
         "- playlist: 2021 Summer
       - playlist: 2021 Fall
