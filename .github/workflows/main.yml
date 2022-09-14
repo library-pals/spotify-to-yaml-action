@@ -2,6 +2,7 @@ name: Save Spotify playlist
 on:
   schedule:
     - cron: "00 01 20 Mar,Jun,Sep,Dec *"
+  workflow_dispatch: # enables run button on github.com
 
 jobs:
   spotify_to_jekyll:
@@ -22,6 +23,7 @@ jobs:
         run: curl "${{ env.PlaylistImage }}" -o "img/playlists/${{ env.PlaylistImageOutput }}"
       - name: Commit files
         run: |
+          git pull
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add -A && git commit -m "🎵 ${{ env.playlist }}"
