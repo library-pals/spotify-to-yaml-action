@@ -57,6 +57,7 @@ jobs:
           git push
 ```
 
+
 ## Action options
 
 - `spotifyUser`: Required. Your Spotify username.
