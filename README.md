@@ -39,7 +39,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Save the playlist
-        uses: katydecorah/spotify-to-yaml-action@v7.1.0
+        uses: katydecorah/spotify-to-yaml-action@v7.2.0
         with:
           spotifyUser: "katydecorah"
         env:
