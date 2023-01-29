@@ -30,7 +30,18 @@ jest.mock("spotify-web-api-node", () => {
   });
 });
 
+const defaultInputs = {
+  seasonNames: "Winter,Spring,Summer,Fall",
+  fileName: "_data/playlists.yml",
+};
+
 describe("action", () => {
+  beforeEach(() => {
+    jest
+      .spyOn(core, "getInput")
+      .mockImplementation((name) => defaultInputs[name] || undefined);
+  });
+
   test("works", async () => {
     process.env.MONTH = "11";
     process.env.YEAR = "2021";
@@ -42,9 +53,6 @@ describe("action", () => {
 `);
     const writeFileSpy = jest.spyOn(promises, "writeFile").mockImplementation();
     const exportVariableSpy = jest.spyOn(core, "exportVariable");
-    jest
-      .spyOn(core, "getInput")
-      .mockImplementation(() => "_data/playlists.yml");
 
     await action();
     expect(learnPlaylistNameSpy).toHaveReturnedWith("2021 Fall");

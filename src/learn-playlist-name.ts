@@ -1,4 +1,4 @@
-import { exportVariable } from "@actions/core";
+import { exportVariable, getInput } from "@actions/core";
 
 export default function learnPlaylistName(): string {
   const today = new Date();
@@ -8,11 +8,14 @@ export default function learnPlaylistName(): string {
   const year = process.env.YEAR
     ? parseInt(process.env.YEAR)
     : today.getFullYear();
+  const [marchEnd, juneEnd, septemberEnd, decemberEnd] = getInput("seasonNames")
+    .split(",")
+    .map((s) => s.trim());
   const season = {
-    2: "Winter",
-    5: "Spring",
-    8: "Summer",
-    11: "Fall",
+    2: marchEnd,
+    5: juneEnd,
+    8: septemberEnd,
+    11: decemberEnd,
   };
   const name = `${month === 2 ? `${year - 1}/${year}` : year} ${season[month]}`;
   exportVariable("playlist", name);
