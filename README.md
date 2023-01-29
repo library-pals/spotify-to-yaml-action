@@ -62,4 +62,5 @@ jobs:
 
 - `spotifyUser`: Required. Your Spotify username.
 - `fileName`: The YAML file to write your playlists. Default: `_data/playlists.yml`.
+- `seasonNames`: The season names in order by the season that ends in March, June, September, and then December. Default: `Winter,Spring,Summer,Fall`.
 <!-- END GENERATED DOCUMENTATION -->

@@ -11,3 +11,6 @@ inputs:
   fileName:
     description: The YAML file to write your playlists.
     default: _data/playlists.yml
+  seasonNames:
+    description: The season names in order by the season that ends in March, June, September, and then December.
+    default: "Winter,Spring,Summer,Fall"
