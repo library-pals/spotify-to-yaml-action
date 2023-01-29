@@ -6,7 +6,7 @@ At the end of each season, the workflow will fetch last season's playlists, add 
 
 ## Set up
 
-This workflow requires that you name your Spotify playlists using the following format: `YYYY {season}`. Examples:
+This workflow requires that you name your Spotify playlists using the following format: `YYYY {season}`. If you use different names for the seasons, you can use the `seasonNames` [action input](#action-options) to reflect that. Examples:
 
 - `2021 Fall`
 - `2021/2022 Winter`
@@ -56,7 +56,6 @@ jobs:
           git add -A && git commit -m "🎵 ${{ env.playlist }}"
           git push
 ```
-
 
 ## Action options
 
