@@ -51,7 +51,7 @@
   "jest": {
     "clearMocks": true,
     "transformIgnorePatterns": [
-      "node_modules/(?!spotify-to-jekyll)"
+      "node_modules/(?!spotify-to-yaml)"
     ],
     "coverageThreshold": {
       "global": {

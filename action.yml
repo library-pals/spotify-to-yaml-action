@@ -1,4 +1,4 @@
-name: "Spotify to Jekyll"
+name: "Spotify to Yaml"
 description: "Export a seasonal Spotify playlist to YAML."
 runs:
   using: "node16"

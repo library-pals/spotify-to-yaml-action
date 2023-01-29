@@ -5,7 +5,7 @@ on:
   workflow_dispatch: # enables run button on github.com
 
 jobs:
-  spotify_to_jekyll:
+  spotify_to_yaml:
     runs-on: macOS-latest
     name: Save Spotify playlist and thumbnail
     steps:
