@@ -2,7 +2,9 @@ name: Document GitHub action
 on:
   push:
     paths:
-      - ".github/workflows/main.yml"
+      - ".github/workflows/spotify.yml"
+      - ".github/workflows/spotify-advanced.yml"
+      - ".github/workflows/documentation.yml"
       - "action.yml"
       - "package.json"
       - "README.md"
@@ -17,7 +19,8 @@ jobs:
       - name: Documentation action
         uses: katydecorah/documentation-action@v0.3.0
         with:
-          exampleWorkflowFile: "main.yml"
+          exampleWorkflowFile: "spotify.yml"
+          additionalWorkflowFilePrefix: "spotify"
       - name: Commit files
         if: env.UpdateDocumentation == 'true'
         run: |

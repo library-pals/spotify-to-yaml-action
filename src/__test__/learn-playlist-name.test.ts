@@ -1,6 +1,7 @@
 import { exportVariable } from "@actions/core";
 import learnPlaylistName from "../learn-playlist-name";
 import * as core from "@actions/core";
+import * as github from "@actions/github";
 
 process.env.YEAR = "2019";
 
@@ -63,5 +64,27 @@ describe("learnPlaylistName", () => {
       "playlist",
       `${process.env.YEAR} Fall`
     );
+  });
+
+  test("Month does not match end of season month", () => {
+    process.env.MONTH = 1;
+    expect(() => learnPlaylistName()).toThrow(
+      "The current month does not match an end of season month."
+    );
+  });
+
+  test("Set workflow input `playlistName`", () => {
+    process.env.MONTH = 1;
+    Object.defineProperty(github, "context", {
+      value: {
+        payload: {
+          inputs: {
+            playlistName: "2020 Fall",
+          },
+        },
+      },
+    });
+    expect(learnPlaylistName()).toEqual("2020 Fall");
+    expect(exportVariable).toHaveBeenCalledWith("playlist", "2020 Fall");
   });
 });

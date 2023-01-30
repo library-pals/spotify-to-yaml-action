@@ -29,7 +29,6 @@ name: Save Spotify playlist
 on:
   schedule:
     - cron: "00 01 20 Mar,Jun,Sep,Dec *"
-  workflow_dispatch: # enables run button on github.com
 
 jobs:
   spotify_to_yaml:
@@ -57,10 +56,54 @@ jobs:
           git push
 ```
 
+ ### Additional example workflows
+
+<details>
+<summary>Manually trigger the action</summary>
+
+```yml
+name: Manually trigger the action
+on:
+  workflow_dispatch:
+    inputs:
+      playlistName:
+        type: string
+        description: The name of the Spotify playlist.
+
+jobs:
+  spotify_to_yaml:
+    runs-on: macOS-latest
+    name: Save Spotify playlist and thumbnail
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Save the playlist
+        uses: katydecorah/spotify-to-yaml-action@v7.2.0
+        with:
+          spotifyUser: "katydecorah"
+        env:
+          SpotifyClientID: ${{ secrets.SpotifyClientID }}
+          SpotifyClientSecret: ${{ secrets.SpotifyClientSecret}}
+          SpotifyUser: ${{ secrets.SpotifyUser }}
+      - name: Save the thumbnail
+        run: curl "${{ env.PlaylistImage }}" -o "img/playlists/${{ env.PlaylistImageOutput }}"
+      - name: Commit files
+        run: |
+          git pull
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add -A && git commit -m "🎵 ${{ env.playlist }}"
+          git push
+```
+
+</details>
+
 
 ## Action options
 
 - `spotifyUser`: Required. Your Spotify username.
+
 - `fileName`: The YAML file to write your playlists. Default: `_data/playlists.yml`.
+
 - `seasonNames`: The season names in order by the season that ends in March, June, September, and then December. Default: `Winter,Spring,Summer,Fall`.
 <!-- END GENERATED DOCUMENTATION -->
