@@ -28908,9 +28908,7 @@ function learnPlaylistName() {
         const year = process.env.YEAR
             ? parseInt(process.env.YEAR)
             : today.getFullYear();
-        const [marchEnd, juneEnd, septemberEnd, decemberEnd] = (0,lib_core.getInput)("seasonNames")
-            .split(",")
-            .map((s) => s.trim());
+        const [marchEnd, juneEnd, septemberEnd, decemberEnd] = validateSeasonNames();
         const seasons = {
             2: marchEnd,
             5: juneEnd,
@@ -28924,6 +28922,14 @@ function learnPlaylistName() {
     }
     (0,lib_core.exportVariable)("playlist", playlistName);
     return playlistName;
+}
+function validateSeasonNames() {
+    const seasonNames = (0,lib_core.getInput)("seasonNames")
+        .split(",")
+        .map((s) => s.trim());
+    if (seasonNames.length !== 4)
+        throw new Error(`There must be 4 seasons listed in \`seasonNames\` only found ${seasonNames.length} (\`${seasonNames}\`).`);
+    return seasonNames;
 }
 
 // EXTERNAL MODULE: ./node_modules/spotify-web-api-node/src/server.js

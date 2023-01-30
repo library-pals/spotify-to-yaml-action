@@ -16,11 +16,8 @@ export default function learnPlaylistName(): string {
     const year = process.env.YEAR
       ? parseInt(process.env.YEAR)
       : today.getFullYear();
-    const [marchEnd, juneEnd, septemberEnd, decemberEnd] = getInput(
-      "seasonNames"
-    )
-      .split(",")
-      .map((s) => s.trim());
+    const [marchEnd, juneEnd, septemberEnd, decemberEnd] =
+      validateSeasonNames();
     const seasons = {
       2: marchEnd,
       5: juneEnd,
@@ -36,4 +33,15 @@ export default function learnPlaylistName(): string {
   }
   exportVariable("playlist", playlistName);
   return playlistName;
+}
+
+function validateSeasonNames() {
+  const seasonNames = getInput("seasonNames")
+    .split(",")
+    .map((s) => s.trim());
+  if (seasonNames.length !== 4)
+    throw new Error(
+      `There must be 4 seasons listed in \`seasonNames\` only found ${seasonNames.length} (\`${seasonNames}\`).`
+    );
+  return seasonNames;
 }

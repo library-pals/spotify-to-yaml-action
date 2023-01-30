@@ -73,6 +73,14 @@ describe("learnPlaylistName", () => {
     );
   });
 
+  test("Invalid seasonNames", () => {
+    process.env.MONTH = 5;
+    defaultInputs.seasonNames = "Summer";
+    expect(() => learnPlaylistName()).toThrow(
+      "There must be 4 seasons listed in `seasonNames` only found 1 (`Summer`)."
+    );
+  });
+
   test("Set workflow input `playlistName`", () => {
     process.env.MONTH = 1;
     Object.defineProperty(github, "context", {
