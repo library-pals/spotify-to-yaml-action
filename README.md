@@ -57,6 +57,49 @@ jobs:
           git push
 ```
 
+ ### Additional example workflows
+
+<details>
+<summary>Manually trigger the action</summary>
+
+```yml
+name: Manually trigger the action
+on:
+  workflow_dispatch:
+    inputs:
+      playlistName:
+        type: string
+        description: The name of the Spotify playlist.
+
+jobs:
+  spotify_to_yaml:
+    runs-on: macOS-latest
+    name: Save Spotify playlist and thumbnail
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Save the playlist
+        uses: katydecorah/spotify-to-yaml-action@v7.2.0
+        with:
+          spotifyUser: "katydecorah"
+        env:
+          SpotifyClientID: ${{ secrets.SpotifyClientID }}
+          SpotifyClientSecret: ${{ secrets.SpotifyClientSecret}}
+          SpotifyUser: ${{ secrets.SpotifyUser }}
+      - name: Save the thumbnail
+        run: curl "${{ env.PlaylistImage }}" -o "img/playlists/${{ env.PlaylistImageOutput }}"
+      - name: Commit files
+        run: |
+          git pull
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add -A && git commit -m "🎵 ${{ env.playlist }}"
+          git push
+```
+
+</details>
+
+
 ## Action options
 
 - `spotifyUser`: Required. Your Spotify username.
