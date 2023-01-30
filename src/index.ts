@@ -18,6 +18,7 @@ export type Playlist = {
 export async function action() {
   try {
     const fileName = getInput("fileName");
+
     const playlistName: string = learnPlaylistName();
     const playlist = (await listPlaylists(playlistName)) as Playlist;
     // export image variable to be downloaded latter
