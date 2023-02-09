@@ -31,7 +31,7 @@ on:
     - cron: "00 01 20 Mar,Jun,Sep,Dec *"
 
 jobs:
-  spotify_to_yaml:
+  spotify-to-yaml:
     runs-on: macOS-latest
     name: Save Spotify playlist and thumbnail
     steps:
@@ -71,7 +71,7 @@ on:
         description: The name of the Spotify playlist.
 
 jobs:
-  spotify_to_yaml:
+  spotify-to-yaml:
     runs-on: macOS-latest
     name: Save Spotify playlist and thumbnail
     steps:
