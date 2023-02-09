@@ -9,7 +9,7 @@ export default async function listPlaylists(
     clientId: process.env.SpotifyClientID,
     clientSecret: process.env.SpotifyClientSecret,
   });
-  const username = getInput("spotifyUser");
+  const username = getInput("spotify-username");
   const {
     body: { access_token },
   } = await spotifyApi.clientCredentialsGrant();

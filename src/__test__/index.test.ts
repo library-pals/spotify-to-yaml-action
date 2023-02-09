@@ -31,8 +31,8 @@ jest.mock("spotify-web-api-node", () => {
 });
 
 const defaultInputs = {
-  seasonNames: "Winter,Spring,Summer,Fall",
-  fileName: "_data/playlists.yml",
+  "season-names": "Winter,Spring,Summer,Fall",
+  filename: "_data/playlists.yml",
 };
 
 describe("action", () => {

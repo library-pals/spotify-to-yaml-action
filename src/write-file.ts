@@ -3,19 +3,19 @@ import { Playlist } from ".";
 import { load, dump } from "js-yaml";
 import { setFailed } from "@actions/core";
 
-export default async function updateMain(data: Playlist, fileName: string) {
+export default async function updateMain(data: Playlist, filename: string) {
   try {
-    const newContents = await buildNewMain(data, fileName);
-    return await writeFile(fileName, newContents);
+    const newContents = await buildNewMain(data, filename);
+    return await writeFile(filename, newContents);
   } catch (error) {
     throw new Error(error);
   }
 }
 
-export async function buildNewMain(data: Playlist, fileName: string) {
+export async function buildNewMain(data: Playlist, filename: string) {
   try {
     const currentPlaylists: string | [] =
-      (await readFile(fileName, "utf-8")) || "";
+      (await readFile(filename, "utf-8")) || "";
     const currentJson = load(currentPlaylists) as Playlist[];
     const newPlaylist = {
       playlist: data.name,
