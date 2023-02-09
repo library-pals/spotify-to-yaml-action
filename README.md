@@ -6,7 +6,7 @@ At the end of each season, the workflow will fetch last season's playlists, add 
 
 ## Set up
 
-This workflow requires that you name your Spotify playlists using the following format: `YYYY {season}`. If you use different names for the seasons, you can use the `seasonNames` [action input](#action-options) to reflect that. Examples:
+This workflow requires that you name your Spotify playlists using the following format: `YYYY {season}`. If you use different names for the seasons, you can use the `season-names` [action input](#action-options) to reflect that. Examples:
 
 - `2021 Fall`
 - `2021/2022 Winter`
@@ -31,7 +31,7 @@ on:
     - cron: "00 01 20 Mar,Jun,Sep,Dec *"
 
 jobs:
-  spotify_to_yaml:
+  spotify-to-yaml:
     runs-on: macOS-latest
     name: Save Spotify playlist and thumbnail
     steps:
@@ -71,7 +71,7 @@ on:
         description: The name of the Spotify playlist.
 
 jobs:
-  spotify_to_yaml:
+  spotify-to-yaml:
     runs-on: macOS-latest
     name: Save Spotify playlist and thumbnail
     steps:

@@ -7,7 +7,7 @@ on:
         description: The name of the Spotify playlist.
 
 jobs:
-  spotify_to_yaml:
+  spotify-to-yaml:
     runs-on: macOS-latest
     name: Save Spotify playlist and thumbnail
     steps:
