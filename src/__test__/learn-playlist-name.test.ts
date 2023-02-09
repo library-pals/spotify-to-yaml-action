@@ -8,8 +8,8 @@ process.env.YEAR = "2019";
 jest.mock("@actions/core");
 
 const defaultInputs = {
-  seasonNames: "Winter,Spring,Summer,Fall",
-  fileName: "_data/playlists.yml",
+  "season-names": "Winter,Spring,Summer,Fall",
+  filename: "_data/playlists.yml",
 };
 
 describe("learnPlaylistName", () => {
@@ -58,7 +58,7 @@ describe("learnPlaylistName", () => {
 
   test("Change season order", () => {
     process.env.MONTH = 5;
-    defaultInputs.seasonNames = "Summer,Fall,Winter,Spring";
+    defaultInputs["season-names"] = "Summer,Fall,Winter,Spring";
     expect(learnPlaylistName()).toEqual(`${process.env.YEAR} Fall`);
     expect(exportVariable).toHaveBeenCalledWith(
       "playlist",
@@ -73,11 +73,11 @@ describe("learnPlaylistName", () => {
     );
   });
 
-  test("Invalid seasonNames", () => {
+  test("Invalid season-names", () => {
     process.env.MONTH = 5;
-    defaultInputs.seasonNames = "Summer";
+    defaultInputs["season-names"] = "Summer";
     expect(() => learnPlaylistName()).toThrow(
-      "There must be 4 seasons listed in `seasonNames` only found 1 (`Summer`)."
+      "There must be 4 seasons listed in `season-names` only found 1 (`Summer`)."
     );
   });
 

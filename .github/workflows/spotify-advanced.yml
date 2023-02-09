@@ -16,7 +16,7 @@ jobs:
       - name: Save the playlist
         uses: ./
         with:
-          spotifyUser: "katydecorah"
+          spotify-username: "katydecorah"
         env:
           SpotifyClientID: ${{ secrets.SpotifyClientID }}
           SpotifyClientSecret: ${{ secrets.SpotifyClientSecret}}

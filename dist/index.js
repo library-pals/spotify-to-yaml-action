@@ -28853,21 +28853,21 @@ var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argume
 };
 
 
-function updateMain(data, fileName) {
+function updateMain(data, filename) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const newContents = yield buildNewMain(data, fileName);
-            return yield (0,promises_namespaceObject.writeFile)(fileName, newContents);
+            const newContents = yield buildNewMain(data, filename);
+            return yield (0,promises_namespaceObject.writeFile)(filename, newContents);
         }
         catch (error) {
             throw new Error(error);
         }
     });
 }
-function buildNewMain(data, fileName) {
+function buildNewMain(data, filename) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const currentPlaylists = (yield (0,promises_namespaceObject.readFile)(fileName, "utf-8")) || "";
+            const currentPlaylists = (yield (0,promises_namespaceObject.readFile)(filename, "utf-8")) || "";
             const currentJson = load(currentPlaylists);
             const newPlaylist = {
                 playlist: data.name,
@@ -28924,11 +28924,11 @@ function learnPlaylistName() {
     return playlistName;
 }
 function validateSeasonNames() {
-    const seasonNames = (0,lib_core.getInput)("seasonNames")
+    const seasonNames = (0,lib_core.getInput)("season-names")
         .split(",")
         .map((s) => s.trim());
     if (seasonNames.length !== 4)
-        throw new Error(`There must be 4 seasons listed in \`seasonNames\` only found ${seasonNames.length} (\`${seasonNames}\`).`);
+        throw new Error(`There must be 4 seasons listed in \`season-names\` only found ${seasonNames.length} (\`${seasonNames}\`).`);
     return seasonNames;
 }
 
@@ -28953,7 +28953,7 @@ function listPlaylists(listName) {
             clientId: process.env.SpotifyClientID,
             clientSecret: process.env.SpotifyClientSecret,
         });
-        const username = (0,lib_core.getInput)("spotifyUser");
+        const username = (0,lib_core.getInput)("spotify-username");
         const { body: { access_token }, } = yield spotifyApi.clientCredentialsGrant();
         spotifyApi.setAccessToken(access_token);
         const { body } = yield spotifyApi.getUserPlaylists(username);
@@ -29003,7 +29003,7 @@ var src_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argu
 function action() {
     return src_awaiter(this, void 0, void 0, function* () {
         try {
-            const fileName = (0,lib_core.getInput)("fileName");
+            const filename = (0,lib_core.getInput)("filename");
             const playlistName = learnPlaylistName();
             const playlist = (yield listPlaylists(playlistName));
             // export image variable to be downloaded latter
@@ -29012,7 +29012,7 @@ function action() {
             // replace Spotify image url with local version
             playlist.image = `${playlist.formatted_name}.png`;
             // save tracks to playlists.yml
-            yield updateMain(playlist, fileName);
+            yield updateMain(playlist, filename);
         }
         catch (error) {
             (0,lib_core.setFailed)(error.message);

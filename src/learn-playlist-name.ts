@@ -36,12 +36,12 @@ export default function learnPlaylistName(): string {
 }
 
 function validateSeasonNames() {
-  const seasonNames = getInput("seasonNames")
+  const seasonNames = getInput("season-names")
     .split(",")
     .map((s) => s.trim());
   if (seasonNames.length !== 4)
     throw new Error(
-      `There must be 4 seasons listed in \`seasonNames\` only found ${seasonNames.length} (\`${seasonNames}\`).`
+      `There must be 4 seasons listed in \`season-names\` only found ${seasonNames.length} (\`${seasonNames}\`).`
     );
   return seasonNames;
 }

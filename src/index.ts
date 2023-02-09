@@ -17,7 +17,7 @@ export type Playlist = {
 
 export async function action() {
   try {
-    const fileName = getInput("fileName");
+    const filename = getInput("filename");
 
     const playlistName: string = learnPlaylistName();
     const playlist = (await listPlaylists(playlistName)) as Playlist;
@@ -27,7 +27,7 @@ export async function action() {
     // replace Spotify image url with local version
     playlist.image = `${playlist.formatted_name}.png`;
     // save tracks to playlists.yml
-    await updateMain(playlist, fileName);
+    await updateMain(playlist, filename);
   } catch (error) {
     setFailed(error.message);
   }
