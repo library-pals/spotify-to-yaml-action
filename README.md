@@ -40,7 +40,7 @@ jobs:
       - name: Save the playlist
         uses: katydecorah/spotify-to-yaml-action@v7.2.1
         with:
-          spotifyUser: "katydecorah"
+          spotify-username: "katydecorah"
         env:
           SpotifyClientID: ${{ secrets.SpotifyClientID }}
           SpotifyClientSecret: ${{ secrets.SpotifyClientSecret}}
@@ -80,7 +80,7 @@ jobs:
       - name: Save the playlist
         uses: katydecorah/spotify-to-yaml-action@v7.2.1
         with:
-          spotifyUser: "katydecorah"
+          spotify-username: "katydecorah"
         env:
           SpotifyClientID: ${{ secrets.SpotifyClientID }}
           SpotifyClientSecret: ${{ secrets.SpotifyClientSecret}}
@@ -101,9 +101,9 @@ jobs:
 
 ## Action options
 
-- `spotifyUser`: Required. Your Spotify username.
+- `spotify-username`: Required. Your Spotify username.
 
-- `fileName`: The YAML file to write your playlists. Default: `_data/playlists.yml`.
+- `filename`: The YAML file to write your playlists. Default: `_data/playlists.yml`.
 
-- `seasonNames`: The season names in order by the season that ends in March, June, September, and then December. Default: `Winter,Spring,Summer,Fall`.
+- `season-names`: The season names in order by the season that ends in March, June, September, and then December. Default: `Winter,Spring,Summer,Fall`.
 <!-- END GENERATED DOCUMENTATION -->
