@@ -1,7 +1,7 @@
 name: "Spotify to Yaml"
 description: "Export a seasonal Spotify playlist to YAML."
 runs:
-  using: "node16"
+  using: node20
   main: "dist/index.js"
 
 inputs:
