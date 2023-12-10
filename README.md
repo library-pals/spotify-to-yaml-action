@@ -38,7 +38,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Save the playlist
-        uses: katydecorah/spotify-to-yaml-action@v8.1.0
+        uses: katydecorah/spotify-to-yaml-action@v8.2.0
         with:
           spotify-username: "katydecorah"
         env:
@@ -78,7 +78,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Save the playlist
-        uses: katydecorah/spotify-to-yaml-action@v8.1.0
+        uses: katydecorah/spotify-to-yaml-action@v8.2.0
         with:
           spotify-username: "katydecorah"
         env:
