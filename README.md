@@ -32,13 +32,13 @@ on:
 
 jobs:
   spotify-to-yaml:
-    runs-on: macOS-latest
+    runs-on: ubuntu-latest
     name: Save Spotify playlist and thumbnail
     steps:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Save the playlist
-        uses: katydecorah/spotify-to-yaml-action@v8.2.0
+        uses: library-pals/spotify-to-yaml-action@v8.2.0
         with:
           spotify-username: "katydecorah"
         env:
@@ -72,13 +72,13 @@ on:
 
 jobs:
   spotify-to-yaml:
-    runs-on: macOS-latest
+    runs-on: ubuntu-latest
     name: Save Spotify playlist and thumbnail
     steps:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Save the playlist
-        uses: katydecorah/spotify-to-yaml-action@v8.2.0
+        uses: library-pals/spotify-to-yaml-action@v8.2.0
         with:
           spotify-username: "katydecorah"
         env:
