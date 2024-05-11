@@ -8,7 +8,7 @@ on:
 
 jobs:
   spotify-to-yaml:
-    runs-on: macOS-latest
+    runs-on: ubuntu-latest
     name: Save Spotify playlist and thumbnail
     steps:
       - name: Checkout

@@ -40,12 +40,12 @@
   "keywords": [],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/katydecorah/spotify-to-yaml-action.git"
+    "url": "git+https://github.com/library-pals/spotify-to-yaml-action.git"
   },
   "bugs": {
-    "url": "https://github.com/katydecorah/spotify-to-yaml-action/issues"
+    "url": "https://github.com/library-pals/spotify-to-yaml-action/issues"
   },
-  "homepage": "https://github.com/katydecorah/spotify-to-yaml-action#readme",
+  "homepage": "https://github.com/library-pals/spotify-to-yaml-action#readme",
   "jest": {
     "clearMocks": true,
     "transformIgnorePatterns": [
