@@ -1,7 +1,6 @@
 import { writeFile, readFile } from "fs/promises";
 import { Playlist } from ".";
 import { load, dump } from "js-yaml";
-import { setFailed } from "@actions/core";
 
 export default async function updateMain(data: Playlist, filename: string) {
   try {
