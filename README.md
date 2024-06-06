@@ -22,7 +22,7 @@ on:
   workflow_dispatch:
     inputs:
       playlist-name:
-        description: Your Spotify playlist name that you want to export. Required for non-seasonal playlist export.
+        description: Your Spotify playlist name that you want to export.
         required: true
         type: string
 
@@ -58,10 +58,10 @@ jobs:
 ### Additional example workflows
 
 <details>
-<summary>Save seasonal or any playlist</summary>
+<summary>Export playlists on a schedule</summary>
 
 ```yml
-name: Save seasonal or any playlist
+name: Export playlists on a schedule
 
 on:
   # Run every three months on the 20th to get the seasonal playlist
@@ -84,10 +84,31 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Set playlist name
+        run: |
+          MONTH=$(date +%m)
+          YEAR=$(date +%Y)
+          case $MONTH in
+            03)
+              echo "PLAYLIST_NAME=${YEAR}/$(($YEAR + 1)) Winter" >> $GITHUB_ENV
+              ;;
+            06)
+              echo "PLAYLIST_NAME=${YEAR} Spring" >> $GITHUB_ENV
+              ;;
+            09)
+              echo "PLAYLIST_NAME=${YEAR} Summer" >> $GITHUB_ENV
+              ;;
+            12)
+              echo "PLAYLIST_NAME=${YEAR} Fall" >> $GITHUB_ENV
+              ;;
+          esac
       - name: Save the playlist
         uses: library-pals/spotify-to-yaml-action@v8.2.0
         with:
           spotify-username: "katydecorah"
+          # If the playlist name is provided, use it
+          # The workflow_dispatch input playlist-name takes precedence
+          playlist-name: ${{ env.PLAYLIST_NAME }}
         env:
           SpotifyClientID: ${{ secrets.SpotifyClientID }}
           SpotifyClientSecret: ${{ secrets.SpotifyClientSecret}}
@@ -121,7 +142,7 @@ To trigger the action, [create a workflow dispatch event](https://docs.github.co
 {
   "ref": "main", // Required. The git reference for the workflow, a branch or tag name.
   "inputs": {
-    "playlist-name": "", // Required. Your Spotify playlist name that you want to export. Required for non-seasonal playlist export.
+    "playlist-name": "", // Required. Your Spotify playlist name that you want to export.
   }
 }
 ```
