@@ -40,6 +40,9 @@ describe("action", () => {
     jest
       .spyOn(core, "getInput")
       .mockImplementation((name) => defaultInputs[name] || undefined);
+
+    process.env.SpotifyClientID = "test-client-id";
+    process.env.SpotifyClientSecret = "test-client-secret";
   });
 
   test("works", async () => {

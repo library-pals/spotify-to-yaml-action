@@ -29,6 +29,11 @@ jest.mock("spotify-web-api-node", () => {
 jest.mock("@actions/core");
 
 describe("listPlaylists", () => {
+  beforeEach(() => {
+    process.env.SpotifyClientID = "test-client-id";
+    process.env.SpotifyClientSecret = "test-client-secret";
+    jest.clearAllMocks();
+  });
   test("returns", async () => {
     expect(await listPlaylists("2021 Fall")).toMatchInlineSnapshot(`
 {
@@ -175,6 +180,15 @@ describe("listPlaylists", () => {
   test("cannot find", async () => {
     await expect(listPlaylists("2022 Fall")).rejects.toThrow(
       'Could not find playlist "2022 Fall". Is it private?'
+    );
+  });
+
+  test("throw error when SpotifyClientID or SpotifyClientSecret is missing", async () => {
+    delete process.env.SpotifyClientID;
+    delete process.env.SpotifyClientSecret;
+
+    await expect(listPlaylists("2021 Fall")).rejects.toThrow(
+      "Missing SpotifyClientID or SpotifyClientSecret in environment variables"
     );
   });
 });

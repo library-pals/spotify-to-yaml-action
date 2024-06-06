@@ -49338,10 +49338,40 @@ var github = __nccwpck_require__(5438);
 
 
 function learnPlaylistName() {
-    const payload = github.context.payload.inputs;
+    // Extract the playlist name from the payload if it exists
+    const payload = github?.context?.payload?.inputs;
     if (payload && payload["playlist-name"]) {
         return payload["playlist-name"];
     }
+    return getSeasonalPlaylistName();
+}
+function getSeasonalPlaylistName() {
+    const { month, year } = getMonthYear();
+    const season = getSeason(month);
+    // Return the playlist name, which is the year and season name
+    // If the month is March, the year is the previous year and the current year
+    const playlistYear = month === 2 ? `${year - 1}/${year}` : year;
+    return `${playlistYear} ${season}`;
+}
+function getSeason(month) {
+    // Define the end of season names
+    const [marchEnd, juneEnd, septemberEnd, decemberEnd] = validateSeasonNames();
+    // Map the end of season months to their names
+    const seasons = {
+        2: marchEnd,
+        5: juneEnd,
+        8: septemberEnd,
+        11: decemberEnd,
+    };
+    // Get the season name for the current month
+    const season = seasons[month];
+    // Throw an error if the current month is not an end of season month
+    if (!season) {
+        throw new Error(`The current month does not match an end of season month.`);
+    }
+    return season;
+}
+function getMonthYear() {
     const today = new Date();
     const month = process.env.MONTH
         ? parseInt(process.env.MONTH)
@@ -49349,17 +49379,10 @@ function learnPlaylistName() {
     const year = process.env.YEAR
         ? parseInt(process.env.YEAR)
         : today.getFullYear();
-    const [marchEnd, juneEnd, septemberEnd, decemberEnd] = validateSeasonNames();
-    const seasons = {
-        2: marchEnd,
-        5: juneEnd,
-        8: septemberEnd,
-        11: decemberEnd,
+    return {
+        month,
+        year,
     };
-    const season = seasons[month];
-    if (!season)
-        throw new Error(`The current month does not match an end of season month.`);
-    return `${month === 2 ? `${year - 1}/${year}` : year} ${season}`;
 }
 function validateSeasonNames() {
     const seasonNames = (0,lib_core.getInput)("season-names")
@@ -49378,21 +49401,10 @@ var server_default = /*#__PURE__*/__nccwpck_require__.n(server);
 
 async function listPlaylists(listName) {
     try {
-        const spotifyApi = new (server_default())({
-            clientId: process.env.SpotifyClientID,
-            clientSecret: process.env.SpotifyClientSecret,
-        });
+        const spotifyApi = await initializeSpotifyApi();
         const username = (0,lib_core.getInput)("spotify-username");
-        const { body: { access_token }, } = await spotifyApi.clientCredentialsGrant();
-        spotifyApi.setAccessToken(access_token);
-        const { body } = await spotifyApi.getUserPlaylists(username);
-        const findPlaylist = body.items.find(({ name }) => name === listName);
-        if (!findPlaylist) {
-            throw new Error(`Could not find playlist "${listName}". Is it private?`);
-        }
-        const { body: { items }, } = await spotifyApi.getPlaylistTracks(findPlaylist.id);
-        if (!items.length)
-            throw new Error("Playlist has no tracks.");
+        const findPlaylist = await getPlaylist(spotifyApi, username, listName);
+        const items = await getPlaylistTracks(spotifyApi, findPlaylist.id);
         return formatTracks({
             name: findPlaylist.name,
             external_urls: findPlaylist.external_urls,
@@ -49403,6 +49415,34 @@ async function listPlaylists(listName) {
     catch (error) {
         throw new Error(error);
     }
+}
+async function getPlaylist(spotifyApi, username, listName) {
+    const { body } = await spotifyApi.getUserPlaylists(username);
+    const findPlaylist = body.items.find(({ name }) => name === listName);
+    if (!findPlaylist) {
+        throw new Error(`Could not find playlist "${listName}". Is it private?`);
+    }
+    return findPlaylist;
+}
+async function getPlaylistTracks(spotifyApi, playlistId) {
+    const { body: { items }, } = await spotifyApi.getPlaylistTracks(playlistId);
+    if (!items.length)
+        throw new Error("Playlist has no tracks.");
+    return items;
+}
+async function initializeSpotifyApi() {
+    const clientId = process.env.SpotifyClientID;
+    const clientSecret = process.env.SpotifyClientSecret;
+    if (!clientId || !clientSecret) {
+        throw new Error("Missing SpotifyClientID or SpotifyClientSecret in environment variables");
+    }
+    const spotifyApi = new (server_default())({
+        clientId,
+        clientSecret,
+    });
+    const { body: { access_token }, } = await spotifyApi.clientCredentialsGrant();
+    spotifyApi.setAccessToken(access_token);
+    return spotifyApi;
 }
 function formatTracks({ name, external_urls, images, tracks, }) {
     const largestImage = images.sort((a, b) => (b.width || 0) - (a.width || 0))[0];
