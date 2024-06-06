@@ -11,6 +11,5 @@ inputs:
   filename:
     description: The YAML file to write your playlists.
     default: _data/playlists.yml
-  season-names:
-    description: The season names in order by the season that ends in March, June, September, and then December.
-    default: "Winter,Spring,Summer,Fall"
+  playlist-name:
+    description: Your Spotify playlist name that you want to export.
