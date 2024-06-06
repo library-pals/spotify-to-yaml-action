@@ -25,32 +25,32 @@ describe("learnPlaylistName", () => {
   });
 
   test("Fall", () => {
-    const mockDate = new Date(2019, 11); // November
+    const mockDate = new Date(2019, 11); // December
     jest.spyOn(global, "Date").mockImplementation(() => mockDate);
     expect(learnPlaylistName()).toEqual(`2019 Fall`);
   });
 
   test("Winter", () => {
-    const mockDate = new Date(2019, 2); // February
+    const mockDate = new Date(2019, 2); // March
     jest.spyOn(global, "Date").mockImplementation(() => mockDate);
     expect(learnPlaylistName()).toEqual(`2018/2019 Winter`);
   });
 
   test("Spring", () => {
-    const mockDate = new Date(2019, 5); // May
+    const mockDate = new Date(2019, 5); // June
     jest.spyOn(global, "Date").mockImplementation(() => mockDate);
     expect(learnPlaylistName()).toEqual(`2019 Spring`);
   });
 
   test("Change season order", () => {
-    const mockDate = new Date(2019, 5); // May
+    const mockDate = new Date(2019, 5); // June
     jest.spyOn(global, "Date").mockImplementation(() => mockDate);
     defaultInputs["season-names"] = "Summer,Fall,Winter,Spring";
     expect(learnPlaylistName()).toEqual(`2019 Fall`);
   });
 
   test("Month does not match end of season month", () => {
-    const mockDate = new Date(2019, 1); // January
+    const mockDate = new Date(2019, 1); // February
     jest.spyOn(global, "Date").mockImplementation(() => mockDate);
     expect(() => learnPlaylistName()).toThrow(
       "The current month (1) does not match an end of season month: 2,5,8,11."
@@ -58,7 +58,7 @@ describe("learnPlaylistName", () => {
   });
 
   test("Invalid season-names", () => {
-    const mockDate = new Date(2019, 5); // May
+    const mockDate = new Date(2019, 5); // June
     jest.spyOn(global, "Date").mockImplementation(() => mockDate);
     defaultInputs["season-names"] = "Summer";
     expect(() => learnPlaylistName()).toThrow(
@@ -67,7 +67,7 @@ describe("learnPlaylistName", () => {
   });
 
   test("Set workflow input `playlist-name`", () => {
-    const mockDate = new Date(2019, 1); // January
+    const mockDate = new Date(2019, 1); // February
     jest.spyOn(global, "Date").mockImplementation(() => mockDate);
     Object.defineProperty(github, "context", {
       value: {
