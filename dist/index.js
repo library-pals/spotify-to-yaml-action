@@ -49332,80 +49332,6 @@ async function buildNewMain(data, filename) {
 
 // EXTERNAL MODULE: ./node_modules/@actions/core/lib/core.js
 var lib_core = __nccwpck_require__(2186);
-// EXTERNAL MODULE: ./node_modules/@actions/github/lib/github.js
-var github = __nccwpck_require__(5438);
-;// CONCATENATED MODULE: ./src/learn-playlist-name.ts
-
-
-function learnPlaylistName() {
-    // Extract the playlist name from the payload if it exists
-    const payload = github?.context?.payload?.inputs;
-    if (payload && payload["playlist-name"]) {
-        return payload["playlist-name"];
-    }
-    return getSeasonalPlaylistName();
-}
-function getSeasonalPlaylistName() {
-    const { month, year } = getMonthYear();
-    const season = getSeason(month);
-    // Return the playlist name, which is the year and season name
-    // If the month is March, the year is the previous year and the current year
-    const playlistYear = month === 2 ? `${year - 1}/${year}` : year;
-    return `${playlistYear} ${season}`;
-}
-function getSeason(month) {
-    // Define the end of season names
-    const [marchEnd, juneEnd, septemberEnd, decemberEnd] = validateSeasonNames();
-    // Map the end of season months to their names
-    const seasons = {
-        2: marchEnd,
-        5: juneEnd,
-        8: septemberEnd,
-        11: decemberEnd,
-    };
-    // Get the season name for the current month
-    const season = seasons[month];
-    if (!season) {
-        throw new Error(`The current month (${monthToWords(month)}) does not match an end of season month: ${Object.keys(seasons)
-            .map((month) => monthToWords(parseInt(month)))
-            .join(", ")}.`);
-    }
-    return season;
-}
-function monthToWords(number) {
-    return [
-        "January",
-        "February",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December",
-    ][number];
-}
-function getMonthYear() {
-    const today = new Date();
-    const month = today.getMonth();
-    const year = today.getFullYear();
-    return {
-        month,
-        year,
-    };
-}
-function validateSeasonNames() {
-    const seasonNames = (0,lib_core.getInput)("season-names")
-        .split(",")
-        .map((s) => s.trim());
-    if (seasonNames.length !== 4)
-        throw new Error(`There must be 4 seasons listed in \`season-names\` only found ${seasonNames.length} (\`${seasonNames}\`).`);
-    return seasonNames;
-}
-
 // EXTERNAL MODULE: ./node_modules/spotify-web-api-node/src/server.js
 var server = __nccwpck_require__(5337);
 var server_default = /*#__PURE__*/__nccwpck_require__.n(server);
@@ -49479,6 +49405,8 @@ function formatName(name) {
         .toLowerCase();
 }
 
+// EXTERNAL MODULE: ./node_modules/@actions/github/lib/github.js
+var github = __nccwpck_require__(5438);
 ;// CONCATENATED MODULE: ./src/index.ts
 
 
@@ -49487,9 +49415,13 @@ function formatName(name) {
 async function action() {
     try {
         const filename = (0,lib_core.getInput)("filename");
-        const playlistName = learnPlaylistName();
+        const playlistName = github?.context?.payload?.inputs?.payload?.["playlist-name"] ||
+            (0,lib_core.getInput)("playlist-name");
+        if (!playlistName) {
+            throw new Error("Playlist name is required");
+        }
         const playlist = await listPlaylists(playlistName);
-        // export image variable to be downloaded latter
+        // export image variable to be downloaded later
         (0,lib_core.exportVariable)("playlist", playlistName);
         (0,lib_core.exportVariable)("PlaylistImageOutput", `${playlist.formatted_name}.png`);
         (0,lib_core.exportVariable)("PlaylistImage", playlist.image);
