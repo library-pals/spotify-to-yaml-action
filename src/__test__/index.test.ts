@@ -4,6 +4,7 @@ import * as UpdateMain from "../write-file";
 import * as core from "@actions/core";
 import * as ListPlaylists from "../list-playlists";
 import { promises } from "fs";
+import * as github from "@actions/github";
 
 jest.mock("@actions/core");
 jest.mock("spotify-web-api-node", () => {
@@ -139,5 +140,31 @@ describe("action", () => {
       ",
       ]
     `);
+  });
+
+  test("workflow input task precedence", async () => {
+    Object.defineProperty(github, "context", {
+      value: {
+        payload: {
+          inputs: {
+            "playlist-name": "2021 Fall",
+          },
+        },
+      },
+    });
+    defaultInputs["playlist-name"] = "2019 Fall";
+
+    jest.spyOn(promises, "readFile").mockResolvedValue(`
+- playlist: 2021 Summer
+`);
+    const exportVariableSpy = jest.spyOn(core, "exportVariable");
+
+    await action();
+
+    expect(exportVariableSpy).toHaveBeenNthCalledWith(
+      1,
+      "playlist",
+      "2021 Fall"
+    );
   });
 });
