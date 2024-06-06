@@ -49415,9 +49415,9 @@ var github = __nccwpck_require__(5438);
 async function action() {
     try {
         const filename = (0,lib_core.getInput)("filename");
-        const playlistName = github?.context?.payload?.inputs?.payload?.["playlist-name"] ||
-            (0,lib_core.getInput)("playlist-name");
-        (0,lib_core.info)(`payload: ${github?.context?.payload?.inputs?.payload?.["playlist-name"]}`);
+        const payload = github.context.payload.inputs;
+        const playlistName = payload?.["playlist-name"] || (0,lib_core.getInput)("playlist-name");
+        (0,lib_core.info)(`payload: ${payload?.["playlist-name"]}`);
         (0,lib_core.info)(`action input: ${(0,lib_core.getInput)("playlist-name")}`);
         (0,lib_core.info)(`playlistName: ${playlistName}`);
         if (!playlistName) {

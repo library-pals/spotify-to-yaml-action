@@ -22,14 +22,12 @@ export type WorkflowPayload = {
 export async function action() {
   try {
     const filename = getInput("filename");
+    const payload = github.context.payload.inputs;
 
     const playlistName =
-      github?.context?.payload?.inputs?.payload?.["playlist-name"] ||
-      getInput("playlist-name");
+      payload?.["playlist-name"] || getInput("playlist-name");
 
-    info(
-      `payload: ${github?.context?.payload?.inputs?.payload?.["playlist-name"]}`
-    );
+    info(`payload: ${payload?.["playlist-name"]}`);
     info(`action input: ${getInput("playlist-name")}`);
     info(`playlistName: ${playlistName}`);
 
