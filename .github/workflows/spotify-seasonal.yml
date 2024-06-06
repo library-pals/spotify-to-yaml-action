@@ -4,7 +4,7 @@ run-name: Export playlist ${{ inputs['playlist-name'] }}${{ github.event.schedul
 on:
   # Run every three months on the 20th to get the seasonal playlist
   schedule:
-    - cron: "40 22 06 Mar,Jun,Sep,Dec *"
+    - cron: "45 22 06 Mar,Jun,Sep,Dec *"
   # Run on demand to get any playlist
   workflow_dispatch:
     inputs:
