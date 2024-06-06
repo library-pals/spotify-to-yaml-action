@@ -1,6 +1,6 @@
 # spotify-to-yaml-action
 
-Export a Spotify playlist to YAML.
+Export a public Spotify playlist to YAML.
 
 ## Set up
 
@@ -8,6 +8,8 @@ To connect your Spotify account to this workflow, set the following [secrets to 
 
 - `SpotifyClientID`
 - `SpotifyClientSecret`
+
+In your workflow, you can define `playlist-name` as a workflow dispatch input or an action input. If both are set, the workflow dispatch input will take precedence.
 
 <!-- START GENERATED DOCUMENTATION -->
 
