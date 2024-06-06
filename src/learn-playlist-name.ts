@@ -3,14 +3,24 @@ import * as github from "@actions/github";
 
 export default function learnPlaylistName(): string {
   // Extract the playlist name from the payload if it exists
-  const payload = github.context.payload?.inputs;
+  const payload = github?.context?.payload?.inputs;
   if (payload && payload["playlist-name"]) {
     return payload["playlist-name"];
   }
 
-  // Get the current month and year, or use the provided environment variables
-  const { month, year } = getMonthYear();
+  return getSeasonalPlaylistName();
+}
 
+function getSeasonalPlaylistName(): string {
+  const { month, year } = getMonthYear();
+  const season = getSeason(month);
+  // Return the playlist name, which is the year and season name
+  // If the month is March, the year is the previous year and the current year
+  const playlistYear = month === 2 ? `${year - 1}/${year}` : year;
+  return `${playlistYear} ${season}`;
+}
+
+function getSeason(month: number): string {
   // Define the end of season names
   const [marchEnd, juneEnd, septemberEnd, decemberEnd] = validateSeasonNames();
 
@@ -30,10 +40,7 @@ export default function learnPlaylistName(): string {
     throw new Error(`The current month does not match an end of season month.`);
   }
 
-  // Return the playlist name, which is the year and season name
-  // If the month is March, the year is the previous year and the current year
-  const playlistYear = month === 2 ? `${year - 1}/${year}` : year;
-  return `${playlistYear} ${season}`;
+  return season;
 }
 
 function getMonthYear(): { month: number; year: number } {
