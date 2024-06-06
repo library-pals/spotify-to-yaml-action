@@ -1,10 +1,11 @@
 name: Document GitHub action
 
 on:
+  workflow_dispatch:
   push:
     paths:
       - ".github/workflows/spotify.yml"
-      - ".github/workflows/spotify-advanced.yml"
+      - ".github/workflows/spotify-seasonal.yml"
       - ".github/workflows/documentation.yml"
       - "action.yml"
       - "package.json"
