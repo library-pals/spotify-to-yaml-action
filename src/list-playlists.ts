@@ -102,9 +102,10 @@ export function formatTracks({
   };
 }
 
-function formatName(name: string): string {
+export function formatName(name: string): string {
   return name
     .replace(/\s/g, "-")
+    .replace(/[/]/g, "-")
     .replace(/[^a-zA-Z0-9-]/g, "")
     .replace(/-+/g, "-")
     .toLowerCase();

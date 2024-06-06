@@ -1,5 +1,5 @@
 import updateMain from "./write-file";
-import { setFailed, exportVariable, getInput, info } from "@actions/core";
+import { setFailed, exportVariable, getInput } from "@actions/core";
 import listPlaylists from "./list-playlists";
 import * as github from "@actions/github";
 
@@ -23,13 +23,8 @@ export async function action() {
   try {
     const filename = getInput("filename");
     const payload = github.context.payload.inputs;
-
     const playlistName =
       payload?.["playlist-name"] || getInput("playlist-name");
-
-    info(`payload: ${payload?.["playlist-name"]}`);
-    info(`action input: ${getInput("playlist-name")}`);
-    info(`playlistName: ${playlistName}`);
 
     if (!playlistName) {
       throw new Error("Playlist name is required");
