@@ -21,7 +21,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Set playlist name
+      # For this Spotify user, they have a predicable schem for setting the playlist name
+      # Examples: 2019/2020 Winter, 2020 Spring, 2020 Summer, 2020 Fall
+      # This step sets the playlist name based on the current month when the workflow runs
+      - name: Determine Playlist Name Based on Season
         run: |
           MONTH=$(date +%m)
           YEAR=$(date +%Y)
@@ -39,7 +42,8 @@ jobs:
               echo "PLAYLIST_NAME=${YEAR} Fall" >> $GITHUB_ENV
               ;;
           esac
-      - name: Save the playlist
+      # This step saves the playlist using the determined name
+      - name: Export the playlist
         uses: ./
         with:
           spotify-username: "katydecorah"
