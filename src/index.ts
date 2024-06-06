@@ -1,5 +1,5 @@
 import updateMain from "./write-file";
-import { setFailed, exportVariable, getInput } from "@actions/core";
+import { setFailed, exportVariable, getInput, info } from "@actions/core";
 import listPlaylists from "./list-playlists";
 import * as github from "@actions/github";
 
@@ -22,9 +22,16 @@ export type WorkflowPayload = {
 export async function action() {
   try {
     const filename = getInput("filename");
+
     const playlistName =
       github?.context?.payload?.inputs?.payload?.["playlist-name"] ||
       getInput("playlist-name");
+
+    info(
+      `payload: ${github?.context?.payload?.inputs?.payload?.["playlist-name"]}`
+    );
+    info(`action input: ${getInput("playlist-name")}`);
+    info(`playlistName: ${playlistName}`);
 
     if (!playlistName) {
       throw new Error("Playlist name is required");
