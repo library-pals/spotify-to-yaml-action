@@ -49417,6 +49417,9 @@ async function action() {
         const filename = (0,lib_core.getInput)("filename");
         const playlistName = github?.context?.payload?.inputs?.payload?.["playlist-name"] ||
             (0,lib_core.getInput)("playlist-name");
+        (0,lib_core.info)(`payload: ${github?.context?.payload?.inputs?.payload?.["playlist-name"]}`);
+        (0,lib_core.info)(`action input: ${(0,lib_core.getInput)("playlist-name")}`);
+        (0,lib_core.info)(`playlistName: ${playlistName}`);
         if (!playlistName) {
             throw new Error("Playlist name is required");
         }
