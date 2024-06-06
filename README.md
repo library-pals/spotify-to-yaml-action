@@ -31,9 +31,14 @@ To use this action, create a new workflow in `.github/workflows` and modify it a
 
 ```yml
 name: Save Spotify playlist
+
 on:
-  schedule:
-    - cron: "00 01 20 Mar,Jun,Sep,Dec *"
+  workflow_dispatch:
+    inputs:
+      playlist-name:
+        description: Your Spotify playlist name that you want to export.
+        required: true
+        type: string
 
 jobs:
   spotify-to-yaml:
@@ -64,16 +69,14 @@ jobs:
 ### Additional example workflows
 
 <details>
-<summary>Manually trigger the action</summary>
+<summary>Save seasonal playlist</summary>
 
 ```yml
-name: Manually trigger the action
+name: Save seasonal playlist
+
 on:
-  workflow_dispatch:
-    inputs:
-      playlistName:
-        type: string
-        description: The name of the Spotify playlist.
+  schedule:
+    - cron: "00 01 20 Mar,Jun,Sep,Dec *"
 
 jobs:
   spotify-to-yaml:
@@ -110,4 +113,18 @@ jobs:
 - `filename`: The YAML file to write your playlists. Default: `_data/playlists.yml`.
 
 - `season-names`: The season names in order by the season that ends in March, June, September, and then December. Default: `Winter,Spring,Summer,Fall`.
+
+## Trigger the action
+
+To trigger the action, [create a workflow dispatch event](https://docs.github.com/en/rest/actions/workflows#create-a-workflow-dispatch-event) with the following body parameters:
+
+```js
+{
+  "ref": "main", // Required. The git reference for the workflow, a branch or tag name.
+  "inputs": {
+    "playlist-name": "", // Required. Your Spotify playlist name that you want to export.
+  }
+}
+```
+
 <!-- END GENERATED DOCUMENTATION -->
