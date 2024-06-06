@@ -49400,6 +49400,7 @@ function formatTracks({ name, external_urls, images, tracks, }) {
 function formatName(name) {
     return name
         .replace(/\s/g, "-")
+        .replace(/[/]/g, "-")
         .replace(/[^a-zA-Z0-9-]/g, "")
         .replace(/-+/g, "-")
         .toLowerCase();
@@ -49417,9 +49418,6 @@ async function action() {
         const filename = (0,lib_core.getInput)("filename");
         const payload = github.context.payload.inputs;
         const playlistName = payload?.["playlist-name"] || (0,lib_core.getInput)("playlist-name");
-        (0,lib_core.info)(`payload: ${payload?.["playlist-name"]}`);
-        (0,lib_core.info)(`action input: ${(0,lib_core.getInput)("playlist-name")}`);
-        (0,lib_core.info)(`playlistName: ${playlistName}`);
         if (!playlistName) {
             throw new Error("Playlist name is required");
         }
