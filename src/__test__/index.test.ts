@@ -44,10 +44,7 @@ describe("action", () => {
   });
 
   test("works", async () => {
-    const mockDate = new Date(2021, 11);
     defaultInputs["playlist-name"] = "2021 Fall";
-    jest.spyOn(global, "Date").mockImplementation(() => mockDate);
-
     const listPlaylistsSpy = jest.spyOn(ListPlaylists, "default");
     const updateMainSpy = jest.spyOn(UpdateMain, "default");
     jest.spyOn(promises, "readFile").mockResolvedValue(`
