@@ -27,7 +27,7 @@ jobs:
           YEAR=$(date +%Y)
           case $MONTH in
             03)
-              echo "PLAYLIST_NAME=${YEAR}/$(($YEAR + 1)) Winter" >> $GITHUB_ENV
+              echo "PLAYLIST_NAME=$(($YEAR - 1))/${YEAR} Winter" >> $GITHUB_ENV
               ;;
             06)
               echo "PLAYLIST_NAME=${YEAR} Spring" >> $GITHUB_ENV
