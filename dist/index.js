@@ -49367,18 +49367,14 @@ function getSeason(month) {
     const season = seasons[month];
     // Throw an error if the current month is not an end of season month
     if (!season) {
-        throw new Error(`The current month does not match an end of season month.`);
+        throw new Error(`The current month (${month}) does not match an end of season month: ${Object.keys(seasons)}.`);
     }
     return season;
 }
 function getMonthYear() {
     const today = new Date();
-    const month = process.env.MONTH
-        ? parseInt(process.env.MONTH)
-        : today.getMonth();
-    const year = process.env.YEAR
-        ? parseInt(process.env.YEAR)
-        : today.getFullYear();
+    const month = today.getMonth();
+    const year = today.getFullYear();
     return {
         month,
         year,
