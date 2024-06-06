@@ -49365,20 +49365,33 @@ function getSeason(month) {
     };
     // Get the season name for the current month
     const season = seasons[month];
-    // Throw an error if the current month is not an end of season month
     if (!season) {
-        throw new Error(`The current month does not match an end of season month.`);
+        throw new Error(`The current month (${monthToWords(month)}) does not match an end of season month: ${Object.keys(seasons)
+            .map((month) => monthToWords(parseInt(month)))
+            .join(", ")}.`);
     }
     return season;
 }
+function monthToWords(number) {
+    return [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+    ][number];
+}
 function getMonthYear() {
     const today = new Date();
-    const month = process.env.MONTH
-        ? parseInt(process.env.MONTH)
-        : today.getMonth();
-    const year = process.env.YEAR
-        ? parseInt(process.env.YEAR)
-        : today.getFullYear();
+    const month = today.getMonth();
+    const year = today.getFullYear();
     return {
         month,
         year,

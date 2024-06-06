@@ -46,8 +46,9 @@ describe("action", () => {
   });
 
   test("works", async () => {
-    process.env.MONTH = "11";
-    process.env.YEAR = "2021";
+    const mockDate = new Date(2021, 11);
+    jest.spyOn(global, "Date").mockImplementation(() => mockDate);
+
     const learnPlaylistNameSpy = jest.spyOn(LearnPlaylistName, "default");
     const listPlaylistsSpy = jest.spyOn(ListPlaylists, "default");
     const updateMainSpy = jest.spyOn(UpdateMain, "default");

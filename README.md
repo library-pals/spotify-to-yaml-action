@@ -89,7 +89,6 @@ on:
     inputs:
       playlist-name:
         description: Your Spotify playlist name that you want to export.
-        required: true
         type: string
 
 permissions:

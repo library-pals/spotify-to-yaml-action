@@ -2,8 +2,6 @@ import learnPlaylistName from "../learn-playlist-name";
 import * as core from "@actions/core";
 import * as github from "@actions/github";
 
-process.env.YEAR = "2019";
-
 jest.mock("@actions/core");
 
 const defaultInputs = {
@@ -17,44 +15,51 @@ describe("learnPlaylistName", () => {
       .spyOn(core, "getInput")
       .mockImplementation((name) => defaultInputs[name] || undefined);
   });
+  afterEach(() => {
+    jest.spyOn(global, "Date").mockRestore();
+  });
   test("Summer", () => {
-    process.env.MONTH = "8";
-    expect(learnPlaylistName()).toEqual(`${process.env.YEAR} Summer`);
+    const mockDate = new Date(2019, 8); // September
+    jest.spyOn(global, "Date").mockImplementation(() => mockDate);
+    expect(learnPlaylistName()).toEqual(`2019 Summer`);
   });
 
   test("Fall", () => {
-    process.env.MONTH = "11";
-    expect(learnPlaylistName()).toEqual(`${process.env.YEAR} Fall`);
+    const mockDate = new Date(2019, 11); // December
+    jest.spyOn(global, "Date").mockImplementation(() => mockDate);
+    expect(learnPlaylistName()).toEqual(`2019 Fall`);
   });
 
   test("Winter", () => {
-    process.env.MONTH = "2";
-    const year = process.env.YEAR ? parseInt(process.env.YEAR) - 1 : '';
-    expect(learnPlaylistName()).toEqual(
-      `${year}/${process.env.YEAR} Winter`
-    );
+    const mockDate = new Date(2019, 2); // March
+    jest.spyOn(global, "Date").mockImplementation(() => mockDate);
+    expect(learnPlaylistName()).toEqual(`2018/2019 Winter`);
   });
 
   test("Spring", () => {
-    process.env.MONTH = "5";
-    expect(learnPlaylistName()).toEqual(`${process.env.YEAR} Spring`);
+    const mockDate = new Date(2019, 5); // June
+    jest.spyOn(global, "Date").mockImplementation(() => mockDate);
+    expect(learnPlaylistName()).toEqual(`2019 Spring`);
   });
 
   test("Change season order", () => {
-    process.env.MONTH = "5";
+    const mockDate = new Date(2019, 5); // June
+    jest.spyOn(global, "Date").mockImplementation(() => mockDate);
     defaultInputs["season-names"] = "Summer,Fall,Winter,Spring";
-    expect(learnPlaylistName()).toEqual(`${process.env.YEAR} Fall`);
+    expect(learnPlaylistName()).toEqual(`2019 Fall`);
   });
 
   test("Month does not match end of season month", () => {
-    process.env.MONTH = "1";
+    const mockDate = new Date(2019, 1); // February
+    jest.spyOn(global, "Date").mockImplementation(() => mockDate);
     expect(() => learnPlaylistName()).toThrow(
-      "The current month does not match an end of season month."
+      "The current month (February) does not match an end of season month: March, June, September, December."
     );
   });
 
   test("Invalid season-names", () => {
-    process.env.MONTH = "5";
+    const mockDate = new Date(2019, 5); // June
+    jest.spyOn(global, "Date").mockImplementation(() => mockDate);
     defaultInputs["season-names"] = "Summer";
     expect(() => learnPlaylistName()).toThrow(
       "There must be 4 seasons listed in `season-names` only found 1 (`Summer`)."
@@ -62,7 +67,8 @@ describe("learnPlaylistName", () => {
   });
 
   test("Set workflow input `playlist-name`", () => {
-    process.env.MONTH = "1";
+    const mockDate = new Date(2019, 1); // February
+    jest.spyOn(global, "Date").mockImplementation(() => mockDate);
     Object.defineProperty(github, "context", {
       value: {
         payload: {
