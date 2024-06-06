@@ -1,7 +1,12 @@
 name: Save Spotify playlist
+
 on:
-  schedule:
-    - cron: "00 01 20 Mar,Jun,Sep,Dec *"
+  workflow_dispatch:
+    inputs:
+      playlist-name:
+        description: Your Spotify playlist name that you want to export.
+        required: true
+        type: string
 
 jobs:
   spotify-to-yaml:

@@ -1,38 +1,41 @@
-import { setFailed, getInput } from "@actions/core";
+import { getInput } from "@actions/core";
 import SpotifyWebApi from "spotify-web-api-node";
 import { Playlist } from "./index.js";
 
 export default async function listPlaylists(
   listName: string
-): Promise<Playlist | undefined> {
-  const spotifyApi = new SpotifyWebApi({
-    clientId: process.env.SpotifyClientID,
-    clientSecret: process.env.SpotifyClientSecret,
-  });
-  const username = getInput("spotify-username");
-  const {
-    body: { access_token },
-  } = await spotifyApi.clientCredentialsGrant();
+): Promise<Playlist> {
+  try {
+    const spotifyApi = new SpotifyWebApi({
+      clientId: process.env.SpotifyClientID,
+      clientSecret: process.env.SpotifyClientSecret,
+    });
+    const username = getInput("spotify-username");
+    const {
+      body: { access_token },
+    } = await spotifyApi.clientCredentialsGrant();
 
-  spotifyApi.setAccessToken(access_token);
+    spotifyApi.setAccessToken(access_token);
 
-  const { body } = await spotifyApi.getUserPlaylists(username);
-  const findPlaylist: SpotifyPlaylist = body.items.find(
-    ({ name }) => name === listName
-  );
-  if (!findPlaylist) {
-    setFailed(`Could not find playlist "${listName}". Is it private?`);
-    return;
+    const { body } = await spotifyApi.getUserPlaylists(username);
+    const findPlaylist = body.items.find(({ name }) => name === listName);
+    if (!findPlaylist) {
+      throw new Error(`Could not find playlist "${listName}". Is it private?`);
+    }
+    const {
+      body: { items },
+    } = await spotifyApi.getPlaylistTracks(findPlaylist.id);
+    if (!items.length) throw new Error("Playlist has no tracks.");
+
+    return formatTracks({
+      name: findPlaylist.name,
+      external_urls: findPlaylist.external_urls,
+      images: findPlaylist.images,
+      tracks: items,
+    });
+  } catch (error) {
+    throw new Error(error);
   }
-  const {
-    body: { items },
-  } = await spotifyApi.getPlaylistTracks(findPlaylist.id);
-  return formatTracks({
-    name: findPlaylist.name,
-    external_urls: findPlaylist.external_urls,
-    images: findPlaylist.images,
-    tracks: items,
-  });
 }
 
 export function formatTracks({
@@ -42,139 +45,30 @@ export function formatTracks({
   tracks,
 }: {
   name: string;
-  external_urls: SpotifyPlaylist["external_urls"];
-  images: SpotifyPlaylist["images"];
-  tracks: SpotifyTrack[];
+  external_urls: SpotifyApi.ExternalUrlObject;
+  images: SpotifyApi.ImageObject[];
+  tracks: SpotifyApi.PlaylistTrackObject[];
 }): Playlist {
-  const largestImage = images.sort((a, b) => b.width - a.width)[0];
+  const largestImage = images.sort(
+    (a, b) => (b.width || 0) - (a.width || 0)
+  )[0];
   return {
     name,
-    formatted_name: name.replace("/", "-").toLowerCase().replace(" ", "-"),
+    formatted_name: formatName(name),
     url: external_urls.spotify,
     tracks: tracks.map(({ track }) => ({
-      name: track.name,
-      artist: track.artists.map(({ name }) => name).join(", "),
-      album: track.album.name,
+      name: track?.name,
+      artist: track?.artists.map(({ name }) => name).join(", "),
+      album: track?.album.name,
     })),
     image: largestImage.url,
   };
 }
 
-export type SpotifyTrack = {
-  added_at: string;
-  added_by: {
-    external_urls: {
-      spotify: string;
-    };
-    href: string;
-    id: string;
-    type: string;
-    uri: string;
-  };
-  is_local: boolean;
-  primary_color: string | null;
-  track: {
-    album: {
-      album_type: string;
-      artists: [
-        {
-          external_urls: {
-            spotify: string;
-          };
-          href: string;
-          id: string;
-          name: string;
-          type: string;
-          uri: string;
-        }
-      ];
-      available_markets: string[];
-      external_urls: {
-        spotify: string;
-      };
-      href: string;
-      id: string;
-      images: {
-        height: number;
-        url: string;
-        width: number;
-      }[];
-
-      name: string;
-      release_date: string;
-      release_date_precision: string;
-      total_tracks: number;
-      type: string;
-      uri: string;
-    };
-    artists: {
-      external_urls: {
-        spotify: string;
-      };
-      href: string;
-      id: string;
-      name: string;
-      type: string;
-      uri: string;
-    }[];
-    available_markets: string[];
-    disc_number: number;
-    duration_ms: number;
-    episode: boolean;
-    explicit: boolean;
-    external_ids: {
-      isrc: string;
-    };
-    external_urls: {
-      spotify: string;
-    };
-    href: string;
-    id: string;
-    is_local: boolean;
-    name: string;
-    popularity: number;
-    preview_url: string;
-    track: true;
-    track_number: number;
-    type: string;
-    uri: string;
-  };
-  video_thumbnail: {
-    url: string | null;
-  };
-};
-
-export type SpotifyPlaylist = {
-  collaborative: boolean;
-  description: string;
-  external_urls: {
-    spotify: string;
-  };
-  href: string;
-  id: string;
-  images: {
-    height: number;
-    url: string;
-    width: number;
-  }[];
-  name: string;
-  owner: {
-    display_name: string;
-    external_urls: {
-      spotify: string;
-    };
-    href: string;
-    id: string;
-    type: string;
-    uri: string;
-  };
-  primary_color: string | null;
-  public: boolean;
-  snapshot_id: string;
-  tracks: {
-    href: string;
-    total: number;
-  };
-  type: string;
-  uri: string;
-};
+function formatName(name: string): string {
+  return name
+    .replace(/\s/g, "-")
+    .replace(/[^a-zA-Z0-9-]/g, "")
+    .replace(/-+/g, "-")
+    .toLowerCase();
+}

@@ -49298,49 +49298,36 @@ var jsYaml = {
 
 
 ;// CONCATENATED MODULE: ./src/write-file.ts
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 
 
-function updateMain(data, filename) {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            const newContents = yield buildNewMain(data, filename);
-            return yield (0,promises_namespaceObject.writeFile)(filename, newContents);
-        }
-        catch (error) {
-            throw new Error(error);
-        }
-    });
+async function updateMain(data, filename) {
+    try {
+        const newContents = await buildNewMain(data, filename);
+        return await (0,promises_namespaceObject.writeFile)(filename, newContents);
+    }
+    catch (error) {
+        throw new Error(error);
+    }
 }
-function buildNewMain(data, filename) {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            const currentPlaylists = (yield (0,promises_namespaceObject.readFile)(filename, "utf-8")) || "";
-            const currentJson = load(currentPlaylists);
-            const newPlaylist = {
-                playlist: data.name,
-                spotify: data.url,
-                tracks: data.tracks.map(({ name, artist, album }) => ({
-                    track: name,
-                    artist,
-                    album,
-                })),
-            };
-            const json = [...(currentPlaylists && [...currentJson]), newPlaylist];
-            return dump(json);
-        }
-        catch (error) {
-            throw new Error(error);
-        }
-    });
+async function buildNewMain(data, filename) {
+    try {
+        const currentPlaylists = (await (0,promises_namespaceObject.readFile)(filename, "utf-8")) || "";
+        const currentJson = load(currentPlaylists);
+        const newPlaylist = {
+            playlist: data.name,
+            spotify: data.url,
+            tracks: data.tracks.map(({ name, artist, album }) => ({
+                track: name,
+                artist,
+                album,
+            })),
+        };
+        const json = [...(currentPlaylists && [...currentJson]), newPlaylist];
+        return dump(json);
+    }
+    catch (error) {
+        throw new Error(error);
+    }
 }
 
 // EXTERNAL MODULE: ./node_modules/@actions/core/lib/core.js
@@ -49351,33 +49338,28 @@ var github = __nccwpck_require__(5438);
 
 
 function learnPlaylistName() {
-    let playlistName;
     const payload = github.context.payload.inputs;
-    if (payload && payload.playlistName) {
-        playlistName = payload.playlistName;
+    if (payload && payload["playlist-name"]) {
+        return payload["playlist-name"];
     }
-    if (!playlistName) {
-        const today = new Date();
-        const month = process.env.MONTH
-            ? parseInt(process.env.MONTH)
-            : today.getMonth();
-        const year = process.env.YEAR
-            ? parseInt(process.env.YEAR)
-            : today.getFullYear();
-        const [marchEnd, juneEnd, septemberEnd, decemberEnd] = validateSeasonNames();
-        const seasons = {
-            2: marchEnd,
-            5: juneEnd,
-            8: septemberEnd,
-            11: decemberEnd,
-        };
-        const season = seasons[month];
-        if (!season)
-            throw new Error(`The current month does not match an end of season month.`);
-        playlistName = `${month === 2 ? `${year - 1}/${year}` : year} ${season}`;
-    }
-    (0,lib_core.exportVariable)("playlist", playlistName);
-    return playlistName;
+    const today = new Date();
+    const month = process.env.MONTH
+        ? parseInt(process.env.MONTH)
+        : today.getMonth();
+    const year = process.env.YEAR
+        ? parseInt(process.env.YEAR)
+        : today.getFullYear();
+    const [marchEnd, juneEnd, septemberEnd, decemberEnd] = validateSeasonNames();
+    const seasons = {
+        2: marchEnd,
+        5: juneEnd,
+        8: septemberEnd,
+        11: decemberEnd,
+    };
+    const season = seasons[month];
+    if (!season)
+        throw new Error(`The current month does not match an end of season month.`);
+    return `${month === 2 ? `${year - 1}/${year}` : year} ${season}`;
 }
 function validateSeasonNames() {
     const seasonNames = (0,lib_core.getInput)("season-names")
@@ -49392,88 +49374,80 @@ function validateSeasonNames() {
 var server = __nccwpck_require__(5337);
 var server_default = /*#__PURE__*/__nccwpck_require__.n(server);
 ;// CONCATENATED MODULE: ./src/list-playlists.ts
-var list_playlists_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 
 
-function listPlaylists(listName) {
-    return list_playlists_awaiter(this, void 0, void 0, function* () {
+async function listPlaylists(listName) {
+    try {
         const spotifyApi = new (server_default())({
             clientId: process.env.SpotifyClientID,
             clientSecret: process.env.SpotifyClientSecret,
         });
         const username = (0,lib_core.getInput)("spotify-username");
-        const { body: { access_token }, } = yield spotifyApi.clientCredentialsGrant();
+        const { body: { access_token }, } = await spotifyApi.clientCredentialsGrant();
         spotifyApi.setAccessToken(access_token);
-        const { body } = yield spotifyApi.getUserPlaylists(username);
+        const { body } = await spotifyApi.getUserPlaylists(username);
         const findPlaylist = body.items.find(({ name }) => name === listName);
         if (!findPlaylist) {
-            (0,lib_core.setFailed)(`Could not find playlist "${listName}". Is it private?`);
-            return;
+            throw new Error(`Could not find playlist "${listName}". Is it private?`);
         }
-        const { body: { items }, } = yield spotifyApi.getPlaylistTracks(findPlaylist.id);
+        const { body: { items }, } = await spotifyApi.getPlaylistTracks(findPlaylist.id);
+        if (!items.length)
+            throw new Error("Playlist has no tracks.");
         return formatTracks({
             name: findPlaylist.name,
             external_urls: findPlaylist.external_urls,
             images: findPlaylist.images,
             tracks: items,
         });
-    });
+    }
+    catch (error) {
+        throw new Error(error);
+    }
 }
 function formatTracks({ name, external_urls, images, tracks, }) {
-    const largestImage = images.sort((a, b) => b.width - a.width)[0];
+    const largestImage = images.sort((a, b) => (b.width || 0) - (a.width || 0))[0];
     return {
         name,
-        formatted_name: name.replace("/", "-").toLowerCase().replace(" ", "-"),
+        formatted_name: formatName(name),
         url: external_urls.spotify,
         tracks: tracks.map(({ track }) => ({
-            name: track.name,
-            artist: track.artists.map(({ name }) => name).join(", "),
-            album: track.album.name,
+            name: track?.name,
+            artist: track?.artists.map(({ name }) => name).join(", "),
+            album: track?.album.name,
         })),
         image: largestImage.url,
     };
 }
+function formatName(name) {
+    return name
+        .replace(/\s/g, "-")
+        .replace(/[^a-zA-Z0-9-]/g, "")
+        .replace(/-+/g, "-")
+        .toLowerCase();
+}
 
 ;// CONCATENATED MODULE: ./src/index.ts
-var src_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 
 
 
 
-function action() {
-    return src_awaiter(this, void 0, void 0, function* () {
-        try {
-            const filename = (0,lib_core.getInput)("filename");
-            const playlistName = learnPlaylistName();
-            const playlist = (yield listPlaylists(playlistName));
-            // export image variable to be downloaded latter
-            (0,lib_core.exportVariable)("PlaylistImageOutput", `${playlist.formatted_name}.png`);
-            (0,lib_core.exportVariable)("PlaylistImage", playlist.image);
-            // replace Spotify image url with local version
-            playlist.image = `${playlist.formatted_name}.png`;
-            // save tracks to playlists.yml
-            yield updateMain(playlist, filename);
-        }
-        catch (error) {
-            (0,lib_core.setFailed)(error.message);
-        }
-    });
+async function action() {
+    try {
+        const filename = (0,lib_core.getInput)("filename");
+        const playlistName = learnPlaylistName();
+        const playlist = await listPlaylists(playlistName);
+        // export image variable to be downloaded latter
+        (0,lib_core.exportVariable)("playlist", playlistName);
+        (0,lib_core.exportVariable)("PlaylistImageOutput", `${playlist.formatted_name}.png`);
+        (0,lib_core.exportVariable)("PlaylistImage", playlist.image);
+        // replace Spotify image url with local version
+        playlist.image = `${playlist.formatted_name}.png`;
+        // save tracks to playlists.yml
+        await updateMain(playlist, filename);
+    }
+    catch (error) {
+        (0,lib_core.setFailed)(error.message);
+    }
 }
 /* harmony default export */ const src = (action());
 
