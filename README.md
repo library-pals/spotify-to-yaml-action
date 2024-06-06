@@ -36,7 +36,7 @@ on:
   workflow_dispatch:
     inputs:
       playlist-name:
-        description: Your Spotify playlist name that you want to export.
+        description: Your Spotify playlist name that you want to export. Required for non-seasonal playlist export.
         required: true
         type: string
 
@@ -122,7 +122,7 @@ To trigger the action, [create a workflow dispatch event](https://docs.github.co
 {
   "ref": "main", // Required. The git reference for the workflow, a branch or tag name.
   "inputs": {
-    "playlist-name": "", // Required. Your Spotify playlist name that you want to export.
+    "playlist-name": "", // Required. Your Spotify playlist name that you want to export. Required for non-seasonal playlist export.
   }
 }
 ```
