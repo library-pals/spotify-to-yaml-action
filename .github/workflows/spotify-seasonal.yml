@@ -1,10 +1,8 @@
-name: Manually trigger the action
+name: Save seasonal playlist
+
 on:
-  workflow_dispatch:
-    inputs:
-      playlistName:
-        type: string
-        description: The name of the Spotify playlist.
+  schedule:
+    - cron: "00 01 20 Mar,Jun,Sep,Dec *"
 
 jobs:
   spotify-to-yaml:

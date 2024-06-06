@@ -8,20 +8,25 @@ export type Playlist = {
   formatted_name: string;
   url: string;
   tracks: {
-    name: string;
-    artist: string;
-    album: string;
+    name?: string;
+    artist?: string;
+    album?: string;
   }[];
   image: string;
+};
+
+export type WorkflowPayload = {
+  "playlist-name"?: string;
 };
 
 export async function action() {
   try {
     const filename = getInput("filename");
+    const playlistName = learnPlaylistName();
+    const playlist = await listPlaylists(playlistName);
 
-    const playlistName: string = learnPlaylistName();
-    const playlist = (await listPlaylists(playlistName)) as Playlist;
     // export image variable to be downloaded latter
+    exportVariable("playlist", playlistName);
     exportVariable("PlaylistImageOutput", `${playlist.formatted_name}.png`);
     exportVariable("PlaylistImage", playlist.image);
     // replace Spotify image url with local version

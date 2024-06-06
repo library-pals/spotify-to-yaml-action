@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
-    "target": "es2015",
+    "target": "es2021",
     "moduleResolution": "node",
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "allowSyntheticDefaultImports": true
   },
   "include": ["src/*.ts"]
 }

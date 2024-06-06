@@ -1,22 +1,27 @@
 # spotify-to-yaml-action
 
-Export a seasonal Spotify playlist to YAML.
+Export a Spotify playlist to YAML.
 
-At the end of each season, the workflow will fetch last season's playlists, add the the contents to `_data/playlist.yml` and save the playlist thumbnail image to the repository.
+This workflow can:
+
+- Export your Spotify playlist to yaml.
+- Fetch last season's playlists, add the the contents to `_data/playlist.yml` and save the playlist thumbnail image to the repository.
 
 ## Set up
 
-This workflow requires that you name your Spotify playlists using the following format: `YYYY {season}`. If you use different names for the seasons, you can use the `season-names` [action input](#action-options) to reflect that. Examples:
+To connect your Spotify account to this workflow, set the following [secrets to your repository](https://docs.github.com/en/actions/security-guides/encrypted-secrets#creating-encrypted-secrets-for-a-repository). You can find these values from the [Spotify API dashboard](https://developer.spotify.com/dashboard):
+
+- `SpotifyClientID`
+- `SpotifyClientSecret`
+
+## Seasonal set up
+
+To take part in season playlist export, you will need to name your Spotify playlists with the following pattern: `YYYY {season}`. If you use different names for the seasons, you can use the `season-names` [action input](#action-options) to reflect that. Examples:
 
 - `2021 Fall`
 - `2021/2022 Winter`
 - `2022 Spring`
 - `2022 Summer`
-
-You must also set the following [secrets to your repository](https://docs.github.com/en/actions/security-guides/encrypted-secrets#creating-encrypted-secrets-for-a-repository) to connect to Spotify. You can find these values from the [Spotify API dashboard](https://developer.spotify.com/dashboard):
-
-- `SpotifyClientID`
-- `SpotifyClientSecret`
 
 <!-- START GENERATED DOCUMENTATION -->
 
@@ -26,9 +31,14 @@ To use this action, create a new workflow in `.github/workflows` and modify it a
 
 ```yml
 name: Save Spotify playlist
+
 on:
-  schedule:
-    - cron: "00 01 20 Mar,Jun,Sep,Dec *"
+  workflow_dispatch:
+    inputs:
+      playlist-name:
+        description: Your Spotify playlist name that you want to export. Required for non-seasonal playlist export.
+        required: true
+        type: string
 
 jobs:
   spotify-to-yaml:
@@ -59,16 +69,14 @@ jobs:
 ### Additional example workflows
 
 <details>
-<summary>Manually trigger the action</summary>
+<summary>Save seasonal playlist</summary>
 
 ```yml
-name: Manually trigger the action
+name: Save seasonal playlist
+
 on:
-  workflow_dispatch:
-    inputs:
-      playlistName:
-        type: string
-        description: The name of the Spotify playlist.
+  schedule:
+    - cron: "00 01 20 Mar,Jun,Sep,Dec *"
 
 jobs:
   spotify-to-yaml:
@@ -105,4 +113,18 @@ jobs:
 - `filename`: The YAML file to write your playlists. Default: `_data/playlists.yml`.
 
 - `season-names`: The season names in order by the season that ends in March, June, September, and then December. Default: `Winter,Spring,Summer,Fall`.
+
+## Trigger the action
+
+To trigger the action, [create a workflow dispatch event](https://docs.github.com/en/rest/actions/workflows#create-a-workflow-dispatch-event) with the following body parameters:
+
+```js
+{
+  "ref": "main", // Required. The git reference for the workflow, a branch or tag name.
+  "inputs": {
+    "playlist-name": "", // Required. Your Spotify playlist name that you want to export. Required for non-seasonal playlist export.
+  }
+}
+```
+
 <!-- END GENERATED DOCUMENTATION -->
