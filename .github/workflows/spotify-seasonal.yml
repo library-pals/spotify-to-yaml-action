@@ -1,9 +1,10 @@
-name: Save seasonal or any playlist
+name: Export playlists on a schedule
+run-name: Export playlist ${{ inputs['playlist-name'] }}${{ github.event.schedule.scheduled_at}}
 
 on:
   # Run every three months on the 20th to get the seasonal playlist
   schedule:
-    - cron: "00 01 20 Mar,Jun,Sep,Dec *"
+    - cron: "45 22 06 Mar,Jun,Sep,Dec *"
   # Run on demand to get any playlist
   workflow_dispatch:
     inputs:
@@ -21,10 +22,35 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Save the playlist
+      # For this Spotify user, they have a predicable schem for setting the playlist name
+      # Examples: 2019/2020 Winter, 2020 Spring, 2020 Summer, 2020 Fall
+      # This step sets the playlist name based on the current month when the workflow runs
+      - name: Determine Playlist Name Based on Season
+        run: |
+          MONTH=$(date +%m)
+          YEAR=$(date +%Y)
+          case $MONTH in
+            03)
+              echo "PLAYLIST_NAME=$(($YEAR - 1))/${YEAR} Winter" >> $GITHUB_ENV
+              ;;
+            06)
+              echo "PLAYLIST_NAME=${YEAR} Spring" >> $GITHUB_ENV
+              ;;
+            09)
+              echo "PLAYLIST_NAME=${YEAR} Summer" >> $GITHUB_ENV
+              ;;
+            12)
+              echo "PLAYLIST_NAME=${YEAR} Fall" >> $GITHUB_ENV
+              ;;
+          esac
+      # This step saves the playlist using the determined name
+      - name: Export the playlist
         uses: ./
         with:
           spotify-username: "katydecorah"
+          # If the playlist name is provided, use it
+          # The workflow_dispatch input playlist-name takes precedence
+          playlist-name: ${{ env.PLAYLIST_NAME }}
         env:
           SpotifyClientID: ${{ secrets.SpotifyClientID }}
           SpotifyClientSecret: ${{ secrets.SpotifyClientSecret}}

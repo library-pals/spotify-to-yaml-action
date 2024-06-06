@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import listPlaylists, { formatTracks } from "../list-playlists";
+import listPlaylists, { formatName, formatTracks } from "../list-playlists";
 import { getInput } from "@actions/core";
 import SpotifyWebApi from "spotify-web-api-node";
 
@@ -231,5 +231,13 @@ describe("formatTracks", () => {
   "url": "https://spotify.com",
 }
 `);
+  });
+});
+
+describe("formatName", () => {
+  it("formats the name correctly", () => {
+    expect(formatName("2021 Fall")).toBe("2021-fall");
+    expect(formatName("2020/2021 Winter")).toBe("2020-2021-winter");
+    expect(formatName("2020 / 2021 Winter")).toBe("2020-2021-winter");
   });
 });

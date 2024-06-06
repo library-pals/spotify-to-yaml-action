@@ -3,8 +3,8 @@ import { action } from "..";
 import * as UpdateMain from "../write-file";
 import * as core from "@actions/core";
 import * as ListPlaylists from "../list-playlists";
-import * as LearnPlaylistName from "../learn-playlist-name";
 import { promises } from "fs";
+import * as github from "@actions/github";
 
 jest.mock("@actions/core");
 jest.mock("spotify-web-api-node", () => {
@@ -31,7 +31,6 @@ jest.mock("spotify-web-api-node", () => {
 });
 
 const defaultInputs = {
-  "season-names": "Winter,Spring,Summer,Fall",
   filename: "_data/playlists.yml",
 };
 
@@ -46,10 +45,7 @@ describe("action", () => {
   });
 
   test("works", async () => {
-    const mockDate = new Date(2021, 11);
-    jest.spyOn(global, "Date").mockImplementation(() => mockDate);
-
-    const learnPlaylistNameSpy = jest.spyOn(LearnPlaylistName, "default");
+    defaultInputs["playlist-name"] = "2021 Fall";
     const listPlaylistsSpy = jest.spyOn(ListPlaylists, "default");
     const updateMainSpy = jest.spyOn(UpdateMain, "default");
     jest.spyOn(promises, "readFile").mockResolvedValue(`
@@ -59,7 +55,6 @@ describe("action", () => {
     const exportVariableSpy = jest.spyOn(core, "exportVariable");
 
     await action();
-    expect(learnPlaylistNameSpy).toHaveReturnedWith("2021 Fall");
     const results = listPlaylistsSpy.mock.results[0].value;
     await expect(results).resolves.toMatchSnapshot();
     expect(exportVariableSpy).toHaveBeenNthCalledWith(
@@ -145,5 +140,31 @@ describe("action", () => {
       ",
       ]
     `);
+  });
+
+  test("workflow input task precedence", async () => {
+    Object.defineProperty(github, "context", {
+      value: {
+        payload: {
+          inputs: {
+            "playlist-name": "2021 Fall",
+          },
+        },
+      },
+    });
+    defaultInputs["playlist-name"] = "2019 Fall";
+
+    jest.spyOn(promises, "readFile").mockResolvedValue(`
+- playlist: 2021 Summer
+`);
+    const exportVariableSpy = jest.spyOn(core, "exportVariable");
+
+    await action();
+
+    expect(exportVariableSpy).toHaveBeenNthCalledWith(
+      1,
+      "playlist",
+      "2021 Fall"
+    );
   });
 });
