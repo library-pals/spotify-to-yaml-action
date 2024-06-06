@@ -75,14 +75,22 @@ jobs:
 ### Additional example workflows
 
 <details>
-<summary>Save seasonal playlist</summary>
+<summary>Save seasonal or any playlist</summary>
 
 ```yml
-name: Save seasonal playlist
+name: Save seasonal or any playlist
 
 on:
+  # Run every three months on the 20th to get the seasonal playlist
   schedule:
     - cron: "00 01 20 Mar,Jun,Sep,Dec *"
+  # Run on demand to get any playlist
+  workflow_dispatch:
+    inputs:
+      playlist-name:
+        description: Your Spotify playlist name that you want to export.
+        required: true
+        type: string
 
 permissions:
   contents: write
