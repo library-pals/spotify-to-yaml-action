@@ -38,7 +38,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Save the playlist
-        uses: library-pals/spotify-to-yaml-action@v8.2.0
+        uses: library-pals/spotify-to-yaml-action@v9.0.0
         with:
           spotify-username: "katydecorah"
         env:
@@ -109,7 +109,7 @@ jobs:
           esac
       # This step saves the playlist using the determined name
       - name: Export the playlist
-        uses: library-pals/spotify-to-yaml-action@v8.2.0
+        uses: library-pals/spotify-to-yaml-action@v9.0.0
         with:
           spotify-username: "katydecorah"
           # If the playlist name is provided, use it
