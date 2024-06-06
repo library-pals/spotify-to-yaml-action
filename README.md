@@ -40,6 +40,9 @@ on:
         required: true
         type: string
 
+permissions:
+  contents: write
+
 jobs:
   spotify-to-yaml:
     runs-on: ubuntu-latest
@@ -77,6 +80,9 @@ name: Save seasonal playlist
 on:
   schedule:
     - cron: "00 01 20 Mar,Jun,Sep,Dec *"
+
+permissions:
+  contents: write
 
 jobs:
   spotify-to-yaml:
