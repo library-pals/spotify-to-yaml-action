@@ -35,16 +35,34 @@ function getSeason(month: number): string {
   // Get the season name for the current month
   const season = seasons[month];
 
-  // Throw an error if the current month is not an end of season month
   if (!season) {
     throw new Error(
-      `The current month (${month}) does not match an end of season month: ${Object.keys(
-        seasons
-      )}.`
+      `The current month (${monthToWords(
+        month
+      )}) does not match an end of season month: ${Object.keys(seasons)
+        .map((month) => monthToWords(parseInt(month)))
+        .join(", ")}.`
     );
   }
 
   return season;
+}
+
+function monthToWords(number: number) {
+  return [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ][number];
 }
 
 function getMonthYear(): { month: number; year: number } {

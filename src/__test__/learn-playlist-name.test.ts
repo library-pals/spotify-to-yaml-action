@@ -53,7 +53,7 @@ describe("learnPlaylistName", () => {
     const mockDate = new Date(2019, 1); // February
     jest.spyOn(global, "Date").mockImplementation(() => mockDate);
     expect(() => learnPlaylistName()).toThrow(
-      "The current month (1) does not match an end of season month: 2,5,8,11."
+      "The current month (February) does not match an end of season month: March, June, September, December."
     );
   });
 
