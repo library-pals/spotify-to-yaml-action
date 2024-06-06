@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       playlist-name:
-        description: Your Spotify playlist name that you want to export. Required for non-seasonal playlist export.
+        description: Your Spotify playlist name that you want to export.
         required: true
         type: string
 

@@ -3,7 +3,6 @@ import { action } from "..";
 import * as UpdateMain from "../write-file";
 import * as core from "@actions/core";
 import * as ListPlaylists from "../list-playlists";
-import * as LearnPlaylistName from "../learn-playlist-name";
 import { promises } from "fs";
 
 jest.mock("@actions/core");
@@ -47,9 +46,9 @@ describe("action", () => {
 
   test("works", async () => {
     const mockDate = new Date(2021, 11);
+    defaultInputs["playlist-name"] = "2021 Fall";
     jest.spyOn(global, "Date").mockImplementation(() => mockDate);
 
-    const learnPlaylistNameSpy = jest.spyOn(LearnPlaylistName, "default");
     const listPlaylistsSpy = jest.spyOn(ListPlaylists, "default");
     const updateMainSpy = jest.spyOn(UpdateMain, "default");
     jest.spyOn(promises, "readFile").mockResolvedValue(`
@@ -59,7 +58,6 @@ describe("action", () => {
     const exportVariableSpy = jest.spyOn(core, "exportVariable");
 
     await action();
-    expect(learnPlaylistNameSpy).toHaveReturnedWith("2021 Fall");
     const results = listPlaylistsSpy.mock.results[0].value;
     await expect(results).resolves.toMatchSnapshot();
     expect(exportVariableSpy).toHaveBeenNthCalledWith(

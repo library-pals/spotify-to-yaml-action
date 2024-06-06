@@ -1,14 +1,6 @@
 # spotify-to-yaml-action
 
-Export a Spotify playlist to Yaml.
-
-This workflow can:
-
-- Export your public Spotify playlist.
-  - [Example workflow](#set-up-the-workflow)
-- Automatically export last season's playlists.
-  - [Seasonal set up](#seasonal-set-up)
-  - [Example seasonal workflow](#additional-example-workflows)
+Export a Spotify playlist to YAML.
 
 ## Set up
 
@@ -16,15 +8,6 @@ To connect your Spotify account to this workflow, set the following [secrets to 
 
 - `SpotifyClientID`
 - `SpotifyClientSecret`
-
-## Seasonal set up
-
-To take part in season playlist export, you will need to name your Spotify playlists with the following pattern: `YYYY {season}`. If you use different names for the seasons, you can use the `season-names` [action input](#action-options) to reflect that. Examples:
-
-- `2021 Fall`
-- `2021/2022 Winter`
-- `2022 Spring`
-- `2022 Summer`
 
 <!-- START GENERATED DOCUMENTATION -->
 

@@ -1,7 +1,7 @@
 import updateMain from "./write-file";
 import { setFailed, exportVariable, getInput } from "@actions/core";
-import learnPlaylistName from "./learn-playlist-name";
 import listPlaylists from "./list-playlists";
+import * as github from "@actions/github";
 
 export type Playlist = {
   name: string;
@@ -22,10 +22,17 @@ export type WorkflowPayload = {
 export async function action() {
   try {
     const filename = getInput("filename");
-    const playlistName = learnPlaylistName();
+    const playlistName =
+      github?.context?.payload?.inputs?.payload?.["playlist-name"] ||
+      getInput("playlist-name");
+
+    if (!playlistName) {
+      throw new Error("Playlist name is required");
+    }
+
     const playlist = await listPlaylists(playlistName);
 
-    // export image variable to be downloaded latter
+    // export image variable to be downloaded later
     exportVariable("playlist", playlistName);
     exportVariable("PlaylistImageOutput", `${playlist.formatted_name}.png`);
     exportVariable("PlaylistImage", playlist.image);
