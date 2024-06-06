@@ -1,11 +1,14 @@
 # spotify-to-yaml-action
 
-Export a Spotify playlist to YAML.
+Export a Spotify playlist to Yaml.
 
 This workflow can:
 
-- Export your Spotify playlist to yaml.
-- Fetch last season's playlists, add the the contents to `_data/playlist.yml` and save the playlist thumbnail image to the repository.
+- Export your public Spotify playlist.
+  - [Example workflow](#set-up-the-workflow)
+- Automatically export last season's playlists.
+  - [Seasonal set up](#seasonal-set-up)
+  - [Example seasonal workflow](#additional-example-workflows))
 
 ## Set up
 
