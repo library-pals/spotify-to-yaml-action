@@ -63,6 +63,7 @@ jobs:
 
 ```yml
 name: Export playlists on a schedule
+run-name: Export playlist ${{ inputs['playlist-name'] }}${{ github.event.schedule.scheduled_at}}
 
 on:
   # Run every three months on the 20th to get the seasonal playlist
