@@ -4,6 +4,9 @@ on:
   schedule:
     - cron: "00 01 20 Mar,Jun,Sep,Dec *"
 
+permissions:
+  contents: write
+
 jobs:
   spotify-to-yaml:
     runs-on: ubuntu-latest
