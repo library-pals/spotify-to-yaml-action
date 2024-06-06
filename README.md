@@ -8,7 +8,7 @@ This workflow can:
   - [Example workflow](#set-up-the-workflow)
 - Automatically export last season's playlists.
   - [Seasonal set up](#seasonal-set-up)
-  - [Example seasonal workflow](#additional-example-workflows))
+  - [Example seasonal workflow](#additional-example-workflows)
 
 ## Set up
 
