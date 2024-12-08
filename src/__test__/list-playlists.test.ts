@@ -1,4 +1,5 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable @typescript-eslint/no-require-imports */
+
 import listPlaylists, { formatName, formatTracks } from "../list-playlists";
 import { getInput } from "@actions/core";
 import SpotifyWebApi from "spotify-web-api-node";
