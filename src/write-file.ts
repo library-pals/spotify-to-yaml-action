@@ -1,5 +1,5 @@
 import { writeFile, readFile } from "fs/promises";
-import { Playlist } from ".";
+import { Playlist } from "./index.js";
 import { load, dump } from "js-yaml";
 
 export default async function updateMain(data: Playlist, filename: string) {

@@ -2,7 +2,7 @@
   "name": "spotify-to-yaml-action",
   "version": "9.0.1",
   "description": "Export a seasonal Spotify playlist to YAML.",
-  "main": "dist/index.js",
+  "exports": "./dist/index.js",
   "type": "module",
   "scripts": {
     "pretest": "npm run lint",
@@ -16,17 +16,17 @@
   "devDependencies": {
     "@babel/preset-env": "^7.26.0",
     "@babel/preset-typescript": "^7.26.0",
-    "@eslint/js": "^9.16.0",
+    "@eslint/js": "^9.18.0",
     "@types/jest": "^29.5.14",
     "@types/js-yaml": "^4.0.9",
-    "@types/node": "^22.10.1",
+    "@types/node": "^22.10.10",
     "@types/spotify-web-api-node": "^5.0.11",
     "@vercel/ncc": "^0.38.3",
-    "eslint": "^9.16.0",
-    "eslint-plugin-jest": "^28.9.0",
+    "eslint": "^9.18.0",
+    "eslint-plugin-jest": "^28.11.0",
     "jest": "^29.7.0",
-    "typescript": "^5.7.2",
-    "typescript-eslint": "^8.17.0"
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.21.0"
   },
   "dependencies": {
     "@actions/core": "^1.11.1",
@@ -45,19 +45,5 @@
   "bugs": {
     "url": "https://github.com/library-pals/spotify-to-yaml-action/issues"
   },
-  "homepage": "https://github.com/library-pals/spotify-to-yaml-action#readme",
-  "jest": {
-    "clearMocks": true,
-    "transformIgnorePatterns": [
-      "node_modules/(?!spotify-to-yaml)"
-    ],
-    "coverageThreshold": {
-      "global": {
-        "branches": 100,
-        "functions": 100,
-        "lines": 100,
-        "statements": 100
-      }
-    }
-  }
+  "homepage": "https://github.com/library-pals/spotify-to-yaml-action#readme"
 }
