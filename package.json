@@ -2,7 +2,7 @@
   "name": "spotify-to-yaml-action",
   "version": "9.0.1",
   "description": "Export a seasonal Spotify playlist to YAML.",
-  "main": "dist/index.js",
+  "exports": "./dist/index.js",
   "type": "module",
   "scripts": {
     "pretest": "npm run lint",
@@ -45,19 +45,5 @@
   "bugs": {
     "url": "https://github.com/library-pals/spotify-to-yaml-action/issues"
   },
-  "homepage": "https://github.com/library-pals/spotify-to-yaml-action#readme",
-  "jest": {
-    "clearMocks": true,
-    "transformIgnorePatterns": [
-      "node_modules/(?!spotify-to-yaml)"
-    ],
-    "coverageThreshold": {
-      "global": {
-        "branches": 100,
-        "functions": 100,
-        "lines": 100,
-        "statements": 100
-      }
-    }
-  }
+  "homepage": "https://github.com/library-pals/spotify-to-yaml-action#readme"
 }

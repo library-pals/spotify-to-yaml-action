@@ -1,6 +1,6 @@
-import updateMain from "./write-file";
+import updateMain from "./write-file.js";
 import { setFailed, exportVariable, getInput } from "@actions/core";
-import listPlaylists from "./list-playlists";
+import listPlaylists from "./list-playlists.js";
 import * as github from "@actions/github";
 
 export type Playlist = {
