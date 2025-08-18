@@ -36,7 +36,7 @@ jobs:
     name: Save Spotify playlist and thumbnail
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Save the playlist
         uses: library-pals/spotify-to-yaml-action@v9.0.1
         with:
@@ -85,7 +85,7 @@ jobs:
     name: Save Spotify playlist and thumbnail
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       # For this Spotify user, they have a predicable schem for setting the playlist name
       # Examples: 2019/2020 Winter, 2020 Spring, 2020 Summer, 2020 Fall
       # This step sets the playlist name based on the current month when the workflow runs
